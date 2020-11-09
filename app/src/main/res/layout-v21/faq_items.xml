@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.cardview.widget.CardView
+        android:layout_margin="15sp"
+        android:elevation="15sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:id="@+id/rel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/icBullet"
+                android:padding="5sp"
+                android:layout_marginTop="8sp"
+                android:layout_marginBottom="8sp"
+                android:layout_marginStart="10sp"
+                android:src="@mipmap/ic_bullet"/>
+
+            <TextView
+                android:layout_toEndOf="@+id/icBullet"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="@color/black"
+                android:layout_marginStart="10sp"
+                android:layout_centerVertical="true"
+                android:id="@+id/txtQuestion"
+                android:text="@string/what_is_lorem_ipsum"
+                android:textSize="17sp"/>
+
+        </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</RelativeLayout>

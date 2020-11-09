@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/constraintLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    xmlns:ads="http://schemas.android.com/apk/res-auto">
+
+    <RelativeLayout
+        android:id="@+id/tapHeader"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:background="@android:color/black">
+
+        <com.google.android.gms.ads.AdView
+            android:id="@+id/ads_view1"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            ads:adSize="BANNER"
+            ads:adUnitId="@string/banner_id"
+            />
+<!--        <TextView-->
+<!--            android:id="@+id/ctv_header"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_centerHorizontal="true"-->
+<!--            android:padding="14sp"-->
+<!--            android:singleLine="true"-->
+<!--            android:text="@string/tap_the_shopping_list_name_to_add_items"-->
+<!--            android:textAllCaps="true"-->
+<!--            android:textColor="@color/white"-->
+<!--            android:textSize="14sp"-->
+<!--            android:textStyle="bold" />-->
+
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/shoppingListRecycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/tapHeader"
+        android:divider="@android:color/transparent" />
+
+    <TextView
+        android:id="@+id/fadingTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/right_hand"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="@string/tap_the_plus_button_to_create_your_list"
+        android:textColor="@color/black"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        android:visibility="gone" />
+
+    <pl.droidsonroids.gif.GifTextView
+        android:id="@+id/right_hand"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/icAdd"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="center"
+        android:layout_marginRight="15dp"
+        android:background="@drawable/pointing_hand"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/icAdd"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="40dp"
+        android:layout_marginEnd="21dp"
+        android:src="@drawable/plus_icon" />
+
+</RelativeLayout>

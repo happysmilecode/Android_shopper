@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="examples" >
+        <item>Tap the plus button to \ncreate your list</item>
+        <item>Tap the plus button to \ncreate your list</item>
+        <item>Tap the plus button to \ncreate your list</item>
+    </string-array>
+</resources>

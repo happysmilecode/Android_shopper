@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/myRel"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <EditText
+        android:id="@+id/searchEdit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10sp"
+        android:layout_marginStart="20sp"
+        android:layout_marginEnd="10sp"
+        android:layout_marginTop="20sp"
+        android:background="@drawable/find_edt_bg"
+        android:hint="@string/search_store"
+        android:inputType="text"
+        android:imeOptions="actionSearch"
+        android:maxLines="1"
+        android:paddingBottom="8sp"
+        android:paddingStart="20sp"
+        android:paddingEnd="10sp"
+        android:paddingTop="8sp"
+        android:layout_toStartOf="@+id/img_add"
+        android:textSize="16sp" />
+
+    <LinearLayout
+        android:id="@+id/img_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_btn_red"
+        android:layout_alignParentEnd="true"
+        android:padding="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="15dp"
+        android:gravity="center">
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:scaleType="fitXY"
+            android:src="@drawable/addbuttonwhite" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:text="@string/add_stores"
+            android:textSize="16sp"
+            android:textColor="@color/white">
+
+        </TextView>
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/lvList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/searchEdit"
+        android:layout_margin="10sp" />
+
+    <TextView
+        android:id="@+id/ctv_no_store"
+        android:textSize="15sp"
+        android:textColor="@color/grey_800"
+        android:gravity="center"
+        android:visibility="gone"
+        android:text="@string/no_stores_available"
+        android:layout_centerInParent="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</RelativeLayout>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorAppBlue">
+
+    <ImageView
+        android:id="@+id/toggleButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="TODO"
+        android:padding="10sp"
+        android:src="@mipmap/ic_menubar" />
+
+    <ImageView
+        android:id="@+id/backButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="TODO"
+        android:padding="10sp"
+        android:src="@mipmap/ic_back"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/txtTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:textColor="@android:color/white"
+        android:textSize="15sp"
+        tools:ignore="RelativeOverlap" />
+
+    <androidx.appcompat.widget.AppCompatSpinner
+        android:id="@+id/spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:gravity="center"
+        android:textAlignment="center"
+        android:padding="5sp"
+        android:backgroundTint="@color/white"
+        android:entries="@array/radius"
+        android:prompt="@string/set_radius"
+        android:spinnerMode="dropdown"
+        android:textSize="10sp"
+        tools:targetApi="lollipop"
+        tools:ignore="SmallSp" />
+
+</RelativeLayout>

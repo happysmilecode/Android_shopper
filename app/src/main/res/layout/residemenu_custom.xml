@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ImageView
+        android:id="@+id/iv_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop" />
+
+    <ImageView
+        android:id="@+id/iv_shadow"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@drawable/shadow"
+        android:scaleType="fitXY" />
+
+    <RelativeLayout
+        android:id="@+id/sv_menu_holder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/imgUserImage"
+            android:layout_width="25sp"
+            android:layout_height="25sp"
+            android:layout_margin="20sp"
+            android:src="@drawable/bg" />
+
+        <TextView
+            android:id="@+id/textUserName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18sp"
+            android:layout_toRightOf="@+id/imgUserImage"
+            android:paddingTop="5sp"
+            android:text="@string/speed_shopper"
+            android:textColor="@color/white" />
+
+        <TextView
+            android:id="@+id/lineView"
+            android:layout_width="match_parent"
+            android:layout_height="0.5sp"
+            android:layout_below="@+id/textUserName"
+            android:layout_marginLeft="25sp"
+            android:layout_marginRight="25sp"
+            android:layout_marginTop="15sp"
+            android:background="@color/white"
+            android:text="@string/speed_shopper"
+            android:textColor="@color/white" />
+
+
+        <RelativeLayout
+            android:id="@+id/sv_menu_logout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="30dp"
+            android:layout_marginStart="100dp"
+            android:layout_marginTop="5sp"
+            android:gravity="center"
+            android:padding="10sp">
+
+            <ImageView
+                android:id="@+id/btnLogout"
+                android:layout_width="50sp"
+                android:layout_height="50sp"
+                android:src="@mipmap/logout" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/btnLogout"
+                android:padding="5sp"
+                android:text="@string/logout"
+                android:textColor="#99FFFFFF"
+                android:textSize="16sp" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+
+</merge>

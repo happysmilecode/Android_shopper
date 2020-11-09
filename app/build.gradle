@@ -1,0 +1,128 @@
+buildscript {
+    repositories {
+        maven { url 'https://maven.fabric.io/public' }
+        maven { url 'https://plugins.gradle.org/m2/' }
+    }
+
+    dependencies {
+        classpath 'io.fabric.tools:gradle:1.31.2'
+        classpath 'gradle.plugin.com.onesignal:onesignal-gradle-plugin:0.12.6'
+    }
+}
+apply plugin: 'com.onesignal.androidsdk.onesignal-gradle-plugin'
+apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
+
+repositories {
+    maven { url 'https://maven.fabric.io/public' }
+    maven { url 'https://maven.google.com' }
+}
+
+android {
+//    signingConfigs {
+//        config {
+//            keyAlias 'speedshopper'
+//            keyPassword '123456789'
+//            storeFile file('/keystore/speedshopper.jks')
+//            storePassword '123456789'
+//        }
+//    }
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+    }
+    signingConfigs {
+        config {
+            keyAlias 'speedshopper'
+            keyPassword '123456789'
+            storeFile file('C:/Users/JA-3/Downloads/wcmediallc-speedshopper_android-d7fe46317d20/keystore/speedshopper.jks')
+            storePassword '123456789'
+        }
+    }
+    compileSdkVersion 30
+    defaultConfig {
+        applicationId "c.offerak.speedshopper"
+        minSdkVersion 17
+        targetSdkVersion 30
+        /*versionCode 4
+        versionName "1.0.2"*/
+        versionCode 51
+        versionName "2.4.3"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        setProperty("archivesBaseName", "SpeedShopper-$versionName")
+        manifestPlaceholders = [
+                onesignal_app_id               : '88eea516-8527-4bf9-a5a3-717221327c0b',
+                // Project number pulled from dashboard, local value is ignored.
+                onesignal_google_project_number: 'REMOTE'
+        ]
+//        signingConfig signingConfigs.config
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+//            signingConfig signingConfigs.config
+            signingConfig signingConfigs.config
+        }
+        debug {
+//            signingConfig signingConfigs.config
+        }
+    }
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
+    }
+    defaultConfig {
+        multiDexEnabled true
+    }
+    productFlavors {
+    }
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    //noinspection GradleCompatible
+    androidTestImplementation 'androidx.test:runner:1.3.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.2'
+    testImplementation 'junit:junit:4.13'
+    implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'com.squareup.retrofit2:retrofit:2.5.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.12.1'
+    implementation 'com.squareup.okhttp3:okhttp:3.12.1'
+    implementation 'com.jakewharton:butterknife:10.2.3'
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
+    implementation 'androidx.cardview:cardview:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
+    implementation 'com.google.android.material:material:1.2.1'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'com.joanzapata.pdfview:android-pdfview:1.0.4@aar'
+    implementation 'com.github.bumptech.glide:glide:4.11.0'
+    implementation 'com.soundcloud.android:android-crop:1.0.1@aar'
+    implementation files('libs/nineoldandroids-library-2.4.0.jar')
+    implementation 'com.toptoche.searchablespinner:searchablespinnerlibrary:1.3.1'
+    implementation 'com.facebook.android:facebook-android-sdk:5.15.3'
+    implementation 'com.google.android.gms:play-services-location:17.1.0'
+    implementation 'com.google.android.gms:play-services-maps:17.0.0'
+    implementation 'com.google.android.gms:play-services-places:17.0.0'
+    implementation 'com.google.android.gms:play-services-ads:19.4.0'
+    implementation 'com.google.android.gms:play-services-auth:18.1.0'
+    implementation 'com.google.maps.android:android-maps-utils:0.4.4'
+    implementation 'com.google.firebase:firebase-messaging:20.3.0'
+    implementation 'com.google.firebase:firebase-core:17.5.1'
+    implementation 'com.journeyapps:zxing-android-embedded:3.6.0'
+    implementation 'com.onesignal:OneSignal:3.12.4'
+    implementation 'com.google.zxing:core:3.3.2'
+    implementation 'com.tomer:fadingtextview:2.5'
+    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.16'
+    implementation 'com.bigkoo:alertview:1.0.3'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.0'
+    implementation('com.crashlytics.sdk.android:crashlytics:2.9.5@aar') {
+        transitive = true
+    }
+    implementation 'com.google.android.libraries.places:places:2.4.0'
+    implementation 'com.github.xujiaji:ripple-checkbox:0.0.2'
+
+}
+apply plugin: 'com.google.gms.google-services'

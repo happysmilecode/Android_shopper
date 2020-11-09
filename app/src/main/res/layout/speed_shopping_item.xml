@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingTop="8sp"
+    android:paddingBottom="8sp">
+
+    <com.xujiaji.library.RippleCheckBox
+        android:id="@+id/ic_checkbox"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        app:rcbCenterCircleColor="@color/colorAppGreen"
+        app:rcbCenterCircleRadius="12dp"
+        android:layout_marginTop="3dp"
+        app:rcbCenterCircleStrokeWidth="2dp"
+        app:rcbChecked="true"
+        app:rcbRightColor="@color/colorAppGreen"
+        app:rcbRightStrokeWidth="2dp"
+        app:rcbRippleColor="@color/colorAppGreen"
+        app:rcbRippleStrokeWidth="2dp" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toStartOf="@+id/icEdit"
+        android:layout_toEndOf="@+id/ic_checkbox"
+        android:layout_marginStart="5sp"
+        android:layout_marginEnd="5dp"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/listName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Milk"
+            android:textColor="@android:color/black"
+            android:textStyle="bold"
+            android:textSize="16sp" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/qty"
+                android:textColor="@color/colorAppBlue"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/colon"
+                android:textColor="#1C719E"/>
+            <TextView
+                android:id="@+id/quantityText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:text="4"
+                android:textColor="@color/colorAppBlue"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="@string/aisle"
+                android:textColor="#1C719E"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/colon"
+                android:textColor="#1C719E"/>
+            <TextView
+                android:id="@+id/aisleLocationText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:text="4"
+                android:textColor="#1C719E"/>
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/icDelete"
+        android:layout_width="35sp"
+        android:layout_height="35sp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:padding="3dp"
+        android:src="@mipmap/ic_delete" />
+
+    <ImageView
+        android:id="@+id/icEdit"
+        android:layout_width="35sp"
+        android:layout_height="35sp"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="10sp"
+        android:padding="3dp"
+        android:layout_toStartOf="@+id/icDelete"
+        android:src="@mipmap/ic_edit" />
+
+</RelativeLayout>
