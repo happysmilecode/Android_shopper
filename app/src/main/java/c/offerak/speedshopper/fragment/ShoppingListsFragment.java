@@ -11,15 +11,16 @@ import android.os.Bundle;
 import android.os.Handler;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.cardview.widget.CardView;
+import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.ViewModelProviders;
+
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -27,7 +28,11 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.anjlab.android.iab.v3.BillingProcessor;
+import com.anjlab.android.iab.v3.TransactionDetails;
+import com.gmail.samehadar.iosdialog.IOSDialog;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.common.ConnectionResult;
@@ -43,6 +48,8 @@ import c.offerak.speedshopper.activity.HomeScreen;
 import c.offerak.speedshopper.activity.LandingScreen;
 import c.offerak.speedshopper.activity.LoginActivity;
 import c.offerak.speedshopper.activity.SpeedShoppingActivity;
+import c.offerak.speedshopper.activity.StoreImageActivity;
+import c.offerak.speedshopper.modal.PurchaseModel;
 import c.offerak.speedshopper.modal.ShoppingListBean;
 import c.offerak.speedshopper.modal.UserBean;
 import c.offerak.speedshopper.response.GetResponse;
@@ -59,7 +66,7 @@ import retrofit2.Callback;
 import static android.app.Activity.RESULT_OK;
 import static android.view.LayoutInflater.from;
 
-public class ShoppingListsFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class ShoppingListsFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,  BillingProcessor.IBillingHandler {
 
     private static final String TAG = ShoppingListsFragment.class.getSimpleName();
     List<ShoppingListBean> listBeans = new ArrayList<>();
@@ -79,16 +86,39 @@ public class ShoppingListsFragment extends Fragment implements GoogleApiClient.C
     GifTextView right_hand;
     int i = 0;
 
+    BillingProcessor bp;
+    IOSDialog iosDialog;
+    private PurchaseModel mViewModel;
+
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_shopping_list, container, false);
         context = getActivity();
+        mViewModel = ViewModelProviders.of((FragmentActivity) context).get(PurchaseModel.class);
         init();
+        initializeBilling();
+//        initializePurchase();
         return rootView;
     }
 
+    public void initializeBilling(){
+        // intialize the billing process
+        iosDialog = new IOSDialog.Builder(context)
+                .setCancelable(false)
+                .setSpinnerClockwise(false)
+                .setMessageContentGravity(Gravity.END)
+                .build();
+        iosDialog.show();
+
+        bp = new BillingProcessor(context, mViewModel.getGooglePlayConsolLicenseKey(), this);
+        bp.initialize();
+    }
+
+    @SuppressLint("MissingPermission")
     public void init() {
+
         Log.e(TAG, "Firebase Token: " + MySharedPreference.getSharedPreferences(context, Constants.DEVICE_ID));
         getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
@@ -101,18 +131,11 @@ public class ShoppingListsFragment extends Fragment implements GoogleApiClient.C
         right_hand = rootView.findViewById(R.id.right_hand);
         tapHeader.setVisibility(View.GONE);
         fadingTextView.setVisibility(View.VISIBLE);
-        right_hand.setVisibility(View.VISIBLE);
+        right_hand.setVisibility(View.GONE);
 
         AdView adView = rootView.findViewById(R.id.ads_view1);
         AdRequest adRequest = new AdRequest.Builder().build();
         adView.loadAd(adRequest);
-
-//        Animation anim = new AlphaAnimation(0.0f, 1.0f);
-//        anim.setDuration(1000); //You can manage the time of the blink with this parameter
-//        anim.setStartOffset(200);
-//        anim.setRepeatMode(Animation.REVERSE);
-//        anim.setRepeatCount(Animation.INFINITE);
-//        ((TextView) rootView.findViewById(R.id.ctv_header)).startAnimation(anim);
 
         LandingScreen.txtTitle.setText(R.string.my_list);
         LandingScreen.history.setVisibility(View.GONE);
@@ -132,20 +155,6 @@ public class ShoppingListsFragment extends Fragment implements GoogleApiClient.C
         String[] texts = {getString(R.string.tap_the_plus_button_to_create_your_list),
                 getString(R.string.tap_the_plus_button_to_create_your_list),
                 getString(R.string.tap_the_plus_button_to_create_your_list)};
-        /*FTV = rootView.findViewById(R.id.fadingTextView);
-        FTV.setTexts(texts); //You can use an array resource or a string array as the parameter
-
-//For text change once every hour
-        FTV.setTimeout(60, MINUTES);
-
-//For text change once every half a minute
-        FTV.setTimeout(0.5, MINUTES);
-
-//For text change every 10 seconds
-        FTV.setTimeout(10, SECONDS);
-
-//For text change every 500 milliseconds (0.5 seconds)
-        FTV.setTimeout(500, MILLISECONDS);*/
 
         GoogleApiClient googleApiClient = new GoogleApiClient.Builder(getActivity())
                 .addApi(Places.GEO_DATA_API)
@@ -159,21 +168,6 @@ public class ShoppingListsFragment extends Fragment implements GoogleApiClient.C
         MySharedPreference mySharedPreference = new MySharedPreference(getActivity());
         userBean = mySharedPreference.getLoginDetails();
 
-//        homeList.setOnItemClickListener((parent, view1, position, id) -> {
-//            String storeId = listBeans.get(position).getStoreId();
-//            String listName = listBeans.get(position).getShopItem();
-//            String storeName = listBeans.get(position).getStoreName();
-//            String listID = listBeans.get(position).getId();
-//            String storeAddress = listBeans.get(position).getAddress();
-//
-//            startActivity(new Intent(getActivity(), SpeedShoppingActivity.class)
-//                    .putExtra("listName", listName)
-//                    .putExtra("storeName", storeName)
-//                    .putExtra("storeAddress", storeAddress)
-//                    .putExtra("storeId", storeId)
-//                    .putExtra("listId", listID));
-//        });
-
         icAdd.setOnClickListener(v -> {
             startActivityForResult(new Intent(getActivity(), HomeScreen.class), 3000);
         });
@@ -184,7 +178,6 @@ public class ShoppingListsFragment extends Fragment implements GoogleApiClient.C
             utils.showSnackBar(getActivity().getWindow().getDecorView().getRootView(), "You are not connected to internet!");
         }
     }
-
 
     @Override
     public void onResume() {
@@ -221,6 +214,7 @@ public class ShoppingListsFragment extends Fragment implements GoogleApiClient.C
                                         listBean.setItemCount(data.get(i).getItemCount());
                                         listBean.setId(data.get(i).getId());
                                         listBean.setStoreId(data.get(i).getStore_id());
+                                        listBean.setImageName(data.get(i).getStoreImage());
                                         listBeans.add(listBean);
                                     }
                                     adapter = new ShoppingListAdapter(getActivity(), listBeans);
@@ -249,7 +243,7 @@ public class ShoppingListsFragment extends Fragment implements GoogleApiClient.C
                                 } else {
                                     tapHeader.setVisibility(View.GONE);
                                     fadingTextView.setVisibility(View.VISIBLE);
-                                    right_hand.setVisibility(View.VISIBLE);
+                                    right_hand.setVisibility(View.GONE);
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -329,7 +323,31 @@ public class ShoppingListsFragment extends Fragment implements GoogleApiClient.C
         myQuittingDialogBox.show();
     }
 
+    private void openPurchaseDialog() {
+        final Dialog dialog = new Dialog(getActivity());
+        dialog.setContentView(R.layout.purchase_dialog);
+        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+
+        TextView btn_yes = dialog.findViewById(R.id.btn_yes);
+        TextView btn_cancel = dialog.findViewById(R.id.btn_cancel);
+        btn_yes.setOnClickListener(v -> {
+            boolean isAvailable = BillingProcessor.isIabServiceAvailable(context);
+            if(isAvailable)
+            /**
+             * IMPORTANT: when you provide a payload, internally the library prepends a string to your payload.
+             * For subscriptions, it prepends "subs:\<productId\>:", and for products, it prepends "inapp:\<productId\>:\<UUID\>:".
+             * This is important to know if you do any validation on the payload returned from Google Play after a successful purchase.
+             * */
+                bp.purchase(getActivity(), mViewModel.getPRODUCT_SKU() );
+            dialog.dismiss();
+        });
+        btn_cancel.setOnClickListener(v -> dialog.dismiss());
+        dialog.show();
+    }
+
     private void openDialog(String id, int pos) {
+
+        Log.e("Shopping ListID:", id);
 
         final Dialog dialog = new Dialog(getActivity());
         dialog.setContentView(R.layout.list_add_dialog);
@@ -422,17 +440,25 @@ public class ShoppingListsFragment extends Fragment implements GoogleApiClient.C
         } else if (requestCode == 3000 && resultCode == 2000) {
 
         }
+
+        if (!bp.handleActivityResult(requestCode, resultCode, data)) {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
     private class ShoppingListAdapter extends BaseAdapter {
 
         TextView shopItem, lineView, storeName, storeAddress, counterTextView;
         RelativeLayout counterLayout;
+        RelativeLayout cardviewContainer;
+        LinearLayout store_info_view;
         CardView cardView;
         ImageView icDelete, icEdit, arrow;
         private Context context;
         private List<ShoppingListBean> shoppingListBeans;
         private MySharedPreference mySharedPreference;
+
+//        Boolean purchased = false;
 
         ShoppingListAdapter(Context context, List<ShoppingListBean> shoppingListBeans) {
             this.context = context;
@@ -465,19 +491,28 @@ public class ShoppingListsFragment extends Fragment implements GoogleApiClient.C
             LandingScreen.txtSync.setVisibility(View.VISIBLE);
 
             convertView = from(parent.getContext()).inflate(R.layout.shopping_list_item, parent, false);
+            cardviewContainer = convertView.findViewById(R.id.parentCardView);
+            store_info_view = convertView.findViewById(R.id.store_info);
             shopItem = convertView.findViewById(R.id.listName);
             storeName = convertView.findViewById(R.id.storeName);
             storeAddress = convertView.findViewById(R.id.storeAddress);
             counterLayout = convertView.findViewById(R.id.counter_layout);
             lineView = convertView.findViewById(R.id.lineView);
             counterTextView = convertView.findViewById(R.id.counter_text_view);
-            cardView = convertView.findViewById(R.id.cardView);
+//            cardView = convertView.findViewById(R.id.cardView);
             icDelete = convertView.findViewById(R.id.icDelete);
             icEdit = convertView.findViewById(R.id.icEdit);
             arrow = convertView.findViewById(R.id.arrow);
             ShoppingListBean bean = shoppingListBeans.get(position);
             shopItem.setText(bean.getShopItem().substring(0, 1).toUpperCase() + bean.getShopItem().substring(1));
             storeName.setText(bean.getStoreName());
+            String imageName = bean.getImageName();
+            if (imageName == null) {
+                imageName = "logo_0";
+            }
+            String imageResource = "@drawable/" + imageName;
+            int imageId = getResources().getIdentifier(imageResource, "drawable", getActivity().getPackageName());
+            arrow.setImageResource(imageId);
 
             String itemCountStr = bean.getItemCount();
             Log.e(TAG, "getView: " + bean.getAddress());
@@ -494,29 +529,46 @@ public class ShoppingListsFragment extends Fragment implements GoogleApiClient.C
                 }
                 counterTextView.setText(itemCountStr);
             }
-            if (position % 2 != 0) {
-                cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.colorAppBlue));
-                icDelete.setImageResource(R.mipmap.delete);
-                icEdit.setImageResource(R.mipmap.edit);
-                lineView.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
-                shopItem.setTextColor(ContextCompat.getColor(context, R.color.white));
-                storeName.setTextColor(ContextCompat.getColor(context, R.color.white));
-                storeAddress.setTextColor(ContextCompat.getColor(context, R.color.white));
+            if (position < 3) {
+                if (position == 0) {
+                    viewUpdate(1);
+                } else if(position == 1) {
+                    viewUpdate(2);
+                } else {
+                    viewUpdate(3);
+                }
             } else {
-                cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.white));
-                icDelete.setImageResource(R.mipmap.delete_g);
-                icEdit.setImageResource(R.mipmap.edit_g);
-                lineView.setBackgroundColor(ContextCompat.getColor(context, R.color.black));
-                shopItem.setTextColor(ContextCompat.getColor(context, R.color.black));
-                storeName.setTextColor(ContextCompat.getColor(context, R.color.black));
-                storeAddress.setTextColor(ContextCompat.getColor(context, R.color.black));
+                if (position % 3 == 0) {
+                    cardviewContainer.setBackgroundResource(R.drawable.glossybox1);
+                } else if (position % 3 == 1){
+                    cardviewContainer.setBackgroundResource(R.drawable.glossybox2blue);
+                } else {
+                    cardviewContainer.setBackgroundResource(R.drawable.glossybox3yellow);
+                }
             }
 
             icDelete.setOnClickListener(new onclick(position));
             icEdit.setOnClickListener(new onclick(position));
-            arrow.setOnClickListener(new View.OnClickListener() {
+            store_info_view.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View v) {
+                public void onClick(View view) {
+                    String storeId = bean.getStoreId();
+                    String listName = bean.getShopItem();
+                    String storeName = bean.getStoreName();
+                    String listID = bean.getId();
+                    String storeAddress = bean.getAddress();
+
+                    startActivity(new Intent(getActivity(), SpeedShoppingActivity.class)
+                            .putExtra("listName", listName)
+                            .putExtra("storeName", storeName)
+                            .putExtra("storeAddress", storeAddress)
+                            .putExtra("storeId", storeId)
+                            .putExtra("listId", listID));
+                }
+            });
+            counterLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
                     String storeId = bean.getStoreId();
                     String listName = bean.getShopItem();
                     String storeName = bean.getStoreName();
@@ -532,6 +584,34 @@ public class ShoppingListsFragment extends Fragment implements GoogleApiClient.C
                 }
             });
 
+            arrow.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    if (mySharedPreference.getPurchased(context, "STORE_LOGO")) {
+                        String storeId = bean.getStoreId();
+                        String listName = bean.getShopItem();
+                        String storeName = bean.getStoreName();
+                        String listID = bean.getId();
+                        String storeAddress = bean.getAddress();
+                        String storeImage = bean.getImageName();
+
+                        Log.e("Shopping List ID:", listID);
+
+                        startActivity(new Intent(getActivity(), StoreImageActivity.class)
+                                .putExtra("listName", listName)
+                                .putExtra("storeName", storeName)
+                                .putExtra("storeAddress", storeAddress)
+                                .putExtra("storeId", storeId)
+                                .putExtra("listId", listID)
+                                .putExtra("storeImage", storeImage));
+                        getActivity().finish();
+                    } else {
+                        openPurchaseDialog();
+                    }
+                }
+            });
+
             LandingScreen.txtSync.setOnClickListener(v -> {
                 if (utils.isNetworkConnected(getActivity())) {
                     listSetupShoppingListsFragment();
@@ -540,6 +620,16 @@ public class ShoppingListsFragment extends Fragment implements GoogleApiClient.C
                 }
             });
             return convertView;
+        }
+
+        public void viewUpdate (int i) {
+            if (i == 1) {
+                cardviewContainer.setBackgroundResource(R.drawable.glossybox1);
+            } else if (i == 2) {
+                cardviewContainer.setBackgroundResource(R.drawable.glossybox2blue);
+            } else {
+                cardviewContainer.setBackgroundResource(R.drawable.glossybox3yellow);
+            }
         }
     }
 
@@ -561,7 +651,62 @@ public class ShoppingListsFragment extends Fragment implements GoogleApiClient.C
                 case R.id.icEdit:
                     openDialog(id, pos);
                     break;
+
             }
         }
     }
+
+    @Override
+    public void onProductPurchased(String productId, TransactionDetails details) {
+        /**
+         * Called when requested PRODUCT ID was successfully purchased
+         */
+        MySharedPreference.setPurchased(context, "STORE_LOGO",true);
+        //always consume made purchase and allow to buy same product multiple times
+        bp.consumePurchase(mViewModel.getPRODUCT_SKU());
+
+        showSuccessPurchase();
+    }
+
+    @Override
+    public void onPurchaseHistoryRestored() {
+
+    }
+
+    @Override
+    public void onBillingError(int errorCode, Throwable error) {
+
+    }
+
+    @Override
+    public void onBillingInitialized() {
+
+        if(bp.loadOwnedPurchasesFromGoogle()){
+            // check user is already subscribe or not
+            if(bp.isPurchased(mViewModel.getPRODUCT_SKU())){
+                /** if already subscribe then we will change the static variable
+                 * and call billingrpocessor release() method.
+                 * */
+                MySharedPreference.setPurchased(context, "STORE_LOGO",true);
+                bp.release();
+                iosDialog.cancel();
+            }
+            else {
+                MySharedPreference.setPurchased(context, "STORE_LOGO",false);
+                iosDialog.cancel();
+            }
+        }
+
+    }
+
+    private void showSuccessPurchase(){
+//        new KAlertDialog(context, KAlertDialog.SUCCESS_TYPE)
+//                .setTitleText("Congratulations!")
+//                .setContentText("Purchase Successfully made! You can add the logos in your shopping list!")
+//                .show();
+        Toast.makeText(context, " You have already purchased the Logos", Toast.LENGTH_LONG).show();
+        startActivity(new Intent(getActivity(), StoreImageActivity.class));
+
+    }
+
 }

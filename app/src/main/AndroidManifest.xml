@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="c.offerak.speedshopper">
 
+    <uses-permission android:name="com.android.vending.BILLING" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -11,11 +12,6 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-
-    <!--<uses-permission android:name="android.permission.SEND_SMS" />-->
-<!--    <uses-sdk-->
-<!--        android:minSdkVersion="17"-->
-<!--        tools:overrideLibrary="com.google.zxing.client.android" />-->
 
     <application
         android:allowBackup="true"
@@ -40,7 +36,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity android:name=".activity.DeepLinkActivity" />
         <activity
             android:name=".activity.LoginActivity"
@@ -54,10 +49,8 @@
                 <data
                     android:host="login"
                     android:scheme="speed-shopper" />
-                <!--
-                    android:pathPattern="/offer_detail.php"
-                   -->
-                <!--stnapp://login-->
+                <!--                     android:pathPattern="/offer_detail.php" -->
+                <!-- stnapp://login -->
             </intent-filter>
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
@@ -103,27 +96,25 @@
         <activity
             android:name=".activity.TransactionHistoryActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".activity.FAQ_Details"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".activity.StoreProduct"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".activity.ProductDetailsActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".activity.NotificationActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.StoreImageActivity"
+            android:screenOrientation="portrait"/>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
-
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
@@ -144,16 +135,12 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".activity.LandingScreen" />
-
-        <!-- Firebase Notifications -->
+        <activity android:name=".activity.LandingScreen" /> <!-- Firebase Notifications -->
         <service android:name=".services.MyFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-
         <service android:name=".services.MyFirebaseInstanceIDService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
@@ -163,7 +150,6 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="65bc72d5d854e2a57781814314f67852e6582055" />
-
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="@string/app_id" />
@@ -179,6 +165,6 @@
         </provider>
 
         <activity android:name="com.soundcloud.android.crop.CropImageActivity" />
-
     </application>
+
 </manifest>

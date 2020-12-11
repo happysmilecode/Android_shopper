@@ -43,20 +43,21 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/tapHeader"
+        android:background="@drawable/listbackground"
         android:divider="@android:color/transparent" />
 
     <TextView
         android:id="@+id/fadingTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/right_hand"
-        android:layout_gravity="center"
+        android:layout_below="@+id/tapHeader"
+        android:layout_marginTop="40dp"
         android:gravity="center"
         android:text="@string/tap_the_plus_button_to_create_your_list"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         android:textSize="20dp"
         android:textStyle="bold"
-        android:visibility="gone" />
+        android:visibility="visible" />
 
     <pl.droidsonroids.gif.GifTextView
         android:id="@+id/right_hand"
@@ -77,6 +78,6 @@
         android:layout_alignParentEnd="true"
         android:layout_marginBottom="40dp"
         android:layout_marginEnd="21dp"
-        android:src="@drawable/plus_icon" />
+        android:src="@drawable/plusblue" />
 
 </RelativeLayout>

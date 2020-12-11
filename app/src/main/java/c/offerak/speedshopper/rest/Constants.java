@@ -3,9 +3,9 @@ package c.offerak.speedshopper.rest;
 public class Constants {
 
     //server
-//    public static final String BASE_URL ="https://infograins.in/INFO01/SSTX/api/";
+//    public static final String BASE_URL ="http://localhost/api/";
     public static final String BASE_URL ="https://www.speedshopperapp.com/app/api/";
-    //public static final String BASE_URL ="https://www.speedshopperapp.com/app_sandbox/api/";
+//    public static final String BASE_URL ="https://www.speedshopperapp.com/app_sandbox/api/";
 
     //local
 //    public static final String BASE_URL = "http://192.168.1.137/SSTX/api/";
@@ -25,6 +25,7 @@ public class Constants {
     public static final String SHOPPING_LIST_ITEM_URL = "shopping/shoppingListItem/{token}";
     public static final String SHOPPING_LIST_URL = "shopping/shoppingList/{token}";
     public static final String ADD_SHOPPING_LIST_URL = "shopping/addShoppingList/{token}";
+
     public static final String ADD_ITEM_TO_SHOPPING_LIST_URL = "shopping/addItemToShoppingListNew/{token}";
     public static final String REMOVE_SHOPPING_LIST_URL = "shopping/removeShoppingList/{token}";
     public static final String REMOVE_ALL_ITEM_URL = "shopping/removeAllItem/{token}";
@@ -34,6 +35,7 @@ public class Constants {
     public static final String ADD_ITEM_LOCATION_URL = "shopping/addItemLocation/{token}";
     public static final String IMPORT_ITEM_URL = "shopping/importItem/{token}";
     public static final String UPDATE_SHOPPING_LIST_NAME_URL = "shopping/updateShoppingListName/{token}";
+    public static final String UPDATE_SHOPPING_LIST_LOGO_URL = "shopping/updateShoppingListLogo/{token}";
     public static final String ADD_URL = "store/add/{token}";
     public static final String LOCATIONS_URL = "shopping/locations/{token}";
     public static final String GET_WALLET_URL = "wallet/getWallet/{token}";
@@ -49,6 +51,8 @@ public class Constants {
     public static final String ADVERTISEMENT_INCREASE_CLICK_COUNT_URL = "speed_shopper_market/advertisement_increase_click_count/{token}";
     public static final String NOTIFICATIONS_URL = "common/notifications/{token}";
     public static final String NOTIFICATION_PAGE_NUMBER_URL = "/{page_number}";
+    public static final String MESSAGES_URL = "common/messages/{token}";
+    public static final String MESSAGES_PAGE_NUMBER_URL = "/{page_number}";
 
     public static final String PRIVACY_POLICY_URL="https://www.speedshopperapp.com/app/privacy-policies";
     public static final String TERMS_CONDITION_URL="https://www.speedshopperapp.com/app/terms-and-conditions";
@@ -94,4 +98,7 @@ public class Constants {
     public static final String EVENT_CHECK = "event_check";
     public static final String IMPORT_SHOPPING_LIST_ID = "import_shopping_list_id";
     public static final String CUR_SHOPPING_LIST_ID = "cur_shopping_list_id";
+
+    public static final String IMAGE = "image";
+    public static final Boolean purchased = false;
 }

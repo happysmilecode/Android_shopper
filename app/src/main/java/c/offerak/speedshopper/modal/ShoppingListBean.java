@@ -9,6 +9,7 @@ public class ShoppingListBean {
     private String address;
     private String storeId;
     private String itemCount;
+    private String imageName;
 
     public String getStoreId() {
 
@@ -17,6 +18,14 @@ public class ShoppingListBean {
 
     public void setStoreId(String storeId) {
         this.storeId = storeId;
+    }
+
+    public String getImageName() {
+        return imageName;
+    }
+
+    public void setImageName(String imageName) {
+        this.imageName = imageName;
     }
 
     public String getAddress() {

@@ -48,6 +48,7 @@
     <string name="no_products_available">No Products Available</string>
     <string name="no_stores_available">No Stores Available</string>
     <string name="no_notifications_available">No Notifications Available</string>
+    <string name="no_messages_available">No Messages Available</string>
     <string name="no_transaction_available">No Transaction History Available</string>
     <string name="no_coupons_available">No Codes Available</string>
     <string name="speech_not_supported">Speech not supported</string>
@@ -148,6 +149,9 @@
     <string name="app_id">ca-app-pub-1558394739169751~2076464822</string>
     <string name="banner_id">ca-app-pub-1558394739169751/9069851223</string>
     <string name="interstitial_id">ca-app-pub-1558394739169751/2424240135</string>
+    <string name="purchase_head">Purchase</string>
+    <string name="purchase_detail">You have to puchase the shopping list logo.  Are you sure you want to purchase the logos?</string>
+    <string name="reply_description">OUR REPLIES WILL APPEAR BELOW</string>
 
     <string-array name="radius">
         <item>5 Miles</item>

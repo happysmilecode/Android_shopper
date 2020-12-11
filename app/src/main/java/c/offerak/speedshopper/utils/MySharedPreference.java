@@ -16,6 +16,20 @@ public class MySharedPreference {
         this.mContext = context;
     }
 
+    public static void setPurchased(Context context, String name, Boolean purchased) {
+        mcontext = context;
+        SharedPreferences settings = context.getSharedPreferences(PREFERENCE, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putBoolean(name, purchased);
+        editor.apply();
+    }
+
+    public Boolean getPurchased(Context context, String name) {
+        mcontext = context;
+        SharedPreferences settings = context.getSharedPreferences(PREFERENCE, 0);
+        return settings.getBoolean(name, false);
+    }
+
     public static void setSharedPreference(Context context, String name, String value) {
         mcontext = context;
         SharedPreferences settings = context.getSharedPreferences(PREFERENCE, 0);
@@ -29,6 +43,7 @@ public class MySharedPreference {
         SharedPreferences settings = context.getSharedPreferences(PREFERENCE, 0);
         return settings.getString(name, "");
     }
+
 
     public void setLoginDetails(String email, String name, String proPic, String token, String id, String flow) {
         SharedPreferences sharedPreferences = mContext.getSharedPreferences(myPref, Context.MODE_PRIVATE);

@@ -10,6 +10,7 @@ import c.offerak.speedshopper.response.GetShoppingListResponse;
 import c.offerak.speedshopper.response.ListItemResponse;
 import c.offerak.speedshopper.response.LoginResponse;
 import c.offerak.speedshopper.response.MarketListResponse;
+import c.offerak.speedshopper.response.MessageListResponse;
 import c.offerak.speedshopper.response.NotificationListRespose;
 import c.offerak.speedshopper.response.ProductListResponse;
 import c.offerak.speedshopper.response.ProfileResponse;
@@ -99,7 +100,10 @@ public interface ApiInterface {
     @FormUrlEncoded
     Call<GetResponse> addShoppingList(@Path(Constants.TOKEN) String token,
                                       @Field(Constants.STORE_ID) String storeId,
-                                      @Field(Constants.NAME) String listName);
+                                      @Field(Constants.NAME) String listName,
+                                      @Field(Constants.IMAGE) String imageName
+
+    );
 
     @POST(Constants.ADD_ITEM_TO_SHOPPING_LIST_URL)
     @FormUrlEncoded
@@ -157,6 +161,12 @@ public interface ApiInterface {
     Call<GetResponse> updateShoppingListName(@Path(Constants.TOKEN) String token,
                                              @Field(Constants.LIST_ID) String listId,
                                              @Field(Constants.NAME) String name);
+
+    @POST(Constants.UPDATE_SHOPPING_LIST_LOGO_URL)
+    @FormUrlEncoded
+    Call<GetResponse> updateShoppingListImage(@Path(Constants.TOKEN) String token,
+                                              @Field(Constants.LIST_ID) String listId,
+                                              @Field(Constants.IMAGE) String imageId);
 
     @POST(Constants.FACEBOOK_LOGIN_URL)
     @FormUrlEncoded
@@ -237,6 +247,10 @@ public interface ApiInterface {
     @GET(Constants.NOTIFICATIONS_URL + Constants.NOTIFICATION_PAGE_NUMBER_URL)
     Call<NotificationListRespose> getNotificationsList(@Path(Constants.TOKEN) String token,
                                                        @Path(Constants.PAGE_NUMBER) String page_number);
+
+    @GET(Constants.MESSAGES_URL + Constants.MESSAGES_PAGE_NUMBER_URL)
+    Call<MessageListResponse> getMessagesList(@Path(Constants.TOKEN) String token,
+                                                   @Path(Constants.PAGE_NUMBER) String page_number);
 
 }
 

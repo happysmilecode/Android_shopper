@@ -271,10 +271,10 @@ public class HomeScreen extends AppCompatActivity implements LocationListener,
         }
     }
 
-    public void addListToServer(String listName, String storeId) {
+    public void addListToServer(String listName, String storeId, String imgName) {
         utils.showDialog(context);
         if (utils.isNetworkConnected(context)) {
-            Call<GetResponse> call = apiService.addShoppingList(userBean.getUserToken(), storeId, listName);
+            Call<GetResponse> call = apiService.addShoppingList(userBean.getUserToken(), storeId, listName, imgName);
             call.enqueue(new Callback<GetResponse>() {
                 @Override
                 public void onResponse(Call<GetResponse> call, retrofit2.Response<GetResponse> response) {

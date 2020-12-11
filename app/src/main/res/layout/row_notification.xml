@@ -38,7 +38,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:textStyle="italic"
-                android:textColor="@color/grey_500"
+                android:textColor="@color/grey_700"
                 android:textSize="10dp" />
         </RelativeLayout>
 
@@ -48,7 +48,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:textStyle="italic"
-            android:textColor="@color/grey_500"
+            android:textColor="@color/black"
             android:textSize="12dp" />
 
         <TextView
@@ -57,7 +57,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:textStyle="italic"
-            android:textColor="@color/grey_500"
+            android:textColor="@color/black"
             android:textSize="10dp"
             android:autoLink="all"
             android:linksClickable="true"/>

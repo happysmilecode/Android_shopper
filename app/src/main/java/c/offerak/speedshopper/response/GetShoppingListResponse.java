@@ -52,6 +52,14 @@ public class GetShoppingListResponse {
         private String store_id;
         private String address;
         private String item_count;
+        private String image;
+
+        public String getStoreImage() {
+            return image;
+        }
+        public void setStoreImage(String image) {
+            this.image = image;
+        }
 
         public String getStore_id() {
             return store_id;

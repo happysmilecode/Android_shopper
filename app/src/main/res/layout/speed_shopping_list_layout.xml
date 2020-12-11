@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     android:id="@+id/myRel"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,12 +10,21 @@
     <include
         android:id="@+id/headerView"
         layout="@layout/header_layout" />
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/ads_view"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/headerView"
+        ads:adSize="BANNER"
+        ads:adUnitId="@string/banner_id"
+        />
 
     <RelativeLayout
         android:id="@+id/upperRelative"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/headerView"
+        android:layout_below="@+id/ads_view"
         android:background="#10000000"
         android:paddingStart="10sp"
         android:paddingEnd="10sp"
@@ -31,7 +41,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/grocery_store"
                 android:textColor="@color/colorAppBlue"
-                android:textSize="12sp"
+                android:textSize="13sp"
                 android:paddingStart="3dp"
                 android:textStyle="bold"
                 android:layout_centerVertical="true"
@@ -52,18 +62,18 @@
                     android:paddingStart="5sp"
                     android:paddingTop="0sp"
                     android:textColor="@color/colorAppBlue"
-                    android:textSize="11sp"
+                    android:textSize="12sp"
                     android:text="Dmart Indore"
                     tools:ignore="RtlSymmetry,SmallSp" />
 
-                <TextView
-                    android:id="@+id/addText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="5sp"
-                    android:text="@string/address_unnamed_road_sector_a_gumasta_nagar_scheme_71_indore_madhya_pradesh_452002"
-                    android:textColor="@color/black"
-                    android:textSize="12sp"/>
+<!--                <TextView-->
+<!--                    android:id="@+id/addText"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:padding="5sp"-->
+<!--                    android:text="@string/address_unnamed_road_sector_a_gumasta_nagar_scheme_71_indore_madhya_pradesh_452002"-->
+<!--                    android:textColor="@color/black"-->
+<!--                    android:textSize="12sp"/>-->
             </LinearLayout>
             <ImageView
                 android:id="@+id/importItem"

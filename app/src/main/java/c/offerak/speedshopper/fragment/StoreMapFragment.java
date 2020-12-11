@@ -128,7 +128,7 @@ public class StoreMapFragment extends Fragment implements OnMapReadyCallback {
                         .putExtra("storeAddress", storeAddress)
                         .putExtra("storeName", storeName));
 
-                showDialogStoreList(storeName, storeId);
+                showDialogStoreList(storeName, storeId, "logo_0");
 //                getActivity().finish();
             });
         });
@@ -176,7 +176,7 @@ public class StoreMapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     //----------------------- Store Dialog List -----------------------
-    public void showDialogStoreList(String storeName, String storeId) {
+    public void showDialogStoreList(String storeName, String storeId, String imageName) {
         final Dialog dialog = new Dialog(getActivity());
         dialog.setContentView(R.layout.list_add_dialog);
         Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
@@ -194,7 +194,7 @@ public class StoreMapFragment extends Fragment implements OnMapReadyCallback {
             String listName = inputE.getText().toString();
             if (!listName.equals("")) {
                 dialog.dismiss();
-                ((HomeScreen) getActivity()).addListToServer(listName, storeId);
+                ((HomeScreen) getActivity()).addListToServer(listName, storeId, imageName);
             } else {
                 utils.showSnackBar(getActivity().getWindow().getDecorView().getRootView(), "Please enter the list name!");
             }

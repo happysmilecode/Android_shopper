@@ -6,7 +6,7 @@ buildscript {
 
     dependencies {
         classpath 'io.fabric.tools:gradle:1.31.2'
-        classpath 'gradle.plugin.com.onesignal:onesignal-gradle-plugin:0.12.6'
+        classpath 'gradle.plugin.com.onesignal:onesignal-gradle-plugin:0.12.8'
     }
 }
 apply plugin: 'com.onesignal.androidsdk.onesignal-gradle-plugin'
@@ -35,7 +35,7 @@ android {
         config {
             keyAlias 'speedshopper'
             keyPassword '123456789'
-            storeFile file('C:/Users/JA-3/Downloads/wcmediallc-speedshopper_android-d7fe46317d20/keystore/speedshopper.jks')
+            storeFile file('/Volumes/WORK/SpeedShopper/speedshopper_android2/keystore/speedshopper.jks')
             storePassword '123456789'
         }
     }
@@ -46,8 +46,8 @@ android {
         targetSdkVersion 30
         /*versionCode 4
         versionName "1.0.2"*/
-        versionCode 51
-        versionName "2.4.3"
+        versionCode 55
+        versionName "2.4.6"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         setProperty("archivesBaseName", "SpeedShopper-$versionName")
         manifestPlaceholders = [
@@ -80,17 +80,20 @@ android {
 }
 
 dependencies {
+    def billing_version = "3.0.0"
+//    def billing_version = "1.1"
+
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     //noinspection GradleCompatible
     androidTestImplementation 'androidx.test:runner:1.3.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.2'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     testImplementation 'junit:junit:4.13'
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'com.squareup.retrofit2:retrofit:2.5.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
-    implementation 'com.squareup.okhttp3:logging-interceptor:3.12.1'
-    implementation 'com.squareup.okhttp3:okhttp:3.12.1'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.2.0'
+    implementation 'com.squareup.okhttp3:okhttp:4.2.0'
     implementation 'com.jakewharton:butterknife:10.2.3'
     implementation 'de.hdodenhof:circleimageview:3.1.0'
     implementation 'androidx.cardview:cardview:1.0.0'
@@ -106,19 +109,24 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:17.1.0'
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
     implementation 'com.google.android.gms:play-services-places:17.0.0'
-    implementation 'com.google.android.gms:play-services-ads:19.4.0'
-    implementation 'com.google.android.gms:play-services-auth:18.1.0'
+    implementation 'com.google.android.gms:play-services-ads:19.5.0'
+    implementation 'com.google.android.gms:play-services-auth:19.0.0'
     implementation 'com.google.maps.android:android-maps-utils:0.4.4'
-    implementation 'com.google.firebase:firebase-messaging:20.3.0'
-    implementation 'com.google.firebase:firebase-core:17.5.1'
+    implementation 'com.google.firebase:firebase-messaging:21.0.0'
+    implementation 'com.google.firebase:firebase-core:18.0.0'
     implementation 'com.journeyapps:zxing-android-embedded:3.6.0'
-    implementation 'com.onesignal:OneSignal:3.12.4'
-    implementation 'com.google.zxing:core:3.3.2'
+    implementation 'com.onesignal:OneSignal:3.13.0'
+    implementation 'com.google.zxing:core:3.3.3'
     implementation 'com.tomer:fadingtextview:2.5'
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.16'
     implementation 'com.bigkoo:alertview:1.0.3'
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.0'
-    implementation('com.crashlytics.sdk.android:crashlytics:2.9.5@aar') {
+    implementation 'com.anjlab.android.iab.v3:library:1.1.0'
+    implementation 'com.gmail.samehadar:iosdialog:1.0'
+//    //Alert Dialog
+//    implementation 'com.github.TutorialsAndroid:KAlertDialog:v9.0.19'
+
+    implementation('com.crashlytics.sdk.android:crashlytics:2.10.1@aar') {
         transitive = true
     }
     implementation 'com.google.android.libraries.places:places:2.4.0'

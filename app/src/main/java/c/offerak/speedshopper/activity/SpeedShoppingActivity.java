@@ -41,6 +41,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
 import com.xujiaji.library.RippleCheckBox;
 
@@ -132,7 +133,7 @@ public class SpeedShoppingActivity extends AppCompatActivity implements View.OnC
         emptyView = findViewById(R.id.empty_view);
         storeListTitle = findViewById(R.id.storeListTitle);
         storeNameTitle = findViewById(R.id.storeNameTitle);
-        storeAddress = findViewById(R.id.addText);
+//        storeAddress = findViewById(R.id.addText);
 //        storeLogo = findViewById(R.id.icStoreLogo);
         icAddCategory = findViewById(R.id.icAddCategory);
         edtUserName = findViewById(R.id.edtUserName);
@@ -161,7 +162,7 @@ public class SpeedShoppingActivity extends AppCompatActivity implements View.OnC
 
         storeListTitle.setText(intent.getStringExtra("listName"));
         storeNameTitle.setText(intent.getStringExtra("storeName"));
-        storeAddress.setText(intent.getStringExtra("storeAddress"));
+//        storeAddress.setText(intent.getStringExtra("storeAddress"));
         storeId = intent.getStringExtra("storeId");
         if (intent.hasExtra("storeId")) {
             storeId = intent.getStringExtra("storeId");
@@ -232,6 +233,9 @@ public class SpeedShoppingActivity extends AppCompatActivity implements View.OnC
             }
 
         });
+        AdView adView = findViewById(R.id.ads_view);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        adView.loadAd(adRequest);
 
     }
 

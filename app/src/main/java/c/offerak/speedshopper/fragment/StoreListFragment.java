@@ -135,7 +135,7 @@ public class StoreListFragment extends Fragment {
                                 .putExtra("storeLogo", storeLogo)
                                 .putExtra("storeAddress", storeAddress)
                                 .putExtra("storeName", storeName));
-                        showDialogStoreList(storeName, storeId);
+                        showDialogStoreList(storeName, storeId, "logo_0");
 //                        getActivity().finish();
                     }
 
@@ -195,7 +195,7 @@ public class StoreListFragment extends Fragment {
     }
 
     //----------------------- Store Dialog List -----------------------
-    public void showDialogStoreList(String storeName, String storeId) {
+    public void showDialogStoreList(String storeName, String storeId, String imageName) {
         final Dialog dialog = new Dialog(getActivity());
         dialog.setContentView(R.layout.list_add_dialog);
 
@@ -214,7 +214,7 @@ public class StoreListFragment extends Fragment {
             String listName = inputE.getText().toString();
             if (!listName.equals("")) {
                 dialog.dismiss();
-                ((HomeScreen) getActivity()).addListToServer(listName, storeId);
+                ((HomeScreen) getActivity()).addListToServer(listName, storeId, imageName);
             } else {
                 utils.showSnackBar(getActivity().getWindow().getDecorView().getRootView(), "Please enter the list name!");
             }
@@ -299,10 +299,10 @@ public class StoreListFragment extends Fragment {
                                         listSetup();
                                         getActivity().setResult(RESULT_OK, new Intent()
                                                 .putExtra("storeId", dataBean.getId())
-                                                .putExtra("storeLogo", "")
+                                                .putExtra("storeLogo", dataBean.getLogo())
                                                 .putExtra("storeAddress", dataBean.getAddress())
                                                 .putExtra("storeName", dataBean.getName()));
-                                        showDialogStoreList(dataBean.getName(), dataBean.getId());
+                                        showDialogStoreList(dataBean.getName(), dataBean.getId(), "logo_0");
 //                                        getActivity().finish();
                                     }
                                 }
