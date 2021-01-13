@@ -32,6 +32,7 @@ import android.widget.Toast;
 
 import com.anjlab.android.iab.v3.BillingProcessor;
 import com.anjlab.android.iab.v3.TransactionDetails;
+import com.bumptech.glide.Glide;
 import com.gmail.samehadar.iosdialog.IOSDialog;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -105,12 +106,12 @@ public class ShoppingListsFragment extends Fragment implements GoogleApiClient.C
 
     public void initializeBilling(){
         // intialize the billing process
-        iosDialog = new IOSDialog.Builder(context)
-                .setCancelable(false)
-                .setSpinnerClockwise(false)
-                .setMessageContentGravity(Gravity.END)
-                .build();
-        iosDialog.show();
+//        iosDialog = new IOSDialog.Builder(context)
+//                .setCancelable(false)
+//                .setSpinnerClockwise(false)
+//                .setMessageContentGravity(Gravity.END)
+//                .build();
+//        iosDialog.show();
 
         bp = new BillingProcessor(context, mViewModel.getGooglePlayConsolLicenseKey(), this);
         bp.initialize();
@@ -507,12 +508,17 @@ public class ShoppingListsFragment extends Fragment implements GoogleApiClient.C
             shopItem.setText(bean.getShopItem().substring(0, 1).toUpperCase() + bean.getShopItem().substring(1));
             storeName.setText(bean.getStoreName());
             String imageName = bean.getImageName();
+
             if (imageName == null) {
                 imageName = "logo_0";
             }
-            String imageResource = "@drawable/" + imageName;
-            int imageId = getResources().getIdentifier(imageResource, "drawable", getActivity().getPackageName());
-            arrow.setImageResource(imageId);
+            Glide.with(context)
+                    .load(Constants.IMAGE_URL + imageName)
+                    .into(arrow);
+
+//            String imageResource = "@drawable/" + imageName;
+//            int imageId = getResources().getIdentifier(imageResource, "drawable", getActivity().getPackageName());
+//            arrow.setImageResource(imageId);
 
             String itemCountStr = bean.getItemCount();
             Log.e(TAG, "getView: " + bean.getAddress());
@@ -588,6 +594,23 @@ public class ShoppingListsFragment extends Fragment implements GoogleApiClient.C
 
                 @Override
                 public void onClick(View v) {
+//                    String storeId = bean.getStoreId();
+//                    String listName = bean.getShopItem();
+//                    String storeName = bean.getStoreName();
+//                    String listID = bean.getId();
+//                    String storeAddress = bean.getAddress();
+//                    String storeImage = bean.getImageName();
+//
+//                    Log.e("Shopping List ID:", listID);
+//
+//                    startActivity(new Intent(getActivity(), StoreImageActivity.class)
+//                            .putExtra("listName", listName)
+//                            .putExtra("storeName", storeName)
+//                            .putExtra("storeAddress", storeAddress)
+//                            .putExtra("storeId", storeId)
+//                            .putExtra("listId", listID)
+//                            .putExtra("storeImage", storeImage));
+//                    getActivity().finish();
                     if (mySharedPreference.getPurchased(context, "STORE_LOGO")) {
                         String storeId = bean.getStoreId();
                         String listName = bean.getShopItem();
@@ -689,11 +712,11 @@ public class ShoppingListsFragment extends Fragment implements GoogleApiClient.C
                  * */
                 MySharedPreference.setPurchased(context, "STORE_LOGO",true);
                 bp.release();
-                iosDialog.cancel();
+//                iosDialog.cancel();
             }
             else {
                 MySharedPreference.setPurchased(context, "STORE_LOGO",false);
-                iosDialog.cancel();
+//                iosDialog.cancel();
             }
         }
 

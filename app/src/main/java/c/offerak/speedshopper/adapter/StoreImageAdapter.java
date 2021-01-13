@@ -10,16 +10,25 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import c.offerak.speedshopper.R;
+import c.offerak.speedshopper.modal.Images;
+import c.offerak.speedshopper.modal.Message;
+import c.offerak.speedshopper.response.StoreImageListResponse;
+import c.offerak.speedshopper.rest.Constants;
 
 public class StoreImageAdapter extends RecyclerView.Adapter<StoreImageAdapter.ViewHolder> {
 
     private Context mContext;
 
-    String[] imageCodeArray;
-    public StoreImageAdapter(Context mContext, String[] imageCodeArray) {
+    List<Images> imageList = new ArrayList<>();
+    public StoreImageAdapter(Context mContext, List<Images> imageList) {
         this.mContext = mContext;
-        this.imageCodeArray = imageCodeArray;
+        this.imageList = imageList;
 
     }
 
@@ -46,13 +55,16 @@ public class StoreImageAdapter extends RecyclerView.Adapter<StoreImageAdapter.Vi
 
     @Override
     public void onBindViewHolder(@NonNull StoreImageAdapter.ViewHolder holder, int position) {
-        int imageId = getResourseId(mContext, imageCodeArray[position], "drawable", mContext.getPackageName());
-        holder.imgLogo.setImageResource(imageId);
+        Glide.with(mContext)
+                .load(Constants.IMAGE_URL + imageList.get(position).getName())
+                .into(holder.imgLogo);
+//        int imageId = getResourseId(mContext, imageList.get(position).getName(), "drawable", mContext.getPackageName());
+//        holder.imgLogo.setImageResource(imageId);
     }
 
     @Override
     public int getItemCount() {
-        return imageCodeArray.length;
+        return imageList.size();
     }
     public static int getResourseId(Context context, String pVariableName, String pResourcename, String pPackageName) throws RuntimeException {
         try {

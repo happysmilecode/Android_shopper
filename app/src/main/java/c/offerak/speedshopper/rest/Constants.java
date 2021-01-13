@@ -7,6 +7,8 @@ public class Constants {
     public static final String BASE_URL ="https://www.speedshopperapp.com/app/api/";
 //    public static final String BASE_URL ="https://www.speedshopperapp.com/app_sandbox/api/";
 
+    public static final String IMAGE_URL = "https://www.speedshopperapp.com/app/public/store_images/";
+
     //local
 //    public static final String BASE_URL = "http://192.168.1.137/SSTX/api/";
 //    public static final String BASE_URL = "http://192.168.1.120/SSTX/api/";
@@ -53,6 +55,8 @@ public class Constants {
     public static final String NOTIFICATION_PAGE_NUMBER_URL = "/{page_number}";
     public static final String MESSAGES_URL = "common/messages/{token}";
     public static final String MESSAGES_PAGE_NUMBER_URL = "/{page_number}";
+    public static final String STOREIMAGE_PAGE_NUMBER_URL = "/{page_number}";
+    public static final String STOREIMAGE_URL = "common/logos/{token}";
 
     public static final String PRIVACY_POLICY_URL="https://www.speedshopperapp.com/app/privacy-policies";
     public static final String TERMS_CONDITION_URL="https://www.speedshopperapp.com/app/terms-and-conditions";

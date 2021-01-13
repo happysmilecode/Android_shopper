@@ -56,6 +56,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
+import com.google.firebase.installations.FirebaseInstallations;
 
 import org.json.JSONObject;
 
@@ -185,10 +186,15 @@ public class LoginActivity extends AppCompatActivity implements FacebookCallback
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail().build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener( LoginActivity.this, instanceIdResult -> {
-            String newToken = instanceIdResult.getToken();
-            MySharedPreference.setSharedPreference(context, Constants.FIREBASE_TOKEN, newToken);
+//        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener( LoginActivity.this, instanceIdResult -> {
+//            String newToken = instanceIdResult.getToken();
+//            MySharedPreference.setSharedPreference(context, Constants.FIREBASE_TOKEN, newToken);
+//
+//        });
 
+        FirebaseInstallations.getInstance().getToken(true).addOnSuccessListener(LoginActivity.this, installationTokenResult -> {
+            String newToken = installationTokenResult.getToken();
+            MySharedPreference.setSharedPreference(context, Constants.FIREBASE_TOKEN, newToken);
         });
 
     }

@@ -17,6 +17,7 @@ import c.offerak.speedshopper.response.ProfileResponse;
 import c.offerak.speedshopper.response.ShoppingListAddItemResponse;
 import c.offerak.speedshopper.response.SignupResponse;
 import c.offerak.speedshopper.response.SpeedAvailableItemResponse;
+import c.offerak.speedshopper.response.StoreImageListResponse;
 import c.offerak.speedshopper.response.StoreListResponse;
 import c.offerak.speedshopper.response.TransactionHistoryResponse;
 import c.offerak.speedshopper.response.UpdateProfileResponse;
@@ -251,6 +252,10 @@ public interface ApiInterface {
     @GET(Constants.MESSAGES_URL + Constants.MESSAGES_PAGE_NUMBER_URL)
     Call<MessageListResponse> getMessagesList(@Path(Constants.TOKEN) String token,
                                                    @Path(Constants.PAGE_NUMBER) String page_number);
+
+    @GET(Constants.STOREIMAGE_URL + Constants.STOREIMAGE_PAGE_NUMBER_URL)
+    Call<StoreImageListResponse> getLogosList(@Path(Constants.TOKEN) String token,
+                                              @Path(Constants.PAGE_NUMBER) String page_number);
 
 }
 
