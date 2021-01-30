@@ -65,6 +65,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 
 import static android.app.Activity.RESULT_OK;
+import static android.content.Context.TELECOM_SERVICE;
 import static android.view.LayoutInflater.from;
 
 public class ShoppingListsFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,  BillingProcessor.IBillingHandler {
@@ -333,14 +334,19 @@ public class ShoppingListsFragment extends Fragment implements GoogleApiClient.C
         TextView btn_cancel = dialog.findViewById(R.id.btn_cancel);
         btn_yes.setOnClickListener(v -> {
             boolean isAvailable = BillingProcessor.isIabServiceAvailable(context);
-            if(isAvailable)
+            if(isAvailable) {
             /**
              * IMPORTANT: when you provide a payload, internally the library prepends a string to your payload.
              * For subscriptions, it prepends "subs:\<productId\>:", and for products, it prepends "inapp:\<productId\>:\<UUID\>:".
              * This is important to know if you do any validation on the payload returned from Google Play after a successful purchase.
              * */
                 bp.purchase(getActivity(), mViewModel.getPRODUCT_SKU() );
+            }
+             else {
+                utils.showSnackBar(getActivity().getWindow().getDecorView().getRootView(), "You are not able to purchase the logos!");
+            }
             dialog.dismiss();
+
         });
         btn_cancel.setOnClickListener(v -> dialog.dismiss());
         dialog.show();
@@ -509,8 +515,8 @@ public class ShoppingListsFragment extends Fragment implements GoogleApiClient.C
             storeName.setText(bean.getStoreName());
             String imageName = bean.getImageName();
 
-            if (imageName == null) {
-                imageName = "logo_0";
+            if (imageName == null || imageName.equals("logo_0")) {
+                imageName = "logo_0.png";
             }
             Glide.with(context)
                     .load(Constants.IMAGE_URL + imageName)

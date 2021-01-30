@@ -253,9 +253,8 @@ public interface ApiInterface {
     Call<MessageListResponse> getMessagesList(@Path(Constants.TOKEN) String token,
                                                    @Path(Constants.PAGE_NUMBER) String page_number);
 
-    @GET(Constants.STOREIMAGE_URL + Constants.STOREIMAGE_PAGE_NUMBER_URL)
-    Call<StoreImageListResponse> getLogosList(@Path(Constants.TOKEN) String token,
-                                              @Path(Constants.PAGE_NUMBER) String page_number);
+    @GET(Constants.STOREIMAGE_URL)
+    Call<StoreImageListResponse> getLogosList(@Path(Constants.TOKEN) String token);
 
 }
 

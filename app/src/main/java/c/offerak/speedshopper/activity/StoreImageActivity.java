@@ -80,18 +80,18 @@ public class StoreImageActivity extends AppCompatActivity {
         mRecyclerView.setAdapter(imgItemsAdapter);
 
         loadImages();
-        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                if (!recyclerView.canScrollVertically(1)) {
-                    if (page != 1 && load) {
-                        load = false;
-                        loadImages();
-                    }
-                }
-            }
-        });
+//        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+//            @Override
+//            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+//                super.onScrollStateChanged(recyclerView, newState);
+//                if (!recyclerView.canScrollVertically(1)) {
+//                    if (page != 1 && load) {
+//                        load = false;
+//                        loadImages();
+//                    }
+//                }
+//            }
+//        });
 
         mRecyclerView.addOnItemTouchListener(new RecyclerItemListener(getApplicationContext(), mRecyclerView,
                 new RecyclerItemListener.RecyclerTouchListener() {
@@ -115,8 +115,7 @@ public class StoreImageActivity extends AppCompatActivity {
         if (utils.isNetworkConnected(context)) {
             utils.showDialog(this);
 
-            Call<StoreImageListResponse> call = apiService.getLogosList(userBean.getUserToken(),
-                    String.valueOf(page)+"");
+            Call<StoreImageListResponse> call = apiService.getLogosList(userBean.getUserToken());
             call.enqueue(new Callback<StoreImageListResponse>() {
                 @Override
                 public void onResponse(Call<StoreImageListResponse> call, Response<StoreImageListResponse> response) {
@@ -132,10 +131,10 @@ public class StoreImageActivity extends AppCompatActivity {
                                     for (int i = 0; i < logoList.size(); i++) {
                                         imageBean.add(new Images(logoList.get(i).getCreated_at(), logoList.get(i).getName(),logoList.get(i).getImage_id()));
                                     }
-                                    if (logoList.size() == 30) {
-                                        page = page+1;
-                                        load = true;
-                                    }
+//                                    if (logoList.size() == 30) {
+//                                        page = page+1;
+//                                        load = true;
+//                                    }
 
                                     if(imageBean.isEmpty()){
                                         mRecyclerView.setVisibility(View.GONE);

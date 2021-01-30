@@ -1,0 +1,4 @@
+            keyAlias 'speedshopper'
+            keyPassword '123456789'
+            storeFile file('/Volumes/WORK/SpeedShopper/speedshopper_android2/keystore/speedshopper.jks')
+            storePassword '123456789'

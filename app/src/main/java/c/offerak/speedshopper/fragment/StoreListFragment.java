@@ -135,7 +135,7 @@ public class StoreListFragment extends Fragment {
                                 .putExtra("storeLogo", storeLogo)
                                 .putExtra("storeAddress", storeAddress)
                                 .putExtra("storeName", storeName));
-                        showDialogStoreList(storeName, storeId, "logo_0");
+                        showDialogStoreList(storeName, storeId, "logo_0.png");
 //                        getActivity().finish();
                     }
 
@@ -302,7 +302,7 @@ public class StoreListFragment extends Fragment {
                                                 .putExtra("storeLogo", dataBean.getLogo())
                                                 .putExtra("storeAddress", dataBean.getAddress())
                                                 .putExtra("storeName", dataBean.getName()));
-                                        showDialogStoreList(dataBean.getName(), dataBean.getId(), "logo_0");
+                                        showDialogStoreList(dataBean.getName(), dataBean.getId(), "logo_0.png");
 //                                        getActivity().finish();
                                     }
                                 }

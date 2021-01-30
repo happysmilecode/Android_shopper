@@ -128,7 +128,7 @@ public class StoreMapFragment extends Fragment implements OnMapReadyCallback {
                         .putExtra("storeAddress", storeAddress)
                         .putExtra("storeName", storeName));
 
-                showDialogStoreList(storeName, storeId, "logo_0");
+                showDialogStoreList(storeName, storeId, "logo_0.png");
 //                getActivity().finish();
             });
         });
