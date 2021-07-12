@@ -15,6 +15,11 @@ public class PurchaseModel  extends ViewModel {
 
     //PRODUCT ID OR SKU
     private  final String PRODUCT_SKU = "store_logos";
+    private  final String PRODUCT_MONTHLY_SKU = "auto_premium1";
+    private  final String PRODUCT_THREEMONTH_SKU = "auto_premium3";
+    private  final String PRODUCT_SIXMONTH_SKU = "auto_premium6";
+    private  final String PRODUCT_YEARLY_SKU = "auto_premium";
+
 
     private String ispuduct_puchase = "ispuduct_puchase";
 
@@ -33,6 +38,22 @@ public class PurchaseModel  extends ViewModel {
 
     public String getPRODUCT_SKU() {
         return PRODUCT_SKU;
+    }
+
+    public String getPRODUCT_MONTHLY_SKU() {
+        return PRODUCT_MONTHLY_SKU;
+    }
+
+    public String getPRODUCT_THREEMONTH_SKU() {
+        return PRODUCT_THREEMONTH_SKU;
+    }
+
+    public String getPRODUCT_SIXMONTH_SKU() {
+        return PRODUCT_SIXMONTH_SKU;
+    }
+
+    public String getPRODUCT_YEARLY_SKU() {
+        return PRODUCT_YEARLY_SKU;
     }
 
     public String getIspuduct_puchase() {

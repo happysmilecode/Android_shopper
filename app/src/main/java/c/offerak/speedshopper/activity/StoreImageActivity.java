@@ -33,6 +33,8 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 
+import com.onesignal.OneSignal;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -108,6 +110,8 @@ public class StoreImageActivity extends AppCompatActivity {
                         System.out.println("On Long Click Item interface");
                     }
                 }));
+
+        OneSignal.addTrigger("storeImage", "loaded");
     }
 
     public void loadImages()
@@ -206,7 +210,7 @@ public class StoreImageActivity extends AppCompatActivity {
                         GetResponse tokenResponse = response.body();
                         String message = tokenResponse.getMessage();
                         if (tokenResponse != null) {
-                            MySharedPreference.setPurchased(context, "STORE_LOGO",true);
+//                            MySharedPreference.setPurchased(context, "STORE_LOGO",true);
                             Intent intent = new Intent(context, LandingScreen.class);
                             intent.putExtra("MENU_NAME", (Bundle) null);
                             startActivity(intent);
@@ -236,4 +240,15 @@ public class StoreImageActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        //stopLocationUpdates();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        OneSignal.addTrigger("storeImage", "loaded");
+    }
 }

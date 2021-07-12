@@ -93,6 +93,14 @@ public class GetShoppingListResponse {
             this.name = name;
         }
 
+        public String getImage() {
+            return image;
+        }
+
+        public void setImage(String image) {
+            this.image = image;
+        }
+
         public String getStore_name() {
             return store_name;
         }

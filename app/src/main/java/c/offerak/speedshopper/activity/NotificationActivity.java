@@ -14,6 +14,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.onesignal.OneSignal;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -98,6 +100,7 @@ public class NotificationActivity extends AppCompatActivity {
                 finish();
             }
         });
+        OneSignal.addTrigger("notification", "loaded");
     }
 
     //------------------------- Notification List ---------------------------------
@@ -180,5 +183,17 @@ public class NotificationActivity extends AppCompatActivity {
         } else {
             utils.showSnackBar(getWindow().getDecorView().getRootView(), getString(R.string.not_connected_to_internet));
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        //stopLocationUpdates();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        OneSignal.addTrigger("notification", "loaded");
     }
 }

@@ -9,150 +9,310 @@
         android:layout_height="match_parent"
         android:scaleType="fitXY"
         android:src="@drawable/menu_bg2" />
-
     <include
         android:id="@+id/headerView"
         layout="@layout/header_layout" />
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/headerView"
-        android:layout_marginTop="20dp"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:padding="20dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/item"
-            android:textColor="@color/white"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/item_name"
+        android:layout_below="@+id/headerView"
+        android:fillViewport="false">
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:background="@drawable/border2"
-            android:paddingStart="10dp"
-            android:paddingTop="5dp"
-            android:paddingEnd="10dp"
-            android:paddingBottom="5dp"
-            android:textColor="@color/white"
-            android:textSize="25sp" />
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:id="@+id/fixedView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:paddingTop="20dp"
+                android:paddingEnd="40dp"
+                android:paddingStart="40dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:text="@string/quantity"
-            android:textColor="@color/white"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/item"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:gravity="center"
-            android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/item_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/border2"
+                    android:paddingStart="10dp"
+                    android:paddingTop="5dp"
+                    android:paddingEnd="10dp"
+                    android:paddingBottom="5dp"
+                    android:textColor="@color/white"
+                    android:textSize="25sp" />
 
-            <RelativeLayout
-                android:layout_width="50dp"
-                android:layout_height="50dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/quantity"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
-                <View
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_centerInParent="true"
-                    android:background="@color/white" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
 
-                <Button
-                    android:id="@+id/minus_button"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_marginEnd="5dp"
-                    android:background="@drawable/blueminus"
-                    android:enabled="false" />
-            </RelativeLayout>
+                    <RelativeLayout
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:layout_marginEnd="3dp">
 
-            <TextView
-                android:id="@+id/quantityText"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:background="@drawable/border2"
-                android:enabled="false"
-                android:importantForAutofill="no"
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp"
-                android:text="1"
-                android:textColor="@color/white"
-                android:textSize="25sp"
-                tools:ignore="LabelFor" />
+                        <View
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_centerInParent="true"
+                            android:background="@color/white" />
 
-            <RelativeLayout
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_gravity="center"
-                android:layout_marginStart="9dp"
-                android:gravity="center">
+                        <Button
+                            android:id="@+id/minus_button"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_centerInParent="true"
+                            android:background="@mipmap/blueminus"
+                            android:enabled="false" />
+                    </RelativeLayout>
 
-                <View
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_centerInParent="true"
-                    android:background="@color/white" />
+                    <TextView
+                        android:id="@+id/quantityText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:background="@drawable/border2"
+                        android:enabled="false"
+                        android:importantForAutofill="no"
+                        android:paddingStart="10dp"
+                        android:paddingEnd="10dp"
+                        android:text="1"
+                        android:textColor="@color/white"
+                        android:textSize="25sp"
+                        tools:ignore="LabelFor" />
 
-                <Button
-                    android:id="@+id/plus_button"
-                    android:layout_width="40dp"
+                    <RelativeLayout
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="9dp"
+                        android:gravity="center">
+
+                        <View
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_centerInParent="true"
+                            android:background="@color/white" />
+
+                        <Button
+                            android:id="@+id/plus_button"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:background="@drawable/blueplus" />
+                    </RelativeLayout>
+                </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="Price per"
+                    android:textColor="@color/white"
+                    android:textSize="17sp"
+                    android:textStyle="bold" />
+                <LinearLayout
+                    android:layout_width="150dp"
                     android:layout_height="40dp"
-                    android:background="@drawable/blueplus" />
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/border2"
+                    android:orientation="horizontal">
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="0.5"
+                        android:layout_height="40dp">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:text="$ "
+                            android:textColor="@color/white"
+                            android:textStyle="bold"
+                            android:textSize="20sp"
+                            android:paddingEnd="5dp"
+                            android:paddingStart="5dp"
+                            android:gravity="center_vertical|end"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="0.5"
+                        android:layout_height="40dp">
+                        <EditText
+                            android:id="@+id/edtUserName"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:hint="price"
+                            android:inputType="numberDecimal"
+                            android:singleLine="true"
+                            android:imeOptions="actionDone"
+                            android:paddingEnd="5dp"
+                            android:paddingStart="5dp"
+                            android:background="@null"
+                            android:textColor="@color/white"
+                            android:textColorHint="@color/white"
+                            android:gravity="center_vertical|start"
+                            android:textSize="20sp" />
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:text="@string/select_aisle_location"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/optional"
+                    android:textColor="@color/white" />
+
+                <EditText
+                    android:id="@+id/select_aisle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/border2"
+                    android:focusable="false"
+                    android:hint="@string/tap_here_to_add_aisle"
+                    android:paddingStart="10dp"
+                    android:paddingTop="5dp"
+                    android:paddingEnd="10dp"
+                    android:paddingBottom="5dp"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/white"
+                    android:textSize="25sp" />
+
+            </LinearLayout>
+            <RelativeLayout
+                android:id="@+id/photoTakeView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/fixedView"
+                android:visibility="gone">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Take a Photo for the Item"
+                        android:textColor="@color/white"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/take_photo"
+                        android:layout_width="150dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:background="@drawable/btn_bg"
+                        android:gravity="center"
+                        android:paddingLeft="20sp"
+                        android:paddingTop="10sp"
+                        android:paddingRight="20sp"
+                        android:paddingBottom="10sp"
+                        android:text="Take a Photo"
+                        android:textColor="@color/white"
+                        android:textSize="14sp"/>
+                </LinearLayout>
+
             </RelativeLayout>
-        </LinearLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:text="@string/select_aisle_location"
-            android:textColor="@color/white"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            <RelativeLayout
+                android:id="@+id/itemImageView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/fixedView"
+                android:visibility="visible">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Image for the Item"
+                        android:textColor="@color/white"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+                    <ImageView
+                        android:id="@+id/itemImage"
+                        android:layout_width="150dp"
+                        android:layout_height="150dp"
+                        android:background="@drawable/border2"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/menu_bg2"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/optional"
-            android:textColor="@color/white" />
+                    <LinearLayout
+                        android:layout_marginTop="-35dp"
+                        android:layout_marginEnd="-63dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+                        <ImageButton
+                            android:id="@+id/retake_photo"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:background="@mipmap/cm" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_marginTop="-36dp"
+                        android:layout_marginStart="-60dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+                        <ImageButton
+                            android:id="@+id/remove_photo"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:background="@drawable/minus_red" />
+                    </LinearLayout>
 
-        <EditText
-            android:id="@+id/select_aisle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:background="@drawable/border2"
-            android:focusable="false"
-            android:hint="@string/tap_here_to_add_aisle"
-            android:paddingStart="10dp"
-            android:paddingTop="5dp"
-            android:paddingEnd="10dp"
-            android:paddingBottom="5dp"
-            android:textColor="@color/white"
-            android:textColorHint="@color/white"
-            android:textSize="25sp" />
-    </LinearLayout>
+                </LinearLayout>
 
-    <ImageView
-        android:id="@+id/done_button"
-        android:layout_width="130dp"
-        android:layout_height="70dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="50dp"
-        android:adjustViewBounds="true"
-        android:background="@drawable/done_button" />
+            </RelativeLayout>
+
+            <ImageButton
+                android:id="@+id/done_button"
+                android:layout_width="130dp"
+                android:layout_height="70dp"
+                android:layout_centerHorizontal="true"
+                android:adjustViewBounds="true"
+                android:layout_marginTop="40dp"
+                android:layout_marginBottom="20dp"
+                android:layout_below="@+id/itemImageView"
+                android:background="@drawable/done_button" />
+
+        </RelativeLayout>
+    </ScrollView>
+
 </RelativeLayout>

@@ -8,58 +8,18 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:28140651852:android:cee2f78f67a156e6",
+        "mobilesdk_app_id": "1:28140651852:android:c40a91eb50839f879f3be9",
         "android_client_info": {
           "package_name": "c.offerak.speedshopper"
         }
       },
       "oauth_client": [
         {
-          "client_id": "28140651852-vmo4dha6v3jg86h44tfk91u02gc11tal.apps.googleusercontent.com",
+          "client_id": "28140651852-668ispm2j09fh0ifali0063i9q3o80o3.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "c.offerak.speedshopper",
-            "certificate_hash": "817df988165b3f3f6156c1b2e1b5aa367c5dbeba"
-          }
-        },
-        {
-          "client_id": "28140651852-e5cmbnhqcll792dclqkta5jhqdchqgcl.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "c.offerak.speedshopper",
-            "certificate_hash": "0a64e752ebe9094a15706bd08ba0cc37bf48378b"
-          }
-        },
-        {
-          "client_id": "28140651852-59bpv95eqtiqqib21vg0diq02leeo2hc.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "c.offerak.speedshopper",
-            "certificate_hash": "20aeffb41b5f79fffecf9dc73eb165fa8ce5cfef"
-          }
-        },
-        {
-          "client_id": "28140651852-se8p91036ka4b39h7rnvmfb8aaaq564s.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "c.offerak.speedshopper",
-            "certificate_hash": "e859f487491182db2bc0493228ab61a2eba1beda"
-          }
-        },
-        {
-          "client_id": "28140651852-mfgrrm3jguk57ceqq49om87gmdp4c5gl.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "c.offerak.speedshopper",
-            "certificate_hash": "2bff55578e091ce6e51b16e59db589cf87daa973"
-          }
-        },
-        {
-          "client_id": "28140651852-ra10tv3uhfhrrpooil8175p7snfnq5lu.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "c.offerak.speedshopper",
-            "certificate_hash": "69b8bba06dd354a53857ad9140476ffd22630103"
+            "certificate_hash": "e46d341cfb565a429e37bf3b4ae2573a6c6ebaf6"
           }
         },
         {
@@ -76,14 +36,15 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "28140651852-vajo3b9e69qslqjigag1305tfg02al83.apps.googleusercontent.com",
+              "client_id": "28140651852-5j4n2f3c0msq7es6tfj5rkqi3u3ept8f.apps.googleusercontent.com",
               "client_type": 3
             },
             {
               "client_id": "28140651852-f4adfls8eelakkvsiesmc8gqnht33s9t.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.speedshopper.app"
+                "bundle_id": "com.speedshopper.app",
+                "app_store_id": "1434065555"
               }
             }
           ]

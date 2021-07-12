@@ -24,7 +24,7 @@ public class MySharedPreference {
         editor.apply();
     }
 
-    public Boolean getPurchased(Context context, String name) {
+    public static Boolean getPurchased(Context context, String name) {
         mcontext = context;
         SharedPreferences settings = context.getSharedPreferences(PREFERENCE, 0);
         return settings.getBoolean(name, false);

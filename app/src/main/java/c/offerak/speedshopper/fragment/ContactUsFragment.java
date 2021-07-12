@@ -18,6 +18,8 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.onesignal.OneSignal;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -181,6 +183,7 @@ public class ContactUsFragment extends Fragment {
                 }
             }
         });
+        OneSignal.addTrigger("contact", "loaded");
     }
 
     public void callMessageList() {
@@ -263,5 +266,17 @@ public class ContactUsFragment extends Fragment {
             noDataFound.setVisibility(View.VISIBLE);
             utils.showSnackBar(getActivity().getWindow().getDecorView().getRootView(), getString(R.string.not_connected_to_internet));
         }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        //stopLocationUpdates();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        OneSignal.addTrigger("contact", "loaded");
     }
 }

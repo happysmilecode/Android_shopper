@@ -24,6 +24,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.MyView
     private List<String> aisleList;
     private List<String> aisleFilterList;
     private String pos;
+    private Boolean isLocated;
 
     public LocationAdapter(Context context, List<String> aisleList, String pos) {
         this.context = context;
@@ -57,7 +58,8 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.MyView
         holder.ctv_title_item.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((ItemEditActivity) context).locationChanged(holder.ctv_title_item.getText().toString());
+
+                ((ItemEditActivity) context).locationAdd(holder.ctv_title_item.getText().toString());
             }
         });
     }

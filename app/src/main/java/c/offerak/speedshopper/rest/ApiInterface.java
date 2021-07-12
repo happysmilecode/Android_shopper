@@ -40,12 +40,14 @@ public interface ApiInterface {
     Call<LoginResponse> login(@Field(Constants.EMAIL) String email,
                               @Field(Constants.PASSWORD) String password,
                               @Field(Constants.DEVICE_ID) String deviceId,
-                              @Field(Constants.DEVICE_TYPE) String deviceType);
+                              @Field(Constants.DEVICE_TYPE) String deviceType,
+                              @Field(Constants.ONESIGNAL_ID) String push_id);
 
     @POST(Constants.LOGIN_URL_GUEST)
     @FormUrlEncoded
     Call<LoginResponse> loginGuest(@Field(Constants.DEVICE_ID) String deviceId,
-                              @Field(Constants.DEVICE_TYPE) String deviceType);
+                                    @Field(Constants.DEVICE_TYPE) String deviceType,
+                                    @Field(Constants.ONESIGNAL_ID) String push_id);
 
     @POST(Constants.REGISTER_URL)
     @FormUrlEncoded
@@ -70,14 +72,7 @@ public interface ApiInterface {
     Call<GetResponse> getSSTXEarned(@Path(Constants.TOKEN) String token,
                                         @Field(Constants.STORE_ID) String storeId);
 
-    @POST(Constants.UPDATE_URL)
-    @Multipart
-    Call<UpdateProfileResponse> update(@Part(Constants.TOKEN) RequestBody token,
-                                       @Part(Constants.NAME) RequestBody name,
-                                       @Part MultipartBody.Part file);
-
     @POST(Constants.GET_STORES_URL)
-
     @FormUrlEncoded
     Call<StoreListResponse> getStores(@Path(Constants.TOKEN) String token,
                                       @Field(Constants.LATITUDE) String lat,
@@ -106,6 +101,16 @@ public interface ApiInterface {
 
     );
 
+    @POST(Constants.SHARE_TOKEN_UPDATE_URL)
+    @FormUrlEncoded
+    Call<GetResponse>updateShareStatus(@Path(Constants.TOKEN) String token, @Field(Constants.SHARE_TOKEN) String shareToken);
+
+    @POST(Constants.SAVE_SHARE_TOKEN_URL)
+    @FormUrlEncoded
+    Call<GetResponse>saveShareToken(@Path(Constants.TOKEN) String token,
+                                    @Field(Constants.SHARE_TOKEN) String shareToken,
+                                    @Field(Constants.LIST_ID) String list_id);
+
     @POST(Constants.ADD_ITEM_TO_SHOPPING_LIST_URL)
     @FormUrlEncoded
     Call<ShoppingListAddItemResponse> addItemToShoppingList(@Path(Constants.TOKEN) String token,
@@ -129,6 +134,13 @@ public interface ApiInterface {
     Call<GetResponse> removeCheckedItem(@Path(Constants.TOKEN) String token,
                                     @Field(Constants.LIST_ID) String listId);
 
+    @POST(Constants.REMOVE_ITEM_IMAGE_URL)
+    @FormUrlEncoded
+    Call<GetResponse> removeItemImage(@Path(Constants.TOKEN) String token,
+                                      @Field(Constants.ITEM_ID) String listId,
+                                      @Field(Constants.IMAGE) String image);
+
+
     @POST(Constants.PURCHASE_ITEM_URL)
     @FormUrlEncoded
     Call<SpeedAvailableItemResponse> purchaseItem(@Path(Constants.TOKEN) String token,
@@ -136,10 +148,19 @@ public interface ApiInterface {
                                                   @Field(Constants.PURCHASE) String purchase,
                                                   @Field(Constants.LIST_ID) String listId);
     @POST(Constants.UPDATE_ITEM_QUANTITY_URL)
-    @FormUrlEncoded
+    @Multipart
     Call<GetResponse> updateItemQuantity(@Path(Constants.TOKEN) String token,
-                                                  @Field(Constants.ITEM_ID) String itemId,
-                                                  @Field(Constants.QUANTITY) String quantity);
+                                         @Part(Constants.ITEM_ID) RequestBody itemId,
+                                         @Part(Constants.QUANTITY) RequestBody quantity,
+                                         @Part(Constants.UNIT_PRICE) RequestBody price,
+                                         @Part("id") RequestBody id,
+                                         @Part MultipartBody.Part file);
+
+    @POST(Constants.UPDATE_URL)
+    @Multipart
+    Call<UpdateProfileResponse> update(@Part(Constants.TOKEN) RequestBody token,
+                                       @Part(Constants.NAME) RequestBody name,
+                                       @Part MultipartBody.Part file);
 
     @POST(Constants.IMPORT_ITEM_URL)
     @FormUrlEncoded
@@ -156,6 +177,36 @@ public interface ApiInterface {
                                                      @Field(Constants.LOCATION) String location,
                                                      @Field(Constants.LONGITUDE) String longitude,
                                                      @Field(Constants.LIST_ID) String list_id);
+
+    @POST(Constants.ADD_ITEM_LOCATION_PRO_URL)
+    @FormUrlEncoded
+    Call<SpeedAvailableItemResponse> addItemLocationPro(@Path(Constants.TOKEN) String token,
+                                                     @Field(Constants.ITEM_ID) String itemId,
+                                                     @Field(Constants.LATITUDE) String latitude,
+                                                     @Field(Constants.STORE_ID) String storeId,
+                                                     @Field(Constants.LOCATION) String location,
+                                                     @Field(Constants.LONGITUDE) String longitude,
+                                                     @Field(Constants.LIST_ID) String list_id);
+
+    @POST(Constants.UPDATE_ITEM_LOCATION_URL)
+    @FormUrlEncoded
+    Call<SpeedAvailableItemResponse> updateItemLocation(@Path(Constants.TOKEN) String token,
+                                                     @Field(Constants.ITEM_ID) String itemId,
+                                                     @Field(Constants.LATITUDE) String latitude,
+                                                     @Field(Constants.STORE_ID) String storeId,
+                                                     @Field(Constants.LOCATION) String location,
+                                                     @Field(Constants.LONGITUDE) String longitude,
+                                                     @Field(Constants.LIST_ID) String list_id);
+
+    @POST(Constants.UPDATE_ITEM_LOCATION_PRO_URL)
+    @FormUrlEncoded
+    Call<SpeedAvailableItemResponse> updateItemLocationPro(@Path(Constants.TOKEN) String token,
+                                                        @Field(Constants.ITEM_ID) String itemId,
+                                                        @Field(Constants.LATITUDE) String latitude,
+                                                        @Field(Constants.STORE_ID) String storeId,
+                                                        @Field(Constants.LOCATION) String location,
+                                                        @Field(Constants.LONGITUDE) String longitude,
+                                                        @Field(Constants.LIST_ID) String list_id);
 
     @POST(Constants.UPDATE_SHOPPING_LIST_NAME_URL)
     @FormUrlEncoded
@@ -176,7 +227,8 @@ public interface ApiInterface {
                                       @Field(Constants.FACEBOOK_ID) String facebookId,
                                       @Field(Constants.LOGIN_TYPE) String login_type,
                                       @Field(Constants.DEVICE_ID) String deviceId,
-                                      @Field(Constants.DEVICE_TYPE) String deviceType);
+                                      @Field(Constants.DEVICE_TYPE) String deviceType,
+                                      @Field(Constants.ONESIGNAL_ID) String push_id);
 
     @POST(Constants.ADD_URL)
     @FormUrlEncoded

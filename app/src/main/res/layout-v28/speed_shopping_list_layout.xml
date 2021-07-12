@@ -18,6 +18,7 @@
         android:layout_below="@id/headerView"
         ads:adSize="BANNER"
         ads:adUnitId="@string/banner_id"
+        android:visibility="visible"
         />
 
     <RelativeLayout
@@ -26,7 +27,10 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/ads_view"
         android:background="#10000000"
-        android:padding="10sp">
+        android:paddingStart="10sp"
+        android:paddingEnd="10sp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp">
 
         <RelativeLayout
             android:id="@+id/storeInfoView"
@@ -39,16 +43,18 @@
                 android:text="@string/grocery_store"
                 android:textColor="@color/colorAppBlue"
                 android:textSize="13sp"
+                android:paddingStart="3dp"
                 android:textStyle="bold"
                 android:layout_centerVertical="true"
                 tools:ignore="RtlSymmetry" />
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:id="@+id/storeNameView"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_toEndOf="@+id/storeListTitle"
-                android:layout_toStartOf="@+id/importItem"
+                android:layout_toStartOf="@+id/shareview"
                 android:layout_centerVertical="true">
 
                 <TextView
@@ -62,15 +68,21 @@
                     android:text="Dmart Indore"
                     tools:ignore="RtlSymmetry,SmallSp" />
 
-<!--                <TextView-->
-<!--                    android:id="@+id/addText"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:padding="5sp"-->
-<!--                    android:text="@string/address_unnamed_road_sector_a_gumasta_nagar_scheme_71_indore_madhya_pradesh_452002"-->
-<!--                    android:textColor="@color/black"-->
-<!--                    android:textSize="12sp"/>-->
             </LinearLayout>
+            <LinearLayout
+                android:id="@+id/shareview"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:layout_toStartOf="@+id/importItem"
+                android:layout_centerVertical="true">
+                <ImageView
+                    android:id="@+id/share"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@mipmap/share"/>
+            </LinearLayout>
+
             <ImageView
                 android:id="@+id/importItem"
                 android:layout_width="wrap_content"
@@ -86,7 +98,7 @@
             android:layout_width="match_parent"
             android:layout_height="0.5sp"
             android:layout_below="@+id/storeInfoView"
-            android:layout_margin="10sp"
+            android:layout_margin="5sp"
             android:background="#80000000" />
 
         <RelativeLayout
@@ -149,8 +161,7 @@
                 android:layout_height="60dp"
                 android:orientation="horizontal"
                 android:layout_alignParentEnd="true"
-                android:layout_marginEnd="0dp"
-                >
+                android:layout_marginEnd="0dp">
                 <TextView
                     android:layout_width="60dp"
                     android:layout_height="wrap_content"
@@ -162,7 +173,7 @@
                     android:textSize="15sp"
                     android:textStyle="bold"
                     android:fontFamily="sans-serif-medium"
-                    android:gravity="center"/>
+                    android:gravity="center" />
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -172,24 +183,24 @@
                     <TextView
                         android:id="@+id/sstxEarendTextView"
                         android:layout_width="wrap_content"
-                        android:layout_height="40dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
                         android:fontFamily="sans-serif-medium"
                         android:text="2"
-                        android:layout_gravity="center_horizontal"
                         android:textColor="@color/colorAppGreen"
                         android:textSize="30sp"
                         android:textStyle="bold" />
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="-4dp"
+                        android:fontFamily="sans-serif-medium"
                         android:text="SSTX "
                         android:textColor="@color/colorAppBlue"
-                        android:layout_marginTop="-4dp"
                         android:textSize="12sp"
-                        android:textStyle="bold"
-                        android:fontFamily="sans-serif-medium"
-                        />
+                        android:textStyle="bold" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -205,7 +216,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/upperRelative"
         android:background="#20000000"
-        android:padding="12sp">
+        android:padding="7sp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -275,15 +286,17 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/listItemView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/itemNameRel"
+        android:layout_above="@+id/bottomView"
+        android:padding="10dp"
         android:background="#10000000">
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="10sp">
+            android:layout_height="match_parent">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/lvList"
@@ -300,6 +313,23 @@
                 android:visibility="gone" />
 
         </androidx.cardview.widget.CardView>
+
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/bottomView"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/grey_500"
+        android:layout_alignParentBottom="true">
+        <TextView
+            android:id="@+id/total_price"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="Total Price: $ 100"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:textColor="@color/colorAppBlue"/>
 
     </RelativeLayout>
 </RelativeLayout>

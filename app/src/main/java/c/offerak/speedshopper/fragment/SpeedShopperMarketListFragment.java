@@ -23,6 +23,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.onesignal.OneSignal;
+
 import java.util.ArrayList;
 
 import c.offerak.speedshopper.R;
@@ -147,6 +149,7 @@ public class SpeedShopperMarketListFragment extends Fragment /*implements View.O
                 }
             }
         });
+        OneSignal.addTrigger("searchMarket", "loaded");
     }
 
     private void listSetup(String page) {
@@ -243,4 +246,16 @@ public class SpeedShopperMarketListFragment extends Fragment /*implements View.O
             }*/
         }
     };
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        //stopLocationUpdates();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        OneSignal.addTrigger("searchMarket", "loaded");
+    }
 }

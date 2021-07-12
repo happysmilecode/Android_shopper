@@ -65,14 +65,17 @@ public class SpeedAvailableItemResponse {
              * item_id : 4
              * name : Meat
              * Quantity: 5
+             * Unit Price: 5.0
              * status : 0
              * location :
              */
 
             private String id;
             private int quantity;
+            private float unit_price;
             private String item_id;
             private String name;
+            private String image;
             private String status;
             private String location;
 
@@ -100,6 +103,14 @@ public class SpeedAvailableItemResponse {
                 this.name = name;
             }
 
+            public String getImage() {
+                return image;
+            }
+
+            public void setImage(String image) {
+                this.image = image;
+            }
+
             public int getQuantity() {
                 return quantity;
             }
@@ -107,6 +118,10 @@ public class SpeedAvailableItemResponse {
             public void setQuantity(int quantity) {
                 this.quantity = quantity;
             }
+
+            public float getUnit_price() { return  unit_price; }
+
+            public void setUnit_price(float price) {this.unit_price = price; }
 
             public String getStatus() {
                 return status;
@@ -138,7 +153,9 @@ public class SpeedAvailableItemResponse {
             private String id;
             private String item_id;
             private String name;
+            private String image;
             private int quantity;
+            private float unit_price;
             private String status;
             private String location;
 
@@ -166,6 +183,14 @@ public class SpeedAvailableItemResponse {
                 this.name = name;
             }
 
+            public String getImage() {
+                return image;
+            }
+
+            public void setImage(String image) {
+                this.image = image;
+            }
+
             public int getQuantity() {
                 return quantity;
             }
@@ -173,6 +198,10 @@ public class SpeedAvailableItemResponse {
             public void setQuantity(int quantity) {
                 this.quantity = quantity;
             }
+
+            public float getUnit_price() { return  unit_price; }
+
+            public void setUnit_price(float price) {this.unit_price = price; }
 
             public String getStatus() {
                 return status;

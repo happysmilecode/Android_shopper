@@ -34,10 +34,12 @@
     </RelativeLayout>
 
     <ImageView
-        android:id="@+id/cross"
+        android:id="@+id/crossUpcoming"
         android:layout_width="35dp"
         android:layout_height="35dp"
         android:layout_alignParentEnd="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="-5dp"
         android:src="@drawable/cross" />
 
 </RelativeLayout>

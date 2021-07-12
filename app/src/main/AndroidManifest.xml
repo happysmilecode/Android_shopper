@@ -21,7 +21,15 @@
         android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:name=".ApplicationClass">
+
+        <meta-data
+            android:name="com.onesignal.BadgeCount"
+            android:value="DISABLE" />
+        <meta-data
+            android:name="com.onesignal.NotificationOpened.DEFAULT"
+            android:value="DISABLE" />
 
         <uses-library
             android:name="org.apache.http.legacy"
@@ -36,7 +44,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.DeepLinkActivity" />
+        <activity android:name=".activity.DeepLinkActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="*"
+                    android:scheme="share-speed-shopper" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".activity.LoginActivity"
             android:screenOrientation="portrait">
@@ -49,8 +69,6 @@
                 <data
                     android:host="login"
                     android:scheme="speed-shopper" />
-                <!--                     android:pathPattern="/offer_detail.php" -->
-                <!-- stnapp://login -->
             </intent-filter>
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
@@ -65,7 +83,7 @@
         </activity>
         <activity
             android:name=".activity.SignupActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.ItemEditActivity"
             android:screenOrientation="portrait" />
@@ -110,7 +128,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.StoreImageActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

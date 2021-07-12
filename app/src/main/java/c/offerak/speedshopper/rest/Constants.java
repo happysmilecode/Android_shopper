@@ -8,6 +8,7 @@ public class Constants {
 //    public static final String BASE_URL ="https://www.speedshopperapp.com/app_sandbox/api/";
 
     public static final String IMAGE_URL = "https://www.speedshopperapp.com/app/public/store_images/";
+    public static final String ITEM_IMAGE_URL = "https://www.speedshopperapp.com/app/public/item_images/";
 
     //local
 //    public static final String BASE_URL = "http://192.168.1.137/SSTX/api/";
@@ -27,14 +28,20 @@ public class Constants {
     public static final String SHOPPING_LIST_ITEM_URL = "shopping/shoppingListItem/{token}";
     public static final String SHOPPING_LIST_URL = "shopping/shoppingList/{token}";
     public static final String ADD_SHOPPING_LIST_URL = "shopping/addShoppingList/{token}";
+    public static final String SHARE_TOKEN_UPDATE_URL = "shopping/shareShoppingListUpdate/{token}";
+    public static final String SAVE_SHARE_TOKEN_URL = "shopping/shareShoppingList/{token}";
 
     public static final String ADD_ITEM_TO_SHOPPING_LIST_URL = "shopping/addItemToShoppingListNew/{token}";
     public static final String REMOVE_SHOPPING_LIST_URL = "shopping/removeShoppingList/{token}";
     public static final String REMOVE_ALL_ITEM_URL = "shopping/removeAllItem/{token}";
     public static final String REMOVE_CHECKED_ITEM_URL = "shopping/removeCheckedItem/{token}";
+    public static final String REMOVE_ITEM_IMAGE_URL = "shopping/removeItemImage/{token}";
     public static final String PURCHASE_ITEM_URL = "shopping/purchaseItemNew/{token}";
     public static final String UPDATE_ITEM_QUANTITY_URL = "shopping/updateItemQuantity/{token}";
     public static final String ADD_ITEM_LOCATION_URL = "shopping/addItemLocation/{token}";
+    public static final String ADD_ITEM_LOCATION_PRO_URL = "shopping/addItemLocationPro/{token}";
+    public static final String UPDATE_ITEM_LOCATION_URL = "shopping/updateItemLocation/{token}";
+    public static final String UPDATE_ITEM_LOCATION_PRO_URL = "shopping/updateItemLocationPro/{token}";
     public static final String IMPORT_ITEM_URL = "shopping/importItem/{token}";
     public static final String UPDATE_SHOPPING_LIST_NAME_URL = "shopping/updateShoppingListName/{token}";
     public static final String UPDATE_SHOPPING_LIST_LOGO_URL = "shopping/updateShoppingListLogo/{token}";
@@ -71,6 +78,7 @@ public class Constants {
     public static final String DEVICE_TYPE = "device_type";
     public static final String DEVICE_ID = "device_id";
     public static final String FACEBOOK_ID = "facebook_id";
+    public static final String ONESIGNAL_ID = "push_id";
     public static final String NAME = "name";
     public static final String CONTACT = "contact";
     public static final String LATITUDE = "latitude";
@@ -81,6 +89,7 @@ public class Constants {
     public static final String ITEM = "item";
     public static final String PURCHASE = "purchase";
     public static final String QUANTITY = "quantity";
+    public static final String UNIT_PRICE = "unit_price";
     public static final String LOCATION = "location";
     public static final String ADDRESS = "address";
 
@@ -105,4 +114,6 @@ public class Constants {
 
     public static final String IMAGE = "image";
     public static final Boolean purchased = false;
+    public static final String SHARE_TOKEN = "sharing_token";
+    public static final String ISDEEPLINK = "deeplink";
 }

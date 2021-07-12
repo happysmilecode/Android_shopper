@@ -12,6 +12,8 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.onesignal.OneSignal;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -254,6 +256,7 @@ public class VerificationActivity extends AppCompatActivity {
             startActivity(new Intent(context, HomeScreen.class));
             finish();
         });
+        OneSignal.addTrigger("verification", "loaded");
     }
 
     @OnClick(R.id.btnNext)
@@ -265,5 +268,17 @@ public class VerificationActivity extends AppCompatActivity {
     @OnClick(R.id.txtResend)
     public void txtResend() {
 
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        //stopLocationUpdates();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        OneSignal.addTrigger("verification", "loaded");
     }
 }

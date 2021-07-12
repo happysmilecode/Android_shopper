@@ -15,6 +15,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.onesignal.OneSignal;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -100,6 +102,7 @@ public class NotificationFragment extends Fragment {
                 }
             }
         });
+//        OneSignal.addTrigger("notification", "loaded");
     }
 
     //------------------------- Notification List ---------------------------------

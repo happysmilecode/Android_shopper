@@ -6,7 +6,9 @@ public class SpeedShoppingListBean {
     private String id;
     private String item_id;
     private String name;
+    private String image;
     private int quantity;
+    private float unit_price;
     private String status;
     private String location;
     private String advertStatus;
@@ -39,12 +41,24 @@ public class SpeedShoppingListBean {
 
     public void setQuantity(int quantity) {this.quantity = quantity;}
 
+    public float getUnitPrice() {return unit_price;}
+
+    public void setUnitPrice(float price) {this.unit_price = price;}
+
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public String getStatus() {

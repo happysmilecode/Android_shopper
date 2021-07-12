@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.joanzapata.pdfview.PDFView;
 import com.joanzapata.pdfview.listener.OnPageChangeListener;
+import com.onesignal.OneSignal;
 
 import c.offerak.speedshopper.R;
 import c.offerak.speedshopper.rest.Constants;
@@ -52,6 +53,7 @@ public class TermsConditionActivity extends AppCompatActivity implements OnPageC
         webView.getSettings().setDomStorageEnabled(true);
         webView.loadUrl(Constants.TERMS_CONDITION_URL);
 //        openFile();
+        OneSignal.addTrigger("terms", "loaded");
     }
     public void openFile() {
         /*pdfView.fromAsset("terms_dummy.pdf")
@@ -91,5 +93,17 @@ public class TermsConditionActivity extends AppCompatActivity implements OnPageC
             utils.hideDialog();
             super.onPageFinished(view, url);
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        //stopLocationUpdates();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        OneSignal.addTrigger("terms", "loaded");
     }
 }

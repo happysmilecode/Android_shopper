@@ -33,6 +33,7 @@ import com.google.zxing.EncodeHintType;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
+import com.onesignal.OneSignal;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -103,6 +104,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
         btn_eth.setOnClickListener(this);
         btn_deposit.setOnClickListener(this);
         getWalletDetials();
+        OneSignal.addTrigger("wallet", "loaded");
     }
 
     public void getWalletDetials() {
@@ -349,5 +351,17 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
                 })
                 .create();
         dlg.show();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        //stopLocationUpdates();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        OneSignal.addTrigger("wallet", "loaded");
     }
 }

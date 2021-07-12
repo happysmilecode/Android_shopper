@@ -39,6 +39,7 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.places.Places;
+import com.onesignal.OneSignal;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,11 +88,11 @@ public class ShoppingListsFragment extends Fragment implements GoogleApiClient.C
     TextView fadingTextView;
     GifTextView right_hand;
     int i = 0;
+    public boolean isUpgraded = false;
 
     BillingProcessor bp;
     IOSDialog iosDialog;
     private PurchaseModel mViewModel;
-
 
     @Nullable
     @Override
@@ -99,28 +100,25 @@ public class ShoppingListsFragment extends Fragment implements GoogleApiClient.C
         rootView = inflater.inflate(R.layout.fragment_shopping_list, container, false);
         context = getActivity();
         mViewModel = ViewModelProviders.of((FragmentActivity) context).get(PurchaseModel.class);
+        isUpgraded = MySharedPreference.getPurchased(context, "membership");
         init();
+        OneSignal.addTrigger("shoppingList", "loaded");
         initializeBilling();
-//        initializePurchase();
+
         return rootView;
     }
 
     public void initializeBilling(){
-        // intialize the billing process
-//        iosDialog = new IOSDialog.Builder(context)
-//                .setCancelable(false)
-//                .setSpinnerClockwise(false)
-//                .setMessageContentGravity(Gravity.END)
-//                .build();
-//        iosDialog.show();
 
-        bp = new BillingProcessor(context, mViewModel.getGooglePlayConsolLicenseKey(), this);
+        Log.e("KEY--->", mViewModel.getGooglePlayConsolLicenseKey());
+        Log.e("KEY--->", mViewModel.getGooglePlayConsolSubscriptionId());
+//        bp = new BillingProcessor(context, mViewModel.getGooglePlayConsolLicenseKey(), this);
+        bp = BillingProcessor.newBillingProcessor(context, mViewModel.getGooglePlayConsolLicenseKey(), this);
         bp.initialize();
     }
 
     @SuppressLint("MissingPermission")
     public void init() {
-
         Log.e(TAG, "Firebase Token: " + MySharedPreference.getSharedPreferences(context, Constants.DEVICE_ID));
         getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
@@ -138,6 +136,10 @@ public class ShoppingListsFragment extends Fragment implements GoogleApiClient.C
         AdView adView = rootView.findViewById(R.id.ads_view1);
         AdRequest adRequest = new AdRequest.Builder().build();
         adView.loadAd(adRequest);
+
+        if (isUpgraded) {
+            adView.setVisibility(View.GONE);
+        }
 
         LandingScreen.txtTitle.setText(R.string.my_list);
         LandingScreen.history.setVisibility(View.GONE);
@@ -179,6 +181,12 @@ public class ShoppingListsFragment extends Fragment implements GoogleApiClient.C
         } else {
             utils.showSnackBar(getActivity().getWindow().getDecorView().getRootView(), "You are not connected to internet!");
         }
+
+
+    }
+    @Override
+    public void onPause() {
+        super.onPause();
     }
 
     @Override
@@ -190,6 +198,7 @@ public class ShoppingListsFragment extends Fragment implements GoogleApiClient.C
         } else {
             i = 1;
         }
+        OneSignal.addTrigger("shoppingList", "loaded");
     }
 
     private void listSetupShoppingListsFragment() {
@@ -334,6 +343,7 @@ public class ShoppingListsFragment extends Fragment implements GoogleApiClient.C
         TextView btn_cancel = dialog.findViewById(R.id.btn_cancel);
         btn_yes.setOnClickListener(v -> {
             boolean isAvailable = BillingProcessor.isIabServiceAvailable(context);
+//            boolean isAvailable = bp.isOneTimePurchaseSupported();
             if(isAvailable) {
             /**
              * IMPORTANT: when you provide a payload, internally the library prepends a string to your payload.
@@ -617,7 +627,7 @@ public class ShoppingListsFragment extends Fragment implements GoogleApiClient.C
 //                            .putExtra("listId", listID)
 //                            .putExtra("storeImage", storeImage));
 //                    getActivity().finish();
-                    if (mySharedPreference.getPurchased(context, "STORE_LOGO")) {
+                    if (isUpgraded) {
                         String storeId = bean.getStoreId();
                         String listName = bean.getShopItem();
                         String storeName = bean.getStoreName();
@@ -636,7 +646,27 @@ public class ShoppingListsFragment extends Fragment implements GoogleApiClient.C
                                 .putExtra("storeImage", storeImage));
                         getActivity().finish();
                     } else {
-                        openPurchaseDialog();
+                        if (mySharedPreference.getPurchased(context, "STORE_LOGO")) {
+                            String storeId = bean.getStoreId();
+                            String listName = bean.getShopItem();
+                            String storeName = bean.getStoreName();
+                            String listID = bean.getId();
+                            String storeAddress = bean.getAddress();
+                            String storeImage = bean.getImageName();
+
+                            Log.e("Shopping List ID:", listID);
+
+                            startActivity(new Intent(getActivity(), StoreImageActivity.class)
+                                    .putExtra("listName", listName)
+                                    .putExtra("storeName", storeName)
+                                    .putExtra("storeAddress", storeAddress)
+                                    .putExtra("storeId", storeId)
+                                    .putExtra("listId", listID)
+                                    .putExtra("storeImage", storeImage));
+                            getActivity().finish();
+                        } else {
+                            openPurchaseDialog();
+                        }
                     }
                 }
             });
@@ -704,7 +734,8 @@ public class ShoppingListsFragment extends Fragment implements GoogleApiClient.C
 
     @Override
     public void onBillingError(int errorCode, Throwable error) {
-
+        Log.e("Purchase Error-->", error.getMessage());
+        Log.e("Purchase Error Code-->", String.valueOf(errorCode));
     }
 
     @Override

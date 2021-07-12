@@ -21,7 +21,7 @@
         android:contentDescription="@string/todo"
         android:padding="10sp"
         android:src="@mipmap/ic_back"
-        android:visibility="gone" />
+        android:visibility="visible" />
 
     <TextView
         android:id="@+id/txtTitle"

@@ -1,5 +1,7 @@
 package c.offerak.speedshopper.activity;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -7,12 +9,14 @@ import android.content.IntentSender;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
+import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -43,9 +47,14 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResolvableApiException;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
@@ -68,6 +77,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import c.offerak.speedshopper.R;
+import c.offerak.speedshopper.modal.UserBean;
+import c.offerak.speedshopper.response.GetResponse;
 import c.offerak.speedshopper.response.LoginResponse;
 import c.offerak.speedshopper.rest.ApiClient;
 import c.offerak.speedshopper.rest.ApiInterface;
@@ -82,17 +93,22 @@ import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
-public class LoginActivity extends AppCompatActivity implements FacebookCallback<LoginResult>, GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
+import com.onesignal.OSDeviceState;
+import com.onesignal.OSPermissionState;
+import com.onesignal.OneSignal;
+
+public class LoginActivity extends AppCompatActivity implements LocationListener, FacebookCallback<LoginResult>, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
     private static final String EMAIL = "email";
     private static final String TAG = LoginActivity.class.getSimpleName();
+
+    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
+
     @BindView(R.id.mainConstraint)
     ConstraintLayout constraintLayout;
     @BindView(R.id.edtUserName)
     EditText edtUsername;
     @BindView(R.id.edtPassword)
     EditText edtPassword;
-    @BindView(R.id.login_button)
-    LoginButton loginButton;
     CallbackManager callbackManager;
     LocationRequest mLocationRequest;
     private Intent intent;
@@ -111,30 +127,66 @@ public class LoginActivity extends AppCompatActivity implements FacebookCallback
     GoogleSignInClient mGoogleSignInClient;
     private GoogleApiClient googleApiClient;
 
+    GoogleApiClient mGoogleApiClient;
+
+    public Boolean isDeepLink = false;
+    private UserBean userBean;
+    String shareToken;
+    String push_id;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         context = this;
         init();
+        getOnesignalInfo();
+    }
+
+    public void  getOnesignalInfo()
+    {
+        OSDeviceState device = OneSignal.getDeviceState();
+        assert device != null;
+        MySharedPreference.setSharedPreference(context, "ONESIGNAL_ID", device.getUserId());
+        push_id = MySharedPreference.getSharedPreferences(context, "ONESIGNAL_ID");
+        Log.e("GET_PUSH_ID", push_id);
+        OneSignal.addTrigger("login", "loaded");
     }
 
     public void init() {
+        checkLocationPermission();
+        createLocationRequest();
+
+        GoogleSignInOptions gSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(LocationServices.API)
+                .enableAutoManage(this, this)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gSignInOptions)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
+
         FacebookSdk.fullyInitialize();
         ButterKnife.bind(this);
+        MySharedPreference mySharedPreference = new MySharedPreference(this);
         apiService = ApiClient.getClient().create(ApiInterface.class);
+        userBean = mySharedPreference.getLoginDetails();
         terms_condition = findViewById(R.id.terms_condition);
         privacy_policy = findViewById(R.id.privacy_policy);
         terms_condition.setOnClickListener(this);
         privacy_policy.setOnClickListener(this);
+        shareToken = MySharedPreference.getSharedPreferences(context, Constants.SHARE_TOKEN);
 
         LinearLayout googleLoginBtn = findViewById(R.id.btnGmailLogin);
         googleLoginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (utils.isNetworkConnected(context)) {
-                    googleSignup();
-                    Intent intent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
+//                    googleSignup();
+                    Intent intent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
                     startActivityForResult(intent, RC_SIGN_IN);
                 } else {
                     utils.showSnackBar(constraintLayout, "You are not connected to internet!");
@@ -142,17 +194,19 @@ public class LoginActivity extends AppCompatActivity implements FacebookCallback
 
             }
         });
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            try {
+                isDeepLink = extras.getBoolean(Constants.SHARE_TOKEN, false);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
 
         Log.e(TAG, "init: "+MySharedPreference.getSharedPreferences(context, Constants.FIREBASE_TOKEN) );
-       /* final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        createLocationRequest();
-
-        if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            buildLocationAccess();
-        }*/
 
         try {
-            PackageInfo info = getPackageManager().getPackageInfo(
+            @SuppressLint("PackageManagerGetSignatures") PackageInfo info = getPackageManager().getPackageInfo(
                     "c.offerak.speedshopper",                  //Insert your own package name.
                     PackageManager.GET_SIGNATURES);
             for (Signature signature : info.signatures) {
@@ -165,20 +219,6 @@ public class LoginActivity extends AppCompatActivity implements FacebookCallback
         } catch (NoSuchAlgorithmException e) {
             Log.e(TAG, "NoSuchAlgorithmException Error: "+e.toString() );
         }
-        /*try {
-            PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), PackageManager.GET_SIGNATURES);
-            for (Signature signature : info.signatures) {
-                MessageDigest md = MessageDigest.getInstance("SHA");
-                md.update(signature.toByteArray());
-                String sign = Base64.encodeToString(md.digest(), Base64.DEFAULT);
-                Log.e("MY KEY HASH:", sign);
-                Toast.makeText(getApplicationContext(), sign, Toast.LENGTH_LONG).show();
-            }
-        } catch (PackageManager.NameNotFoundException e) {
-            Log.e(TAG, "init: "+e.toString() );
-        } catch (NoSuchAlgorithmException e) {
-            Log.e(TAG, "init: "+e.toString() );
-        }*/
 
         callbackManager = CallbackManager.Factory.create();
         LoginManager.getInstance().registerCallback(callbackManager, LoginActivity.this);
@@ -186,17 +226,12 @@ public class LoginActivity extends AppCompatActivity implements FacebookCallback
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail().build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-//        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener( LoginActivity.this, instanceIdResult -> {
-//            String newToken = instanceIdResult.getToken();
-//            MySharedPreference.setSharedPreference(context, Constants.FIREBASE_TOKEN, newToken);
-//
-//        });
+
 
         FirebaseInstallations.getInstance().getToken(true).addOnSuccessListener(LoginActivity.this, installationTokenResult -> {
             String newToken = installationTokenResult.getToken();
             MySharedPreference.setSharedPreference(context, Constants.FIREBASE_TOKEN, newToken);
         });
-
     }
 
     private void requestCameraPermission() {
@@ -221,15 +256,7 @@ public class LoginActivity extends AppCompatActivity implements FacebookCallback
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.terms_condition:
-                /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    if (ContextCompat.checkSelfPermission(context, CAMERA) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(context, WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(context, READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                        termsCondition();
-                    } else {
-                        requestCameraPermission();
-                    }
-                } else {
-                    termsCondition();
-                }*/
+
                 startActivity(new Intent(context, TermsConditionActivity.class));
                 break;
 
@@ -246,19 +273,15 @@ public class LoginActivity extends AppCompatActivity implements FacebookCallback
 
     @OnClick(R.id.txtNewUser1)
     public void signup() {
-        startActivity(new Intent(context, SignupActivity.class));
+        startActivity(new Intent(this, SignupActivity.class));
+        finish();
     }
 
     @OnClick(R.id.guest)
     public void guest() {
-        String androidId = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
+        @SuppressLint("HardwareIds") String androidId = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
         Log.d("Android","Android ID : "+androidId);
         login(androidId, "", "guest");
-        //        Intent intent = new Intent(context, MenuActivity.class);
-//        Bundle b = new Bundle();
-//        b.putString("from", "guest"); //Your id
-//        intent.putExtras(b);
-//        startActivity(intent);
     }
 
     @OnClick(R.id.btnLogin)
@@ -292,18 +315,52 @@ public class LoginActivity extends AppCompatActivity implements FacebookCallback
         }
     }
 
-    private void googleSignup() {
-        if (googleApiClient != null && googleApiClient.isConnected()) {
-            googleApiClient.stopAutoManage((FragmentActivity) context);
-            googleApiClient.disconnect();
+//    private void googleSignup() {
+//        if (googleApiClient != null && googleApiClient.isConnected()) {
+//            googleApiClient.stopAutoManage((FragmentActivity) context);
+//            googleApiClient.disconnect();
+//        }
+//        GoogleSignInOptions gSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+//                .requestEmail()
+//                .build();
+//        googleApiClient = new GoogleApiClient.Builder(this)
+//                .enableAutoManage(this, this)
+//                .addApi(Auth.GOOGLE_SIGN_IN_API, gSignInOptions)
+//                .build();
+//    }
+
+    public void shareTokenUpdate(String type)
+    {
+        if (utils.isNetworkConnected(context)) {
+            utils.showDialog(context);
+            Call<GetResponse> call = apiService.updateShareStatus(userBean.getUserToken(), shareToken);
+            call.enqueue(new Callback<GetResponse>() {
+                @Override
+                public void onResponse(Call<GetResponse> call, retrofit2.Response<GetResponse> response) {
+                    try {
+                        GetResponse tokenResponse = response.body();
+                        if (tokenResponse.getStatus() == 200) {
+                            utils.hideDialog();
+                        } else {
+                            utils.hideDialog();
+                            utils.showSnackBar(getWindow().getDecorView().getRootView(), tokenResponse.getMessage());
+                        }
+                        sendToHome(type);
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<GetResponse> call, Throwable t) {
+                    utils.hideDialog();
+                    utils.showSnackBar(getWindow().getDecorView().getRootView(), "Please check your internet connection!");
+                }
+            });
+        } else {
+            utils.showSnackBar(getWindow().getDecorView().getRootView(), getString(R.string.not_connected_to_internet));
         }
-        GoogleSignInOptions gSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build();
-        googleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this, this)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gSignInOptions)
-                .build();
     }
 
     private void login(String userName, String password, String flow) {
@@ -314,12 +371,12 @@ public class LoginActivity extends AppCompatActivity implements FacebookCallback
             Call<LoginResponse> call = null;
             if(flow.equals("guest")){
                 call = apiService.loginGuest(userName,
-                        "android");
+                        "android", push_id);
             }else{
                 call = apiService.login(userName,
                         password,
                         MySharedPreference.getSharedPreferences(context, Constants.FIREBASE_TOKEN),
-                        "android");
+                        "android", push_id);
             }
 
             call.enqueue(new Callback<LoginResponse>() {
@@ -354,14 +411,11 @@ public class LoginActivity extends AppCompatActivity implements FacebookCallback
                                     mySharedPreference.setLoginDetails(email, name, picPath + "" + proPic, token, id, flow);
 
                                     if (isEmailVerify) {
+
                                         if(flow.equals("guest")){
-                                            Intent intent = new Intent(context, MenuActivity.class);
-                                            Bundle b = new Bundle();
-                                            b.putString("from", "guest"); //Your id
-                                            intent.putExtras(b);
-                                            startActivity(intent);
+                                            checkShare("guest");
                                         }else{
-                                            sendToHome();
+                                            checkShare("email");
                                         }
                                     } else {
                                         utils.showSnackBar(constraintLayout, "Please verify your email first!");
@@ -436,7 +490,7 @@ public class LoginActivity extends AppCompatActivity implements FacebookCallback
                     strauthid,
                     login_type,
                     MySharedPreference.getSharedPreferences(context, Constants.FIREBASE_TOKEN),
-                    "android");
+                    "android", push_id);
             call.enqueue(new Callback<LoginResponse>() {
                 @Override
                 public void onResponse(Call<LoginResponse> call, retrofit2.Response<LoginResponse> response) {
@@ -468,7 +522,7 @@ public class LoginActivity extends AppCompatActivity implements FacebookCallback
                                     if (message.equals("Session expired")) {
                                         utils.showSnackBar(getWindow().getDecorView().getRootView(), "Your account has been deactivated by the admin!");
                                     } else {
-                                        sendToHome();
+                                        checkShare("facebook");
                                     }
                                 } else {
                                     utils.showSnackBar(constraintLayout, message);
@@ -493,9 +547,28 @@ public class LoginActivity extends AppCompatActivity implements FacebookCallback
         }
     }
 
-    private void sendToHome() {
-        startActivity(new Intent(this, MenuActivity.class));
-        finish();
+    private void checkShare(String type) {
+        if (isDeepLink) {
+            shareTokenUpdate(type);
+        } else {
+            sendToHome(type);
+        }
+
+    }
+
+    private void sendToHome(String type) {
+        if (type.equals("guest")) {
+            Intent intent = new Intent(context, MenuActivity.class);
+            Bundle b = new Bundle();
+            b.putString("from", "guest"); //Your id
+            intent.putExtras(b);
+            startActivity(intent);
+            finish();
+        } else {
+            startActivity(new Intent(this, MenuActivity.class));
+            finish();
+        }
+
     }
 
     public boolean isValidEmail(CharSequence target) {
@@ -513,14 +586,6 @@ public class LoginActivity extends AppCompatActivity implements FacebookCallback
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             handleSignInResult(task);
         }
-
-       /* if (requestCode == 200) {
-            final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
-            if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                utils.showSnackBar(getWindow().getDecorView().getRootView(), "Location required, Application may miss behave!");
-            }
-        }*/
     }
 
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
@@ -547,17 +612,20 @@ public class LoginActivity extends AppCompatActivity implements FacebookCallback
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.
             Log.e(TAG, "signInResult:failed code=" + e.getStatusCode() + e.getMessage() + "," + e.toString());
+            utils.showSnackBar(getWindow().getDecorView().getRootView(), "Google Signin failed due to some reason. Please try again later");
         }
     }
 
     @Override
     public void onCancel() {
-        Utility.ShowToastMessage(context, getString(R.string.facebook_login_cancel));
+//        Utility.ShowToastMessage(context, );
+        utils.showSnackBar(getWindow().getDecorView().getRootView(), getString(R.string.facebook_login_cancel));
     }
 
     @Override
     public void onError(FacebookException error) {
-        Utility.ShowToastMessage(context, getString(R.string.error_in_facebook));
+//        Utility.ShowToastMessage(context, getString(R.string.error_in_facebook));
+        utils.showSnackBar(getWindow().getDecorView().getRootView(), getString(R.string.error_in_facebook));
         Log.e(TAG, "onError: " + error.getMessage());
     }
 
@@ -611,5 +679,128 @@ public class LoginActivity extends AppCompatActivity implements FacebookCallback
                 }
             }
         });
+    }
+
+    public void checkLocationPermission() {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.ACCESS_FINE_LOCATION)) {
+
+                ActivityCompat.requestPermissions(LoginActivity.this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        MY_PERMISSIONS_REQUEST_LOCATION);
+
+
+            } else {
+                // No explanation needed, we can request the permission.
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        MY_PERMISSIONS_REQUEST_LOCATION);
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String permissions[], @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    // location-related task you need to do.
+                    if (ContextCompat.checkSelfPermission(this,
+                            Manifest.permission.ACCESS_FINE_LOCATION)
+                            == PackageManager.PERMISSION_GRANTED) {
+
+                        //Request location updates:
+                        startLocationUpdates();
+                    }
+
+                } else {
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                    utils.showSnackBar(getWindow().getDecorView().getRootView(), "You denied the permission!");
+                }
+            }
+
+        }
+    }
+
+    protected void startLocationUpdates() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        PendingResult<Status> pendingResult = LocationServices.FusedLocationApi.requestLocationUpdates(
+                mGoogleApiClient, mLocationRequest, this);
+        Log.d(TAG, "Location update started ..............: ");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        //stopLocationUpdates();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        OneSignal.addTrigger("login", "loaded");
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG, "onStart fired ..............");
+        mGoogleApiClient.connect();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG, "onStop fired ..............");
+        mGoogleApiClient.disconnect();
+        Log.d(TAG, "isConnected ...............: " + mGoogleApiClient.isConnected());
+    }
+
+    private boolean isGooglePlayServicesAvailable() {
+        int status1 = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this);
+
+        int status = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+        if (ConnectionResult.SUCCESS == status) {
+            return true;
+        } else {
+            //GooglePlayServicesUtil.getErrorDialog(status, this, 0).show();
+            return false;
+        }
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        Log.d(TAG, "onConnected - isConnected ...............: " + mGoogleApiClient.isConnected());
+        startLocationUpdates();
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
     }
 }

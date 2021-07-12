@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.bigkoo.alertview.AlertView;
 import com.bigkoo.alertview.OnItemClickListener;
 import com.bumptech.glide.Glide;
+import com.onesignal.OneSignal;
 
 import c.offerak.speedshopper.R;
 import c.offerak.speedshopper.modal.UserBean;
@@ -116,6 +117,8 @@ public class ProductDetailsActivity extends AppCompatActivity implements View.On
             }
         });
         btn_buy.setOnClickListener(this);
+
+        OneSignal.addTrigger("productDetail", "loaded");
     }
 
     @Override
@@ -216,5 +219,17 @@ public class ProductDetailsActivity extends AppCompatActivity implements View.On
         btn_yes.setOnClickListener(this);
         btn_cancel.setOnClickListener(this);
         dialog.show();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        //stopLocationUpdates();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        OneSignal.addTrigger("productDetail", "loaded");
     }
 }

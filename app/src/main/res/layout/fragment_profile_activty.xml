@@ -154,7 +154,7 @@
 
     <TextView
         android:id="@+id/updateProfile"
-        android:layout_width="wrap_content"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="8dp"
@@ -168,6 +168,7 @@
         android:text="@string/update_profile"
         android:textColor="@color/white"
         android:textSize="14sp"
+        android:gravity="center"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -175,17 +176,18 @@
         app:layout_constraintLeft_toLeftOf="@+id/editProfile"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/mainRel"
-        app:layout_constraintVertical_bias="0.549" />
+        app:layout_constraintVertical_bias="0.3" />
 
     <TextView
         android:id="@+id/editProfile"
-        android:layout_width="wrap_content"
+        android:layout_width="180dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="40dp"
+        android:layout_marginEnd="38dp"
         android:layout_marginBottom="8dp"
         android:background="@drawable/btn_bg"
+        android:gravity="center"
         android:paddingLeft="20sp"
         android:paddingTop="10sp"
         android:paddingRight="20sp"
@@ -198,6 +200,53 @@
         app:layout_constraintHorizontal_bias="0.57"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/mainRel"
-        app:layout_constraintVertical_bias="0.549" />
+        app:layout_constraintVertical_bias="0.1" />
+    <TextView
+        android:id="@+id/upgrade"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:paddingLeft="20sp"
+        android:paddingTop="10sp"
+        android:paddingRight="20sp"
+        android:paddingBottom="10sp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="38dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/btn_bg"
+        android:gravity="center"
+        android:text="Upgrade to Premium"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.57"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mainRel"
+        app:layout_constraintVertical_bias="0.5" />
+
+<!--    <TextView-->
+<!--        android:id="@+id/restore"-->
+<!--        android:layout_width="180dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:paddingLeft="20sp"-->
+<!--        android:paddingTop="10sp"-->
+<!--        android:paddingRight="20sp"-->
+<!--        android:paddingBottom="10sp"-->
+<!--        android:layout_marginStart="10dp"-->
+<!--        android:layout_marginTop="8dp"-->
+<!--        android:layout_marginEnd="38dp"-->
+<!--        android:layout_marginBottom="8dp"-->
+<!--        android:background="@drawable/btn_bg"-->
+<!--        android:gravity="center"-->
+<!--        android:text="Restore"-->
+<!--        android:textColor="@color/white"-->
+<!--        android:textSize="14sp"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.57"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/mainRel"-->
+<!--        app:layout_constraintVertical_bias="0.9" />-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

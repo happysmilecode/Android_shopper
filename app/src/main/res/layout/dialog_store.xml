@@ -54,7 +54,7 @@
     </RelativeLayout>
 
     <ImageView
-        android:id="@+id/cross"
+        android:id="@+id/crossStore"
         android:layout_width="35dp"
         android:layout_height="35dp"
         android:layout_alignParentRight="true"

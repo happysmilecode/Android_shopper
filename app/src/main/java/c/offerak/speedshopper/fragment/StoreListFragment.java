@@ -37,6 +37,7 @@ import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.maps.android.SphericalUtil;
+import com.onesignal.OneSignal;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -192,6 +193,7 @@ public class StoreListFragment extends Fragment {
 
             }
         });
+        OneSignal.addTrigger("search", "loaded");
     }
 
     //----------------------- Store Dialog List -----------------------
@@ -418,6 +420,7 @@ public class StoreListFragment extends Fragment {
 
         footer.setVisibility(View.VISIBLE);
         screenTitle.setText(R.string.stores_near_you);
+        OneSignal.addTrigger("search", "loaded");
     }
 
     public LatLngBounds toBounds(LatLng center, double radiusInMeters) {
@@ -474,4 +477,11 @@ public class StoreListFragment extends Fragment {
             }*/
         }
     };
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        //stopLocationUpdates();
+    }
+
 }

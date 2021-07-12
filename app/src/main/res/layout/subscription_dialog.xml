@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/rounded_chat_box"
+            android:orientation="vertical"
+            android:paddingTop="20dp">
+
+            <TextView
+                android:id="@+id/subscription_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:text="Choose Your Option to upgrade "
+                android:textColor="@color/colorAppBlue"
+                android:textSize="18sp"
+                android:padding="5dp"
+                android:textStyle="bold" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/grey_300" />
+
+            <TextView
+                android:id="@+id/sub_monthly"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="Monthly"
+                android:textColor="@color/colorAppBlue"
+                android:textSize="16sp"
+                android:textStyle="bold"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="2dp"
+                android:background="@color/grey_300" />
+
+            <TextView
+                android:id="@+id/three_months"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="3 Months"
+                android:textColor="@color/colorAppBlue"
+                android:textSize="16sp"
+                android:textStyle="bold"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="2dp"
+                android:background="@color/grey_300" />
+
+            <TextView
+                android:id="@+id/six_months"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="6 Months"
+                android:textColor="@color/colorAppBlue"
+                android:textSize="16sp"
+                android:textStyle="bold"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="2dp"
+                android:background="@color/grey_300" />
+
+            <TextView
+                android:id="@+id/sub_year"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="Yearly"
+                android:textColor="@color/colorAppBlue"
+                android:textSize="16sp"
+                android:textStyle="bold"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="2dp"
+                android:background="@color/grey_300" />
+
+            <TextView
+                android:id="@+id/cancel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="8dp"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="Cancel"
+                android:textColor="@color/colorAppBlue"
+                android:textSize="18sp"
+                android:textStyle="bold"/>
+
+
+        </LinearLayout>
+    </ScrollView>
+<!--    <data>-->
+
+<!--        <import type="android.view.View" />-->
+
+<!--        <variable-->
+<!--            name="billingViewModel"-->
+<!--            type="c.offerak.speedshopper.modal.BillingViewModel" />-->
+
+<!--        <variable-->
+<!--            name="subscriptionViewModel"-->
+<!--            type="c.offerak.speedshopper.modal.SubscriptionStatusViewModel" />-->
+<!--    </data>-->
+

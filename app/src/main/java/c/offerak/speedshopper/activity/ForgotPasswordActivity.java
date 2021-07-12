@@ -10,6 +10,8 @@ import android.text.TextUtils;
 import android.util.Patterns;
 import android.widget.EditText;
 
+import com.onesignal.OneSignal;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -46,6 +48,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     public void init() {
         ButterKnife.bind(this);
         apiService = ApiClient.getClient().create(ApiInterface.class);
+        OneSignal.addTrigger("forgot", "loaded");
     }
 
     @OnClick(R.id.btnSend)
@@ -107,5 +110,16 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
     public boolean isValidEmail(CharSequence target) {
         return (!TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches());
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        //stopLocationUpdates();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        OneSignal.addTrigger("forgot", "loaded");
     }
 }

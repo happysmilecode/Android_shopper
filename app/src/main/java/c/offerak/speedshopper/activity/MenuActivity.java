@@ -1,9 +1,11 @@
 package c.offerak.speedshopper.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -13,6 +15,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+import com.onesignal.OSPermissionState;
+import com.onesignal.OneSignal;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -59,20 +66,32 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
     MySharedPreference mySharedPreference;
     private ApiInterface apiService;
 
+    public boolean isUpgraded = false;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
         context = this;
         init();
+        showInAppMessage();
     }
 
 
     public void init() {
+        isUpgraded = MySharedPreference.getPurchased(context, "membership");
         initVariables();
         ButterKnife.bind(this);
         initClickEvents();
-        loadAds();
+        if (isUpgraded) {
+            loadAds();
+        }
+
+    }
+
+    public void  showInAppMessage()
+    {
+        OneSignal.addTrigger("menu", "loaded");
     }
 
     private void initVariables() {
@@ -117,19 +136,22 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     void loadAds() {
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+            }
+        });
         AdView adView = findViewById(R.id.ads_view);
         AdRequest adRequest = new AdRequest.Builder().build();
         adView.loadAd(adRequest);
-
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View view) {
         String menu_name="";
         switch (view.getId()) {
             case R.id.my_list_btn:
-                menu_name = "my_list";
-                break;
             case R.id.my_list_btn1:
                 menu_name = "my_list";
                 break;
@@ -163,6 +185,7 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.logout_btn:
             case R.id.login_btn:
                 if (utils.isNetworkConnected(context)) {
+                    utils.showDialog(context);
                     String token = bean.getUserToken();
                     Call<GetResponse> call = apiService.logout(token);
                     call.enqueue(new Callback<GetResponse>() {
@@ -170,6 +193,7 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
                         public void onResponse(Call<GetResponse> call, retrofit2.Response<GetResponse> response) {
 
                             try {
+                                utils.hideDialog();
                                 GetResponse tokenResponse = response.body();
                                 if (tokenResponse != null) {
                                     int status = tokenResponse.getStatus();
@@ -213,10 +237,23 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
                 } else {
                     utils.showSnackBar(getWindow().getDecorView().getRootView(), "You are not connected to internet!");
                 }
-                return;
+                break;
         }
         Intent intent = new Intent(context, LandingScreen.class);
         intent.putExtra("MENU_NAME", menu_name);
         startActivity(intent);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        //stopLocationUpdates();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        OneSignal.addTrigger("menu", "loaded");
+
     }
 }

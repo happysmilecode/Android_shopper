@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.onesignal.OneSignal;
 
 import c.offerak.speedshopper.R;
 
@@ -57,5 +58,20 @@ public class FAQ_Details extends AppCompatActivity {
                 finish();
             }
         });
+
+        OneSignal.addTrigger("answer", "loaded");
+
+
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        //stopLocationUpdates();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        OneSignal.addTrigger("answer", "loaded");
     }
 }

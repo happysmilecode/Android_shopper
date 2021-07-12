@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.joanzapata.pdfview.PDFView;
 import com.joanzapata.pdfview.listener.OnPageChangeListener;
+import com.onesignal.OneSignal;
 
 import c.offerak.speedshopper.R;
 import c.offerak.speedshopper.rest.Constants;
@@ -52,6 +53,7 @@ public class PrivacyPolicyActivity extends AppCompatActivity implements OnPageCh
         webView.getSettings().setDomStorageEnabled(true);
         webView.loadUrl(Constants.PRIVACY_POLICY_URL);
 //        openFile();
+        OneSignal.addTrigger("policy", "loaded");
     }
 
     private void openFile() {
@@ -92,5 +94,17 @@ public class PrivacyPolicyActivity extends AppCompatActivity implements OnPageCh
             utils.hideDialog();
             super.onPageFinished(view, url);
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        //stopLocationUpdates();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        OneSignal.addTrigger("policy", "loaded");
     }
 }

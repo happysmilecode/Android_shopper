@@ -1,17 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    tools:context=".SplashScreen">
 
-    <TextView
-        android:id="@+id/link_txt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <WebView
-        android:id="@+id/webview"
+    <ImageView
+        android:id="@+id/splashImg"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/bg"
+        tools:ignore="ContentDescription" />
 
-</LinearLayout>
+    <ImageView
+        android:layout_width="250sp"
+        android:layout_height="250sp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:src="@drawable/playstore_icon"
+        app:layout_constraintBottom_toBottomOf="@+id/splashImg"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.447"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.502"
+        tools:ignore="ContentDescription" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

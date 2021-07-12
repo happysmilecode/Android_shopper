@@ -14,6 +14,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.onesignal.OneSignal;
+
 import java.util.List;
 
 import c.offerak.speedshopper.R;
@@ -74,6 +76,7 @@ public class FrequentlyAskedQuestionsFragment extends Fragment {
                         .putExtra("image", dataList.get(position).getImage()));
             }
         });*/
+        OneSignal.addTrigger("faq", "loaded");
     }
 
     private void getQuestionsList() {
@@ -134,5 +137,17 @@ public class FrequentlyAskedQuestionsFragment extends Fragment {
         }else {
             utils.showSnackBar(getActivity().getWindow().getDecorView().getRootView(), getString(R.string.not_connected_to_internet));
         }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        //stopLocationUpdates();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        OneSignal.addTrigger("faq", "loaded");
     }
 }

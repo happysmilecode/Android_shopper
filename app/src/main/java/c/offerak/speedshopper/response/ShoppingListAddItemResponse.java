@@ -43,7 +43,9 @@ public class ShoppingListAddItemResponse {
         private String id;
         private String item_id;
         private String name;
+        private String image;
         private int quantity;
+        private float unit_price;
         private String status;
         private String location;
         public String getId() {
@@ -55,6 +57,9 @@ public class ShoppingListAddItemResponse {
         public String getName() {
             return name;
         }
+        public String getImage() {
+            return image;
+        }
         public int getQuantity() {
             return quantity;
         }
@@ -64,6 +69,10 @@ public class ShoppingListAddItemResponse {
         public String getLocation() {
             return location;
         }
+        public float getUnit_price() {
+            return unit_price;
+        }
+
 
 
     }

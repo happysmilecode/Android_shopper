@@ -7,6 +7,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.speech.RecognizerIntent;
@@ -32,6 +35,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -39,15 +43,25 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+import com.google.android.gms.common.util.ArrayUtils;
+import com.onesignal.OneSignal;
 import com.xujiaji.library.RippleCheckBox;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -65,6 +79,7 @@ import c.offerak.speedshopper.response.ShoppingListAddItemResponse;
 import c.offerak.speedshopper.response.SpeedAvailableItemResponse;
 import c.offerak.speedshopper.rest.ApiClient;
 import c.offerak.speedshopper.rest.ApiInterface;
+import c.offerak.speedshopper.rest.Constants;
 import c.offerak.speedshopper.utils.MySharedPreference;
 import c.offerak.speedshopper.utils.ProgressHUD;
 import c.offerak.speedshopper.utils.Utils;
@@ -96,8 +111,8 @@ public class SpeedShoppingActivity extends AppCompatActivity implements View.OnC
     public ArrayList<String> aisleList = new ArrayList<>();
     public ArrayList<String> aislePositionList = new ArrayList<>();
     public ImageView icBackButton, toggleButton, icMic, icAddCategory, cross;
-    public TextView txtTitle, btnDeleteChecked, btnDeleteAll, btnReverseSort, emptyView, storeListTitle, storeAddress, storeNameTitle, sstxEarned;
-    public ImageView importItem;
+    public TextView txtTitle, btnDeleteChecked, btnDeleteAll, btnReverseSort, emptyView, storeListTitle, storeAddress, storeNameTitle, sstxEarned, totalPrice;
+    public ImageView importItem, btnShare;
     public ArrayAdapter<String> adapter;
     Boolean orderFlag = false;
     Dialog dialog;
@@ -115,6 +130,9 @@ public class SpeedShoppingActivity extends AppCompatActivity implements View.OnC
     private InterstitialAd mInterstitialAd;
     MySharedPreference mySharedPreference = new MySharedPreference(this);
     int unPurchasedCount = 0;
+    public String shareToken;
+    public boolean isUpgraded = false;
+    public float total = 0.0f;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -122,10 +140,11 @@ public class SpeedShoppingActivity extends AppCompatActivity implements View.OnC
         setContentView(R.layout.speed_shopping_list_layout);
         context = this;
         init();
-
     }
 
     public void init() {
+        isUpgraded = MySharedPreference.getPurchased(context, "membership");
+//        isUpgraded = true;
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
@@ -147,6 +166,8 @@ public class SpeedShoppingActivity extends AppCompatActivity implements View.OnC
         icMic = findViewById(R.id.icMic);
         txtTitle = findViewById(R.id.txtTitle);
         txtSync = findViewById(R.id.txtSync);
+        totalPrice = findViewById(R.id.total_price);
+        btnShare = findViewById(R.id.share);
 
         apiService = ApiClient.getClient().create(ApiInterface.class);
         MySharedPreference mySharedPreference = new MySharedPreference(this);
@@ -201,6 +222,11 @@ public class SpeedShoppingActivity extends AppCompatActivity implements View.OnC
             showStoreList();
         });
 
+        btnShare.setOnClickListener(v -> {
+            shareToken = getTokenString();
+            saveShareToken();
+        });
+
         btnDeleteAll.setOnClickListener(v -> AskOption("all"));
         btnReverseSort.setOnClickListener(v -> ReverseSort());
         btnDeleteChecked.setOnClickListener(v -> AskOption("checked"));
@@ -213,6 +239,11 @@ public class SpeedShoppingActivity extends AppCompatActivity implements View.OnC
                 getStoreItemsList();
             } else {
                 utils.showSnackBar(getWindow().getDecorView().getRootView(), "You are not connected to internet!");
+            }
+        });
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
             }
         });
 
@@ -236,9 +267,78 @@ public class SpeedShoppingActivity extends AppCompatActivity implements View.OnC
         AdView adView = findViewById(R.id.ads_view);
         AdRequest adRequest = new AdRequest.Builder().build();
         adView.loadAd(adRequest);
+        if (isUpgraded) {
+            adView.setVisibility(View.GONE);
+        }
+
+        OneSignal.addTrigger("speedshop", "loaded");
 
     }
 
+    private void saveShareToken() {
+        if (utils.isNetworkConnected(context)) {
+            utils.showDialog(SpeedShoppingActivity.this);
+            Call<GetResponse> call = apiService.saveShareToken(userBean.getUserToken(), shareToken, listId);
+            call.enqueue(new Callback<GetResponse>() {
+                @Override
+                public void onResponse(Call<GetResponse> call, retrofit2.Response<GetResponse> response) {
+                    try {
+                        GetResponse tokenResponse = response.body();
+                        assert tokenResponse != null;
+                        if (tokenResponse.getStatus() == 200) {
+                            shareShoppingList(shareToken);
+                            utils.hideDialog();
+                        } else {
+                            utils.hideDialog();
+                            utils.showSnackBar(getWindow().getDecorView().getRootView(), tokenResponse.getMessage());
+
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<GetResponse> call, Throwable t) {
+                    utils.hideDialog();
+                    utils.showSnackBar(getWindow().getDecorView().getRootView(), "Please check your internet connection!");
+                }
+            });
+        } else {
+            utils.showSnackBar(getWindow().getDecorView().getRootView(), getString(R.string.not_connected_to_internet));
+        }
+    }
+
+    private void shareShoppingList(String token) {
+
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+
+        String sharebody = "I want to share my shopping list with you. \n\n " +
+                "This way we'll never forget to buy anything we need, and our lists will always be in sync. \n\n " +
+                "Accept my share request with Speed Shopper. If you're new, you will be sent to download the app first. Don't worry, it's free! \n\n " +
+                "https://speedshopperapp.com/app/share/token/" + token + "\n\n" +
+                "Try Speed Shopper, the world's best shopping list app, for iOS and Android.\n\n" +
+                "https://apps.apple.com/us/app/speed-shopper/id1434065555 \n\n" +
+                "https://play.google.com/store/apps/details?id=c.offerak.speedshopper";
+
+        sendIntent.putExtra(Intent.EXTRA_TEXT, sharebody);
+        sendIntent.putExtra(Intent.EXTRA_TITLE, "Shopping List");
+        sendIntent.putExtra(Intent.EXTRA_SUBJECT, "View My Shopping List With Speed Shopper");
+        sendIntent.setType("text/plain");
+        Intent shareIntent = Intent.createChooser(sendIntent, "Share Shopping List");
+        startActivity(shareIntent);
+    }
+
+
+    public String getTokenString() {
+        String token = "";
+        SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
+        Date date = new Date(System.currentTimeMillis());
+        token = formatter.format(date);
+        token = listId + "_" + token;
+        return token;
+    }
 
     private void ReverseSort() {
         // Implement a reverse-order Comparator by lambda function
@@ -280,6 +380,7 @@ public class SpeedShoppingActivity extends AppCompatActivity implements View.OnC
                                             listBean.setShopItem(data.get(i).getName());
                                             listBean.setStoreName(data.get(i).getStore_name());
                                             listBean.setShoppingListName(data.get(i).getName());
+                                            listBean.setImageName(data.get(i).getImage());
                                             listBean.setAddress(data.get(i).getAddress());
                                             listBean.setId(data.get(i).getId());
                                             listBean.setStoreId(data.get(i).getStore_id());
@@ -714,6 +815,7 @@ public class SpeedShoppingActivity extends AppCompatActivity implements View.OnC
         SpeedShoppingListBean bean = new SpeedShoppingListBean();
         bean.setId(dataBean.getId());
         bean.setName(dataBean.getName());
+        bean.setImage(dataBean.getImage());
         bean.setLocation(dataBean.getLocation());
         bean.setQuantity(dataBean.getQuantity());
         bean.setStatus(dataBean.getStatus());
@@ -787,11 +889,13 @@ public class SpeedShoppingActivity extends AppCompatActivity implements View.OnC
     }
 
     void reloadRecyclerViewWithData(SpeedAvailableItemResponse.DataBean dataBean) {
+        total = 0.0f;
         listBeans.clear();
 
         List<SpeedAvailableItemResponse.DataBean.PurchasedBean> purchasedBeanList = dataBean.getPurchased();
         List<SpeedAvailableItemResponse.DataBean.UnpurchasedBean> unPurchasedBeanList = dataBean.getUnpurchased();
         unPurchasedCount = 0;
+
         if (unPurchasedBeanList != null) {
             unPurchasedCount = unPurchasedBeanList.size();
             for (int i = 0; i < unPurchasedBeanList.size(); i++) {
@@ -800,11 +904,14 @@ public class SpeedShoppingActivity extends AppCompatActivity implements View.OnC
                 bean.setIndex(i);
                 bean.setLocation(unPurchasedBeanList.get(i).getLocation());
                 bean.setName(unPurchasedBeanList.get(i).getName());
+                bean.setImage(unPurchasedBeanList.get(i).getImage());
                 bean.setQuantity(unPurchasedBeanList.get(i).getQuantity());
+                bean.setUnitPrice(unPurchasedBeanList.get(i).getUnit_price());
                 bean.setStatus(unPurchasedBeanList.get(i).getStatus());
                 bean.setItem_id(unPurchasedBeanList.get(i).getItem_id());
                 bean.setAdvertStatus("0");
-
+                float unPurchasedTotal = unPurchasedBeanList.get(i).getQuantity() * unPurchasedBeanList.get(i).getUnit_price();
+                total += unPurchasedTotal;
                 listBeans.add(bean);
             }
         }
@@ -816,14 +923,19 @@ public class SpeedShoppingActivity extends AppCompatActivity implements View.OnC
                 bean.setIndex(i + unPurchasedCount);
                 bean.setLocation(purchasedBeanList.get(i).getLocation());
                 bean.setName(purchasedBeanList.get(i).getName());
+                bean.setImage(purchasedBeanList.get(i).getImage());
                 bean.setQuantity(purchasedBeanList.get(i).getQuantity());
+                bean.setUnitPrice(purchasedBeanList.get(i).getUnit_price());
                 bean.setStatus(purchasedBeanList.get(i).getStatus());
                 bean.setItem_id(purchasedBeanList.get(i).getItem_id());
                 bean.setAdvertStatus("0");
-
+                float purchasedTotal = purchasedBeanList.get(i).getQuantity() * purchasedBeanList.get(i).getUnit_price();
+                total += purchasedTotal;
                 listBeans.add(bean);
             }
         }
+
+        totalPrice.setText("Total Price : $ " + Float.toString(total));
 
         if (item_Ids.size() != 0 && listBeans.size() != 0) {
             for (int i = 0; i < listBeans.size(); i++) {
@@ -921,16 +1033,19 @@ public class SpeedShoppingActivity extends AppCompatActivity implements View.OnC
             }
             case ITEM_EDIT_INTEGER_VALUE:
                 if (resultCode == RESULT_OK && null != data) {
-                    int pos = data.getIntExtra("m_pos", 0);
-                    int itemQuantity = data.getIntExtra("ITEM_QUANTITY", 1);
-                    String aisleLocation = data.getStringExtra("ITEM_LOCATION");
-
-                    SpeedShoppingListBean editBean = listBeans.get(pos);
-                    editBean.setLocation(aisleLocation);
-                    editBean.setQuantity(itemQuantity);
-                    listBeans.remove(pos);
-                    listBeans.add(pos, editBean);
-                    speedShoppingListAdapter.notifyDataSetChanged();
+//                    int pos = data.getIntExtra("m_pos", 0);
+//                    int itemQuantity = data.getIntExtra("ITEM_QUANTITY", 1);
+//                    String aisleLocation = data.getStringExtra("ITEM_LOCATION");
+//                    float itemPrice = data.getFloatExtra("ITEM_PRICE", 0.0f);
+//
+//                    SpeedShoppingListBean editBean = listBeans.get(pos);
+//                    editBean.setLocation(aisleLocation);
+//                    editBean.setQuantity(itemQuantity);
+//                    editBean.setUnitPrice(itemPrice);
+//                    listBeans.remove(pos);
+//                    listBeans.add(pos, editBean);
+//                    speedShoppingListAdapter.notifyDataSetChanged();
+                    getStoreItems();
                 }
                 break;
         }
@@ -1043,7 +1158,7 @@ public class SpeedShoppingActivity extends AppCompatActivity implements View.OnC
             storeDialog.getWindow().setBackgroundDrawable(new ColorDrawable(context.getResources().getColor(R.color.transparent)));
             cet_search = storeDialog.findViewById(R.id.cet_search);
             recyclerView = storeDialog.findViewById(R.id.recyclerView);
-            store_dialog_cross = storeDialog.findViewById(R.id.cross);
+            store_dialog_cross = storeDialog.findViewById(R.id.crossStore);
             Log.e(TAG, "showAisleList: " + aisleList.toString());
             storeAdapter = new StoreListAdapter(context, storeListBeans);
             RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
@@ -1117,16 +1232,44 @@ public class SpeedShoppingActivity extends AppCompatActivity implements View.OnC
         myIntent.putExtra("m_pos", pos);
         myIntent.putExtra("aisle_list", aisleList);
         myIntent.putExtra("item_name", bean.getName());
+        myIntent.putExtra("item_image", bean.getImage());
         myIntent.putExtra("aisle_number", bean.getLocation());
         myIntent.putExtra("item_quantity", String.valueOf(bean.getQuantity()));
+        myIntent.putExtra("item_price", String.valueOf(bean.getUnitPrice()));
         startActivityForResult(myIntent, ITEM_EDIT_INTEGER_VALUE);
+    }
+
+    public void showItemImageDialog(Drawable imgData) {
+        dialog = new Dialog(context);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.dialog_item_image_view);
+
+        WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
+        Window window = dialog.getWindow();
+
+        layoutParams.copyFrom(window.getAttributes());
+        layoutParams.width = WindowManager.LayoutParams.WRAP_CONTENT;
+        layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        layoutParams.gravity = Gravity.CENTER;
+        window.setAttributes(layoutParams);
+
+
+        ImageView itemImage = dialog.findViewById(R.id.item_image);
+
+        itemImage.setImageDrawable(imgData);
+
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(context.getResources().getColor(R.color.transparent)));
+        ImageView imageCross = dialog.findViewById(R.id.cross_image);
+
+        imageCross.setOnClickListener(v -> {
+            dialog.dismiss();
+        });
+        dialog.show();
     }
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.cross) {
-            dialog.dismiss();
-        }
     }
 
     //----------------- Advertisement List By Merchant Id ---------------------------
@@ -1225,10 +1368,10 @@ public class SpeedShoppingActivity extends AppCompatActivity implements View.OnC
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(context.getResources().getColor(R.color.transparent)));
         upcoming_pager = dialog.findViewById(R.id.upcoming_pager);
         viewPagerCountDots = dialog.findViewById(R.id.viewPagerCountDots);
-        cross = dialog.findViewById(R.id.cross);
+        cross = dialog.findViewById(R.id.crossUpcoming);
 
         upcoming_pager.setOnPageChangeListener(this);
-        cross.setOnClickListener(this);
+        cross.setOnClickListener(v -> dialog.dismiss());
         dialog.show();
     }
 
@@ -1251,10 +1394,10 @@ public class SpeedShoppingActivity extends AppCompatActivity implements View.OnC
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(context.getResources().getColor(R.color.transparent)));
         cross = dialog.findViewById(R.id.cross);
 
-        cross.setOnClickListener(this);
+        cross.setOnClickListener(v -> dialog.dismiss());
         dialog.show();
 
-        if (mInterstitialAd.isLoaded()) {
+        if (mInterstitialAd.isLoaded() && !isUpgraded) {
             mInterstitialAd.show();
         } else {
             Log.d("TAG", "The interstitial wasn't loaded yet.");
@@ -1321,7 +1464,7 @@ public class SpeedShoppingActivity extends AppCompatActivity implements View.OnC
 
         class MyViewHolder extends RecyclerView.ViewHolder {
             TextView shopItem, lineView, aisleLocationText, quantityText;
-            ImageView icDelete, icEdit;
+            ImageView icDelete, icEdit, icItemImage;
             RippleCheckBox rippleCheckBox;
 
             MyViewHolder(View view) {
@@ -1332,6 +1475,7 @@ public class SpeedShoppingActivity extends AppCompatActivity implements View.OnC
                 quantityText = view.findViewById(R.id.quantityText);
                 icDelete = view.findViewById(R.id.icDelete);
                 icEdit = view.findViewById(R.id.icEdit);
+                icItemImage = view.findViewById(R.id.itemImage);
                 rippleCheckBox = view.findViewById(R.id.ic_checkbox);
             }
         }
@@ -1385,6 +1529,15 @@ public class SpeedShoppingActivity extends AppCompatActivity implements View.OnC
                 holder.rippleCheckBox.setChecked(true);
             }
 
+            if (isUpgraded && !bean.getImage().equals("")) {
+                Glide.with(context)
+                        .load(Constants.ITEM_IMAGE_URL + bean.getImage())
+                        .into(holder.icItemImage);
+                holder.icItemImage.setVisibility(View.VISIBLE);
+            } else {
+                holder.icItemImage.setVisibility(View.GONE);
+            }
+
             holder.quantityText.setText(String.valueOf(bean.getQuantity()));
             holder.icEdit.setOnClickListener(new onclick(position, "editItem"));
             holder.rippleCheckBox.setOnCheckedChangeListener((checkBox, isChecked) -> {
@@ -1392,7 +1545,7 @@ public class SpeedShoppingActivity extends AppCompatActivity implements View.OnC
                 String id = listBeans.get(position).getId();
                 int counter = mySharedPreference.increaseAndGetShowAdsCounter();
                 if (counter == 0) {
-                    if (mInterstitialAd.isLoaded()) {
+                    if (mInterstitialAd.isLoaded() && !isUpgraded) {
                         mInterstitialAd.show();
                     } else {
                         Log.d("TAG", "The interstitial wasn't loaded yet.");
@@ -1403,6 +1556,10 @@ public class SpeedShoppingActivity extends AppCompatActivity implements View.OnC
             });
 
             holder.icDelete.setOnClickListener(new onclick(position, "del"));
+            holder.icItemImage.setOnClickListener(v -> {
+                showItemImageDialog(holder.icItemImage.getDrawable());
+
+            });
             holder.shopItem.setOnClickListener(new onclick(position, "shopItem"));
         }
 
@@ -1474,6 +1631,7 @@ public class SpeedShoppingActivity extends AppCompatActivity implements View.OnC
                     //  setUiPageViewController(id);
 
                     break;
+
             }
         }
     }
@@ -1559,6 +1717,18 @@ public class SpeedShoppingActivity extends AppCompatActivity implements View.OnC
                 }
             };
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        //stopLocationUpdates();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        OneSignal.addTrigger("speedshop", "loaded");
     }
 
 

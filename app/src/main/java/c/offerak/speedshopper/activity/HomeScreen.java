@@ -40,6 +40,7 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.onesignal.OneSignal;
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -241,6 +242,8 @@ public class HomeScreen extends AppCompatActivity implements LocationListener,
         resideMenu.setSwipeDirectionDisable(ResideMenu.DIRECTION_LEFT);
         resideMenu.attachToActivity(this);
 
+        OneSignal.addTrigger("home", "loaded");
+
     }
 
     @SuppressLint("SetTextI18n")
@@ -426,6 +429,7 @@ public class HomeScreen extends AppCompatActivity implements LocationListener,
             startLocationUpdates();
             Log.d(TAG, "Location update resumed .....................");
         }
+        OneSignal.addTrigger("home", "loaded");
     }
 
     public void checkLocationPermission() {
@@ -499,5 +503,7 @@ public class HomeScreen extends AppCompatActivity implements LocationListener,
         final AlertDialog alert = builder.create();
         alert.show();
     }
+
+
 }
 

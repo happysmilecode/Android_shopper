@@ -15,6 +15,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.onesignal.OneSignal;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -82,6 +84,8 @@ public class CouponFragment extends Fragment {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         callCouponCodeListAPI();
         recyclerView.setAdapter(couponAdapter);
+
+        OneSignal.addTrigger("coupon", "loaded");
     }
 
     //--------------------- List Coupon Code ---------------------
@@ -163,5 +167,17 @@ public class CouponFragment extends Fragment {
             noDataFound.setVisibility(View.VISIBLE);
             utils.showSnackBar(getActivity().getWindow().getDecorView().getRootView(), "Please check your internet connection!");
         }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        //stopLocationUpdates();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        OneSignal.addTrigger("coupon", "loaded");
     }
 }
