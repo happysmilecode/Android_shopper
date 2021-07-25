@@ -37,8 +37,8 @@ android {
         applicationId "c.offerak.speedshopper"
         minSdkVersion 17
         targetSdkVersion 30
-        versionCode 66
-        versionName "2.5.2"
+        versionCode 68
+        versionName "2.5.4"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         setProperty("archivesBaseName", "SpeedShopper-$versionName")
 //        manifestPlaceholders = [
