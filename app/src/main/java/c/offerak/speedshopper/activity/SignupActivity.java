@@ -7,10 +7,13 @@ import android.os.Handler;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.onesignal.OneSignal;
 
@@ -39,6 +42,8 @@ public class SignupActivity extends AppCompatActivity {
 
     @BindView(R.id.edtPassword)
     EditText edtPassword;
+    @BindView(R.id.imvEyeMainPwd)
+    ImageView imvEyeMainPwd;
     private Utils utils = new Utils();
     private ApiInterface apiService;
 
@@ -55,6 +60,18 @@ public class SignupActivity extends AppCompatActivity {
         apiService = ApiClient.getClient().create(ApiInterface.class);
 
         OneSignal.addTrigger("signup", "loaded");
+    }
+
+    @OnClick(R.id.imvEyeMainPwd)
+    void onEyeMainPwd() {
+        if(edtPassword.getInputType() == InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD) {
+            edtPassword.setInputType( InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+            imvEyeMainPwd.setImageResource(R.drawable.eye_view);
+        } else {
+            edtPassword.setInputType( InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD );
+            imvEyeMainPwd.setImageResource(R.drawable.eye_hide);
+        }
+        edtPassword.setSelection(edtPassword.getText().length());
     }
 
     @OnClick(R.id.txtForgotPassword1)

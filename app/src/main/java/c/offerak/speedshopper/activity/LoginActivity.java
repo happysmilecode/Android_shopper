@@ -17,17 +17,18 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.FragmentActivity;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.provider.Settings;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -37,10 +38,8 @@ import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
-import com.facebook.login.Login;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -63,8 +62,6 @@ import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
 import com.google.firebase.installations.FirebaseInstallations;
 
 import org.json.JSONObject;
@@ -84,7 +81,6 @@ import c.offerak.speedshopper.rest.ApiClient;
 import c.offerak.speedshopper.rest.ApiInterface;
 import c.offerak.speedshopper.rest.Constants;
 import c.offerak.speedshopper.utils.MySharedPreference;
-import c.offerak.speedshopper.utils.Utility;
 import c.offerak.speedshopper.utils.Utils;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -94,7 +90,6 @@ import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 import com.onesignal.OSDeviceState;
-import com.onesignal.OSPermissionState;
 import com.onesignal.OneSignal;
 
 public class LoginActivity extends AppCompatActivity implements LocationListener, FacebookCallback<LoginResult>, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
@@ -109,6 +104,8 @@ public class LoginActivity extends AppCompatActivity implements LocationListener
     EditText edtUsername;
     @BindView(R.id.edtPassword)
     EditText edtPassword;
+    @BindView(R.id.imvEyeMainPwd)
+    ImageView imvEyeMainPwd;
     CallbackManager callbackManager;
     LocationRequest mLocationRequest;
     private Intent intent;
@@ -275,6 +272,18 @@ public class LoginActivity extends AppCompatActivity implements LocationListener
     public void signup() {
         startActivity(new Intent(this, SignupActivity.class));
         finish();
+    }
+
+    @OnClick(R.id.imvEyeMainPwd)
+    void onEyeMainPwd() {
+        if(edtPassword.getInputType() == InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD) {
+            edtPassword.setInputType( InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+            imvEyeMainPwd.setImageResource(R.drawable.eye_view);
+        } else {
+            edtPassword.setInputType( InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD );
+            imvEyeMainPwd.setImageResource(R.drawable.eye_hide);
+        }
+        edtPassword.setSelection(edtPassword.getText().length());
     }
 
     @OnClick(R.id.guest)
