@@ -14,6 +14,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -74,6 +75,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import c.offerak.speedshopper.R;
+import c.offerak.speedshopper.SplashScreen;
 import c.offerak.speedshopper.modal.UserBean;
 import c.offerak.speedshopper.response.GetResponse;
 import c.offerak.speedshopper.response.LoginResponse;
@@ -92,19 +94,19 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import com.onesignal.OSDeviceState;
 import com.onesignal.OneSignal;
 
-public class LoginActivity extends AppCompatActivity implements LocationListener, FacebookCallback<LoginResult>, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
+public class LoginActivity extends AppCompatActivity implements  FacebookCallback<LoginResult>, LocationListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
     private static final String EMAIL = "email";
     private static final String TAG = LoginActivity.class.getSimpleName();
 
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
 
     @BindView(R.id.mainConstraint)
-    ConstraintLayout constraintLayout;
+    LinearLayout linearLayout;
     @BindView(R.id.edtUserName)
     EditText edtUsername;
     @BindView(R.id.edtPassword)
     EditText edtPassword;
-    @BindView(R.id.imvEyeMainPwd)
+
     ImageView imvEyeMainPwd;
     CallbackManager callbackManager;
     LocationRequest mLocationRequest;
@@ -151,6 +153,7 @@ public class LoginActivity extends AppCompatActivity implements LocationListener
     }
 
     public void init() {
+
         checkLocationPermission();
         createLocationRequest();
 
@@ -173,6 +176,8 @@ public class LoginActivity extends AppCompatActivity implements LocationListener
         userBean = mySharedPreference.getLoginDetails();
         terms_condition = findViewById(R.id.terms_condition);
         privacy_policy = findViewById(R.id.privacy_policy);
+        imvEyeMainPwd = findViewById(R.id.imvEyeMainPwd);
+        imvEyeMainPwd.setOnClickListener(this);
         terms_condition.setOnClickListener(this);
         privacy_policy.setOnClickListener(this);
         shareToken = MySharedPreference.getSharedPreferences(context, Constants.SHARE_TOKEN);
@@ -186,7 +191,7 @@ public class LoginActivity extends AppCompatActivity implements LocationListener
                     Intent intent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
                     startActivityForResult(intent, RC_SIGN_IN);
                 } else {
-                    utils.showSnackBar(constraintLayout, "You are not connected to internet!");
+                    utils.showSnackBar(linearLayout, "You are not connected to internet!");
                 }
 
             }
@@ -260,7 +265,21 @@ public class LoginActivity extends AppCompatActivity implements LocationListener
             case R.id.privacy_policy:
                 startActivity(new Intent(context, PrivacyPolicyActivity.class));
                 break;
+            case R.id.imvEyeMainPwd:
+                onEyeMainPwd();
+                break;
         }
+    }
+
+    public void onEyeMainPwd() {
+        if(edtPassword.getInputType() == InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD) {
+            edtPassword.setInputType( InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+            imvEyeMainPwd.setImageResource(R.drawable.eye_hide);
+        } else {
+            edtPassword.setInputType( InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD );
+            imvEyeMainPwd.setImageResource(R.drawable.eye_view);
+        }
+        edtPassword.setSelection(edtPassword.getText().length());
     }
 
     @OnClick(R.id.txtForgotPassword)
@@ -271,19 +290,7 @@ public class LoginActivity extends AppCompatActivity implements LocationListener
     @OnClick(R.id.txtNewUser1)
     public void signup() {
         startActivity(new Intent(this, SignupActivity.class));
-        finish();
-    }
-
-    @OnClick(R.id.imvEyeMainPwd)
-    void onEyeMainPwd() {
-        if(edtPassword.getInputType() == InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD) {
-            edtPassword.setInputType( InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-            imvEyeMainPwd.setImageResource(R.drawable.eye_view);
-        } else {
-            edtPassword.setInputType( InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD );
-            imvEyeMainPwd.setImageResource(R.drawable.eye_hide);
-        }
-        edtPassword.setSelection(edtPassword.getText().length());
+//        finish();
     }
 
     @OnClick(R.id.guest)
@@ -300,17 +307,17 @@ public class LoginActivity extends AppCompatActivity implements LocationListener
         String userPass = edtPassword.getText().toString();
 
         if (userName.equals("") || userName.isEmpty()) {
-            utils.showSnackBar(constraintLayout, "Please enter email id!");
+            utils.showSnackBar(linearLayout, "Please enter email id!");
         } else if (!isValidEmail(userName)) {
-            utils.showSnackBar(constraintLayout, "Please enter valid email id!");
+            utils.showSnackBar(linearLayout, "Please enter valid email id!");
         } else if (userPass.equals("") || userPass.isEmpty()) {
-            utils.showSnackBar(constraintLayout, "Please enter password!");
+            utils.showSnackBar(linearLayout, "Please enter password!");
         } else {
             if (utils.isNetworkConnected(this)) {
                 utils.showDialog(this);
                 login(userName, userPass, "loggedin");
             } else {
-                utils.showSnackBar(constraintLayout, "You are not connected to internet!");
+                utils.showSnackBar(linearLayout, "You are not connected to internet!");
             }
         }
     }
@@ -320,7 +327,7 @@ public class LoginActivity extends AppCompatActivity implements LocationListener
         if (utils.isNetworkConnected(this)) {
             LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile", "email"));
         } else {
-            utils.showSnackBar(constraintLayout, "You are not connected to internet!");
+            utils.showSnackBar(linearLayout, "You are not connected to internet!");
         }
     }
 
@@ -427,10 +434,10 @@ public class LoginActivity extends AppCompatActivity implements LocationListener
                                             checkShare("email");
                                         }
                                     } else {
-                                        utils.showSnackBar(constraintLayout, "Please verify your email first!");
+                                        utils.showSnackBar(linearLayout, "Please verify your email first!");
                                     }
                                 } else {
-                                    utils.showSnackBar(constraintLayout, loginResponse.getMessage());
+                                    utils.showSnackBar(linearLayout, loginResponse.getMessage());
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -444,7 +451,7 @@ public class LoginActivity extends AppCompatActivity implements LocationListener
                 @Override
                 public void onFailure(Call<LoginResponse> call, Throwable t) {
                     utils.hideDialog();
-                    utils.showSnackBar(constraintLayout, "Failed to perform login!");
+                    utils.showSnackBar(linearLayout, "Failed to perform login!");
                 }
             });
         } else {
@@ -534,7 +541,7 @@ public class LoginActivity extends AppCompatActivity implements LocationListener
                                         checkShare("facebook");
                                     }
                                 } else {
-                                    utils.showSnackBar(constraintLayout, message);
+                                    utils.showSnackBar(linearLayout, message);
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -548,7 +555,7 @@ public class LoginActivity extends AppCompatActivity implements LocationListener
                 @Override
                 public void onFailure(Call<LoginResponse> call, Throwable t) {
                     utils.hideDialog();
-                    utils.showSnackBar(constraintLayout, "Failed to perform login!");
+                    utils.showSnackBar(linearLayout, "Failed to perform login!");
                 }
             });
         } else {
@@ -639,20 +646,8 @@ public class LoginActivity extends AppCompatActivity implements LocationListener
     }
 
     @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        Log.d(TAG, "onConnectionFailed:" + connectionResult);
-    }
-
-    @Override
     public void onPointerCaptureChanged(boolean hasCapture) {
 
-    }
-
-    protected void createLocationRequest() {
-        mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(10000);
-        mLocationRequest.setFastestInterval(5000);
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
     }
 
     private void buildLocationAccess() {
@@ -690,6 +685,52 @@ public class LoginActivity extends AppCompatActivity implements LocationListener
         });
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        //stopLocationUpdates();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        OneSignal.addTrigger("login", "loaded");
+    }
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d(TAG, "onStart fired ..............");
+        mGoogleApiClient.connect();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(TAG, "onStop fired ..............");
+        mGoogleApiClient.disconnect();
+    }
+
+    private boolean isGooglePlayServicesAvailable() {
+        int status1 = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this);
+
+        int status = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+        if (ConnectionResult.SUCCESS == status) {
+            return true;
+        } else {
+            //GooglePlayServicesUtil.getErrorDialog(status, this, 0).show();
+            return false;
+        }
+    }
+
+    protected void createLocationRequest() {
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(10000);
+        mLocationRequest.setFastestInterval(5000);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+    }
+
     public void checkLocationPermission() {
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION)
@@ -722,19 +763,15 @@ public class LoginActivity extends AppCompatActivity implements LocationListener
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                    // permission was granted, yay! Do the
-                    // location-related task you need to do.
                     if (ContextCompat.checkSelfPermission(this,
                             Manifest.permission.ACCESS_FINE_LOCATION)
                             == PackageManager.PERMISSION_GRANTED) {
 
                         //Request location updates:
-                        startLocationUpdates();
+//                        startLocationUpdates();
                     }
 
                 } else {
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
                     utils.showSnackBar(getWindow().getDecorView().getRootView(), "You denied the permission!");
                 }
             }
@@ -742,74 +779,31 @@ public class LoginActivity extends AppCompatActivity implements LocationListener
         }
     }
 
-    protected void startLocationUpdates() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
+    public void startLocationUpdates() {
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
         PendingResult<Status> pendingResult = LocationServices.FusedLocationApi.requestLocationUpdates(
                 mGoogleApiClient, mLocationRequest, this);
-        Log.d(TAG, "Location update started ..............: ");
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        //stopLocationUpdates();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        OneSignal.addTrigger("login", "loaded");
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        Log.d(TAG, "onStart fired ..............");
-        mGoogleApiClient.connect();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        Log.d(TAG, "onStop fired ..............");
-        mGoogleApiClient.disconnect();
-        Log.d(TAG, "isConnected ...............: " + mGoogleApiClient.isConnected());
-    }
-
-    private boolean isGooglePlayServicesAvailable() {
-        int status1 = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this);
-
-        int status = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
-        if (ConnectionResult.SUCCESS == status) {
-            return true;
-        } else {
-            //GooglePlayServicesUtil.getErrorDialog(status, this, 0).show();
-            return false;
-        }
-    }
-
-    @Override
-    public void onConnected(Bundle bundle) {
-        Log.d(TAG, "onConnected - isConnected ...............: " + mGoogleApiClient.isConnected());
+    public void onConnected(@Nullable Bundle bundle) {
         startLocationUpdates();
     }
 
     @Override
     public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
 
     }
 }

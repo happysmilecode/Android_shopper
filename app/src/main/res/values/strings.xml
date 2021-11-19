@@ -1,13 +1,16 @@
 <resources>
     <string name="app_name">Speed Shopper</string>
     <string name="email">Email</string>
+    <string name="phone">+12345678900</string>
     <string name="login">Login</string>
     <string name="password">Password</string>
     <string name="forgot_password">Forgot password ?</string>
     <string name="new_user_signup">New user?</string>
     <string name="signup">Sign Up</string>
     <string name="send">Send</string>
+    <string name="send_verification">Send Verification Code</string>
     <string name="please_enter_your_registered_email_address_and_we_will_send_you_a_reset_link">Please enter your registered email address and we will send you a reset link</string>
+    <string name="mobile_activity_description">Please enter your Phone number and we will send you a verification Code.</string>
     <string name="already_have_an_account_login">Already have an Account ?</string>
     <string name="verification">Verification</string>
     <string name="we_have_sent_you_an_access_code_via_sms_mobile_number_verification">We have sent you an access code via sms mobile number verification</string>
@@ -153,6 +156,9 @@
     <string name="purchase_head">Purchase</string>
     <string name="purchase_detail">You have to puchase the shopping list logo.  Are you sure you want to purchase the logos?</string>
     <string name="reply_description">OUR REPLIES WILL APPEAR BELOW</string>
+    <string name="signup_success">Profile created! Verify your profile to begin.  You can either wait for the email or verify quickly by text message.</string>
+    <string name="text_me">Text Me</string>
+    <string name="email_me">Email Me</string>
 
     <string-array name="radius">
         <item>5 Miles</item>

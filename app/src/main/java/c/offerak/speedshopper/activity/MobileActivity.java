@@ -1,11 +1,12 @@
 package c.offerak.speedshopper.activity;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.appcompat.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Patterns;
 import android.widget.EditText;
@@ -20,16 +21,17 @@ import c.offerak.speedshopper.R;
 import c.offerak.speedshopper.response.GetResponse;
 import c.offerak.speedshopper.rest.ApiClient;
 import c.offerak.speedshopper.rest.ApiInterface;
+import c.offerak.speedshopper.utils.MySharedPreference;
 import c.offerak.speedshopper.utils.Utils;
 import retrofit2.Call;
 import retrofit2.Callback;
 
-public class ForgotPasswordActivity extends AppCompatActivity {
+public class MobileActivity extends AppCompatActivity {
 
-    public static final String TAG = ForgotPasswordActivity.class.getSimpleName();
+    public static final String TAG = MobileActivity.class.getSimpleName();
     Context context;
-    @BindView(R.id.edtEmail)
-    EditText edtEmail;
+    @BindView(R.id.edtnumber)
+    EditText edtnumber;
 
     @BindView(R.id.constraintLayout)
     ConstraintLayout constraintLayout;
@@ -39,12 +41,12 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
     private ApiInterface apiService;
     private Utils utils = new Utils();
-    String email;
+    String phone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_forgot_password);
+        setContentView(R.layout.activity_mobile);
         context = this;
         init();
     }
@@ -52,36 +54,37 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     public void init() {
         ButterKnife.bind(this);
         apiService = ApiClient.getClient().create(ApiInterface.class);
-        OneSignal.addTrigger("forgot", "loaded");
     }
 
     @OnClick(R.id.close)
     public void closeView() {
         finish();
     }
-    @OnClick(R.id.btnSend)
+    @OnClick(R.id.btnSendVerification)
     public void sendMail() {
-        email = edtEmail.getText().toString();
+        phone = edtnumber.getText().toString();
 
-        if (isValidEmail(email)) {
-            utils.showDialog(ForgotPasswordActivity.this);
-            forgetPassword(email);
+        if (isValidPhone(phone)) {
+            utils.showDialog(MobileActivity.this);
+            sendSMSCode(phone);
         } else {
-            utils.showSnackBar(getWindow().getDecorView().getRootView(), "Please enter valid email id!");
+            utils.showSnackBar(getWindow().getDecorView().getRootView(), "Please enter valid Phone Number!");
         }
     }
 
-    private void forgetPassword(String email) {
+    private void sendSMSCode(String phone) {
+        MySharedPreference mySharedPreference = new MySharedPreference(context);
+        String token = mySharedPreference.getTempToken();
         if(utils.isNetworkConnected(context)) {
-            Call<GetResponse> call = apiService.forget(email);
+            Call<GetResponse> call = apiService.sendSMS(phone, token);
             call.enqueue(new Callback<GetResponse>() {
                 @Override
                 public void onResponse(Call<GetResponse> call, retrofit2.Response<GetResponse> response) {
                     try {
-                        GetResponse loginResponse = response.body();
-                        if (loginResponse != null) {
-                            int status = loginResponse.getStatus();
-                            String message = loginResponse.getMessage();
+                        GetResponse resp = response.body();
+                        if (resp != null) {
+                            int status = resp.getStatus();
+                            String message = resp.getMessage();
                             utils.hideDialog();
                             try {
                                 if (status == 200) {
@@ -89,9 +92,9 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
                                     final Handler handler = new Handler();
                                     handler.postDelayed(() -> {
-//                                        startActivity(new Intent(ForgotPasswordActivity.this, LoginActivity.class));
+                                        startActivity(new Intent(MobileActivity.this, VerificationActivity.class));
                                         finish();
-                                    }, 2000);
+                                    }, 3000);
 
                                 } else {
                                     utils.showSnackBar(getWindow().getDecorView().getRootView(), message);
@@ -108,7 +111,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(Call<GetResponse> call, Throwable t) {
                     utils.hideDialog();
-                    utils.showSnackBar(getWindow().getDecorView().getRootView(), "Failed to reset password!");
+                    utils.showSnackBar(getWindow().getDecorView().getRootView(), "Failed to send Verification code!");
                 }
             });
         }else {
@@ -116,18 +119,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         }
     }
 
-    public boolean isValidEmail(CharSequence target) {
-        return (!TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches());
-    }
-    @Override
-    protected void onPause() {
-        super.onPause();
-        //stopLocationUpdates();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        OneSignal.addTrigger("forgot", "loaded");
+    public boolean isValidPhone(CharSequence target) {
+        return (!TextUtils.isEmpty(target) && Patterns.PHONE.matcher(target).matches());
     }
 }

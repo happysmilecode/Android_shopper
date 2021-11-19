@@ -38,12 +38,10 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="310dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_gravity="center"
-        android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp">
+        android:layout_gravity="center">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -69,7 +67,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="22dp"
+            android:layout_marginTop="20dp"
             android:orientation="horizontal">
 
             <LinearLayout
@@ -107,7 +105,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="35dp"
+            android:layout_marginTop="30dp"
             android:orientation="horizontal">
 
             <LinearLayout
@@ -135,20 +133,18 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="310dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_gravity="center"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp">
+        android:layout_marginTop="10dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <RelativeLayout
-                android:layout_width="310dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -157,16 +153,24 @@
                 app:layout_constraintVertical_bias="0.640">
 
 
-                <TextView
-                    android:id="@+id/txtForgotPassword"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="5sp"
-                    android:paddingRight="5sp"
-                    android:paddingTop="5sp"
-                    android:text="@string/forgot_password"
-                    android:textColor="#99000000"
-                    android:textSize="12sp" />
+                    android:layout_gravity="center"
+                    android:layout_alignParentStart="true"
+                    android:gravity="center">
+                    <TextView
+                        android:id="@+id/txtForgotPassword"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="5sp"
+                        android:paddingEnd="5sp"
+                        android:paddingTop="5sp"
+                        android:text="@string/forgot_password"
+                        android:textColor="#99000000"
+                        android:textSize="12sp"
+                        tools:ignore="RtlSymmetry" />
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -174,7 +178,6 @@
                     android:layout_gravity="center"
                     android:layout_alignParentEnd="true"
                     android:gravity="center">
-
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -188,8 +191,6 @@
                         android:layout_marginStart="10dp"
                         android:gravity="center"
                         android:layout_weight="1">
-
-
                         <TextView
                             android:id="@+id/txtNewUser1"
                             android:layout_width="wrap_content"
@@ -200,7 +201,6 @@
                             android:layout_marginStart="5dp"
                             android:textColorHint="@android:color/white"
                             android:textSize="17sp" />
-
                     </LinearLayout>
 
                 </LinearLayout>
@@ -211,7 +211,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:orientation="horizontal">
 
             <LinearLayout
@@ -233,19 +232,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:orientation="horizontal">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                tools:ignore="LabelFor">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:gravity="center">
 
                     <LinearLayout
                         android:id="@+id/btnFbLogin"
@@ -306,23 +295,13 @@
 
                     </LinearLayout>
 
-                </LinearLayout>
-
-
-            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="15dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center">
+            android:layout_marginTop="5dp">
 
                 <LinearLayout
                     android:id="@+id/guest"
@@ -334,7 +313,6 @@
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:layout_weight="1">
-
 
                     <TextView
                         android:id="@+id/guest_text"
@@ -349,8 +327,6 @@
 
                 </LinearLayout>
 
-            </LinearLayout>
-
         </LinearLayout>
 
         <LinearLayout
@@ -361,8 +337,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginStart="5dp"
                 android:layout_marginTop="8dp"
                 android:gravity="center"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -405,6 +381,14 @@
                         android:textStyle="italic"
                         tools:ignore="SmallSp" />
 
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/lay_policy"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/lay_terms"
+                    android:gravity="center"
+                    android:orientation="horizontal">
                     <TextView
                         android:id="@+id/and"
                         android:layout_width="wrap_content"
@@ -417,22 +401,19 @@
                         android:textSize="12sp"
                         android:textStyle="italic"
                         tools:ignore="SmallSp" />
-
+                    <TextView
+                        android:id="@+id/privacy_policy"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:paddingBottom="0sp"
+                        android:text="@string/privacy_policy"
+                        android:textColor="#99000000"
+                        android:textSize="13sp"
+                        android:textStyle="italic"
+                        tools:ignore="SmallSp" />
                 </LinearLayout>
 
-                <TextView
-                    android:id="@+id/privacy_policy"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/lay_terms"
-                    android:layout_centerInParent="true"
-                    android:gravity="center"
-                    android:paddingBottom="5sp"
-                    android:text="@string/privacy_policy"
-                    android:textColor="#99000000"
-                    android:textSize="13sp"
-                    android:textStyle="italic"
-                    tools:ignore="SmallSp" />
             </RelativeLayout>
         </LinearLayout>
     </LinearLayout>

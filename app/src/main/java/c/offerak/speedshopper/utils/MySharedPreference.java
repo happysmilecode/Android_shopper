@@ -44,6 +44,21 @@ public class MySharedPreference {
         return settings.getString(name, "");
     }
 
+    public void setTempToken(String token) {
+        SharedPreferences sharedPreferences = mContext.getSharedPreferences(myPref, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("tempToken", token);
+        editor.apply();
+    }
+
+    public String getTempToken() {
+        SharedPreferences sharedPreferences = mContext.getSharedPreferences(myPref, Context.MODE_PRIVATE);
+        String tempToken = "";
+        tempToken = sharedPreferences.getString("tempToken", "");
+
+        return tempToken;
+    }
+
 
     public void setLoginDetails(String email, String name, String proPic, String token, String id, String flow) {
         SharedPreferences sharedPreferences = mContext.getSharedPreferences(myPref, Context.MODE_PRIVATE);

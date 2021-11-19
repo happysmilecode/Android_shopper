@@ -14,6 +14,7 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
+        android:name=".ApplicationClass"
         android:allowBackup="true"
         android:fitsSystemWindows="true"
         android:icon="@mipmap/ic_launcher"
@@ -21,8 +22,10 @@
         android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        android:name=".ApplicationClass">
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".activity.MobileActivity"
+            android:exported="true" />
 
         <meta-data
             android:name="com.onesignal.BadgeCount"
@@ -83,7 +86,7 @@
         </activity>
         <activity
             android:name=".activity.SignupActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.ItemEditActivity"
             android:screenOrientation="portrait" />

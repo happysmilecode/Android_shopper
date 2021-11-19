@@ -29,7 +29,7 @@
         tools:ignore="ContentDescription" />
 
     <EditText
-        android:id="@+id/edtEmail"
+        android:id="@+id/edtnumber"
         android:layout_width="284dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
@@ -37,8 +37,8 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:background="@drawable/edit_bg"
-        android:hint="@string/email"
-        android:inputType="textEmailAddress"
+        android:hint="@string/phone"
+        android:inputType="text|phone"
         android:paddingBottom="12sp"
         android:paddingLeft="18sp"
         android:paddingRight="18sp"
@@ -54,7 +54,7 @@
         tools:ignore="LabelFor" />
 
     <TextView
-        android:id="@+id/btnSend"
+        android:id="@+id/btnSendVerification"
         android:layout_width="284dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
@@ -67,7 +67,7 @@
         android:paddingLeft="14sp"
         android:paddingRight="14sp"
         android:paddingTop="12sp"
-        android:text="@string/send"
+        android:text="@string/send_verification"
         android:textColor="@android:color/white"
         android:textColorHint="@android:color/white"
         android:textSize="14sp"
@@ -80,7 +80,7 @@
 
 
     <TextView
-        android:id="@+id/txtNewUser"
+        android:id="@+id/txtDesc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
@@ -88,9 +88,9 @@
         android:layout_marginStart="10dp"
         android:layout_marginTop="8dp"
         android:gravity="center"
-        android:paddingLeft="25sp"
-        android:paddingRight="25sp"
-        android:text="@string/please_enter_your_registered_email_address_and_we_will_send_you_a_reset_link"
+        android:paddingLeft="45sp"
+        android:paddingRight="45sp"
+        android:text="@string/mobile_activity_description"
         android:textColor="#99000000"
         android:textSize="14sp"
         android:textStyle="bold"
@@ -99,6 +99,14 @@
         app:layout_constraintStart_toStartOf="@+id/bgImg"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.478"
+        tools:ignore="MissingConstraints" />
+    <ImageView
+        android:id="@+id/close"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:src="@drawable/cross"
+        tools:layout_editor_absoluteX="360dp"
+        tools:layout_editor_absoluteY="10dp"
         tools:ignore="MissingConstraints" />
 
 

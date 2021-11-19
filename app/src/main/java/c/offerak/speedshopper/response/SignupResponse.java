@@ -59,6 +59,10 @@ public class SignupResponse {
         private String profile_pic;
         private String token;
         private String otp;
+//        private String userToken;
+//        private String balance;
+//        private String smsCode;
+
 
         public String getId() {
             return id;
@@ -131,5 +135,29 @@ public class SignupResponse {
         public void setOtp(String otp) {
             this.otp = otp;
         }
+
+//        public String getTokenUser() {
+//            return userToken;
+//        }
+//
+//        public void setTokenUser(String userToken) {
+//            this.userToken = userToken;
+//        }
+//
+//        public String getSmsCode() {
+//            return smsCode;
+//        }
+//
+//        public void setSmsCode(String smsCode) {
+//            this.smsCode = smsCode;
+//        }
+//
+//        public String getBalance() {
+//            return balance;
+//        }
+//
+//        public void setBalance(String balance) {
+//            this.balance = balance;
+//        }
     }
 }

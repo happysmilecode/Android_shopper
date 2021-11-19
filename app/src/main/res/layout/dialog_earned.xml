@@ -11,11 +11,11 @@
         android:orientation="horizontal"
         android:weightSum="10">
         <ImageView
-            android:id="@+id/congrat_image"
+            android:id="@+id/earned_image"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:src="@drawable/checked"
+            android:src="@drawable/earned"
             android:layout_weight="10"/>
 
         <ImageView

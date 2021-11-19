@@ -18,8 +18,10 @@ public class Constants {
     public static final String LOGIN_URL_GUEST = "account/guestregister";
     public static final String FACEBOOK_LOGIN_URL = "account/facebookLogin";
     public static final String REGISTER_URL = "account/register";
+    public static final String SENDMESSAGE_URL = "account/messageVerify";
     public static final String LOGOUT_URL = "account/logout";
     public static final String FORGET_URL = "account/forget";
+    public static final String SMSCODE_URL = "account/phoneVerify";
     public static final String UPDATE_URL = "account/update";
     public static final String GET_USER_URL = "account/getUser/{token}";
     public static final String GET_SSTX_EARNED_URL = "shopping/getSSTXValue/{token}";
@@ -74,6 +76,7 @@ public class Constants {
     public static final String MESSAGE = "message";
     public static final String TOKEN = "token";
     public static final String EMAIL = "email";
+    public static final String MOBILE = "mobile";
     public static final String PASSWORD = "password";
     public static final String DEVICE_TYPE = "device_type";
     public static final String DEVICE_ID = "device_id";

@@ -56,6 +56,12 @@ public interface ApiInterface {
                                   @Field(Constants.CONTACT) String contact,
                                   @Field(Constants.PASSWORD) String password);
 
+    @POST(Constants.SENDMESSAGE_URL)
+    @FormUrlEncoded
+    Call<GetResponse> sendEmail(@Field(Constants.NAME) String name,
+                                @Field(Constants.EMAIL) String email,
+                                @Field(Constants.TOKEN) String token);
+
     @POST(Constants.LOGOUT_URL)
     @FormUrlEncoded
     Call<GetResponse> logout(@Field(Constants.TOKEN) String token);
@@ -63,6 +69,11 @@ public interface ApiInterface {
     @POST(Constants.FORGET_URL)
     @FormUrlEncoded
     Call<GetResponse> forget(@Field(Constants.EMAIL) String email);
+
+    @POST(Constants.SMSCODE_URL)
+    @FormUrlEncoded
+    Call<GetResponse> sendSMS(@Field(Constants.MOBILE) String phone,
+                              @Field(Constants.TOKEN) String token);
 
     @GET(Constants.GET_USER_URL)
     Call<ProfileResponse> getProfile(@Path(Constants.TOKEN) String token);
