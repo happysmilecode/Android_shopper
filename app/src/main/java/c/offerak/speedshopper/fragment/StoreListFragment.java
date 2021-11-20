@@ -251,6 +251,8 @@ public class StoreListFragment extends Fragment {
             phone = "";
         }
 
+        Log.e(TAG, "Longitude: " + lat + " Latitude: " + lng);
+
         Location startPoint = new Location("locationA");
         startPoint.setLatitude(Double.parseDouble(lat));
         startPoint.setLongitude(Double.parseDouble(lng));

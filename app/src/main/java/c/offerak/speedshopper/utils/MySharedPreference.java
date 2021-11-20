@@ -60,15 +60,18 @@ public class MySharedPreference {
     }
 
 
-    public void setLoginDetails(String email, String name, String proPic, String token, String id, String flow) {
+    public void setLoginDetails(String login_num, String balance, String email, String name, String proPic, String token, String id, String flow) {
         SharedPreferences sharedPreferences = mContext.getSharedPreferences(myPref, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("login_num", login_num);
+        editor.putString("balance", balance);
         editor.putString("userEmail", email);
         editor.putString("userName", name);
         editor.putString("userImage", proPic);
         editor.putString("userToken", token);
-        editor.putString("flow", flow);
         editor.putString("userId", id);
+        editor.putString("flow", flow);
+
         editor.apply();
     }
 
@@ -76,6 +79,8 @@ public class MySharedPreference {
         SharedPreferences sharedPreferences = mContext.getSharedPreferences(myPref, Context.MODE_PRIVATE);
 
         UserBean bean = new UserBean();
+        bean.setBalance(sharedPreferences.getString("balance", "0"));
+        bean.setLogin_num(sharedPreferences.getString("login_num", "0"));
         bean.setUserName(sharedPreferences.getString("userName", null));
         bean.setUserMail(sharedPreferences.getString("userEmail", null));
         bean.setUserImage(sharedPreferences.getString("userImage", null));

@@ -67,6 +67,9 @@ public class ProfileResponse {
         private String status;
         private String created_at;
         private String path;
+        private String balance;
+        private String login_num;
+
 
         public String getId() {
             return id;
@@ -170,6 +173,22 @@ public class ProfileResponse {
 
         public void setPath(String path) {
             this.path = path;
+        }
+
+        public String getBalance() {
+            return balance;
+        }
+
+        public void setBalance(String balance) {
+            this.balance = balance;
+        }
+
+        public String getLogin_num() {
+            return login_num;
+        }
+
+        public void setLogin_num(String login_num) {
+            this.login_num = login_num;
         }
     }
 }

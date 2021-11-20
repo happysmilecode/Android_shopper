@@ -322,7 +322,7 @@ public class ResideMenu extends FrameLayout {
                                                 utils.showSnackBar(scrollViewLeftMenu, message);
                                                 MySharedPreference mySharedPreference = new MySharedPreference(activity);
                                                 mySharedPreference.clearPreference(context);
-                                                mySharedPreference.setLoginDetails("", "", "", "", "","");
+                                                mySharedPreference.setLoginDetails("", "", "", "", "","", "", "");
                                             } else {
                                                 utils.showSnackBar(scrollViewLeftMenu, message);
 

@@ -30,9 +30,12 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -58,6 +61,7 @@ import c.offerak.speedshopper.activity.StoreImageActivity;
 import c.offerak.speedshopper.modal.PurchaseModel;
 import c.offerak.speedshopper.modal.UserBean;
 import c.offerak.speedshopper.reside.ResideMenu;
+import c.offerak.speedshopper.response.GetResponse;
 import c.offerak.speedshopper.response.ProfileResponse;
 import c.offerak.speedshopper.response.UpdateProfileResponse;
 import c.offerak.speedshopper.rest.ApiClient;
@@ -72,6 +76,7 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 
 import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
@@ -105,6 +110,9 @@ public class ProfileFragment extends Fragment implements BillingProcessor.IBilli
     BillingProcessor bp;
 
     private PurchaseModel mViewModel;
+
+    Dialog dialog;
+    ImageView btn_close, earnedImg;
 
     @SuppressLint("SetTextI18n")
     @Nullable
@@ -393,7 +401,7 @@ public class ProfileFragment extends Fragment implements BillingProcessor.IBilli
                                             .load(dataBean.getPath() + dataBean.getProfile_pic())
                                             .into(imageView2);
 
-                                    mySharedPreference.setLoginDetails(userBean.getUserMail(), dataBean.getName(), dataBean.getPath() + "" + dataBean.getProfile_pic(), userBean.getUserToken(), userBean.getUserId(), "loggedin");
+                                    mySharedPreference.setLoginDetails(userBean.getLogin_num(), userBean.getBalance(), userBean.getUserMail(), dataBean.getName(), dataBean.getPath() + "" + dataBean.getProfile_pic(), userBean.getUserToken(), userBean.getUserId(), "loggedin");
                                     txtUserName.setText(dataBean.getName().toUpperCase());
                                     MySharedPreference.setSharedPreference(mContext, Constants.EMAIL, dataBean.getEmail());
                                     mailId.setText(dataBean.getEmail());
@@ -623,6 +631,7 @@ public class ProfileFragment extends Fragment implements BillingProcessor.IBilli
                 MySharedPreference.setPurchased(mContext, mViewModel.getPRODUCT_MONTHLY_SKU(),true);
                 MySharedPreference.setPurchased(mContext, "membership",true);
                 bp.release();
+                callAPIRewardMethod("monthly");
                 utils.showSnackBar(rootView, "You are already Monthly premium member.");
             }
             else {
@@ -633,6 +642,7 @@ public class ProfileFragment extends Fragment implements BillingProcessor.IBilli
                 MySharedPreference.setPurchased(mContext, mViewModel.getPRODUCT_THREEMONTH_SKU(),true);
                 MySharedPreference.setPurchased(mContext, "membership",true);
                 bp.release();
+                callAPIRewardMethod("3months");
                 utils.showSnackBar(rootView, "You are already Three Months premium member.");
             }
             else {
@@ -643,6 +653,7 @@ public class ProfileFragment extends Fragment implements BillingProcessor.IBilli
                 MySharedPreference.setPurchased(mContext, mViewModel.getPRODUCT_SIXMONTH_SKU(),true);
                 MySharedPreference.setPurchased(mContext, "membership",true);
                 bp.release();
+                callAPIRewardMethod("6months");
                 utils.showSnackBar(rootView, "You are already Six Months premium member.");
             }
             else {
@@ -653,6 +664,7 @@ public class ProfileFragment extends Fragment implements BillingProcessor.IBilli
                 MySharedPreference.setPurchased(mContext, mViewModel.getPRODUCT_YEARLY_SKU(),true);
                 MySharedPreference.setPurchased(mContext, "membership",true);
                 bp.release();
+                callAPIRewardMethod("yearly");
                 utils.showSnackBar(rootView, "You are already Yearly premium member.");
             }
             else {
@@ -671,6 +683,69 @@ public class ProfileFragment extends Fragment implements BillingProcessor.IBilli
     public void onResume() {
         super.onResume();
         OneSignal.addTrigger("profile", "loaded");
+    }
+
+    public void callAPIRewardMethod(String key) {
+        utils.showDialog(mContext);
+        if(utils.isNetworkConnected(mContext)) {
+            Call<GetResponse> call = apiService.getReward(userBean.getUserToken(), key);
+            call.enqueue(new Callback<GetResponse>() {
+                @Override
+                public void onResponse(@NonNull Call<GetResponse> call, @NonNull Response<GetResponse> response) {
+
+                    GetResponse resp = response.body();
+                    try {
+                        if (resp != null) {
+
+                            if (resp.getStatus() == 200) {
+                                utils.hideDialog();
+                                showDialogReward();
+                            } else {
+                                utils.hideDialog();
+                                utils.showSnackBar(getActivity().getWindow().getDecorView().getRootView(), "There are no any reward for Store Iamge purchase");
+
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<GetResponse> call, Throwable t) {
+                    utils.hideDialog();
+                    Log.d("", "onResponse: ");
+                }
+            });
+        } else {
+            utils.showSnackBar(getActivity().getWindow().getDecorView().getRootView(), getString(R.string.not_connected_to_internet));
+        }
+    }
+
+    public void showDialogReward() {
+        dialog = new Dialog(mContext);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.dialog_earned);
+
+        WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
+        Window window = dialog.getWindow();
+
+        layoutParams.copyFrom(window.getAttributes());
+        layoutParams.width = WindowManager.LayoutParams.WRAP_CONTENT;
+        layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        layoutParams.gravity = Gravity.CENTER;
+        window.setAttributes(layoutParams);
+
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(mContext.getResources().getColor(R.color.transparent)));
+        earnedImg = dialog.findViewById(R.id.earned_image);
+        btn_close = dialog.findViewById(R.id.close_btn);
+        Glide.with(this).load(R.drawable.earned).into(earnedImg);
+        btn_close.setOnClickListener(v -> {
+            dialog.dismiss();
+        });
+
+        dialog.show();
     }
 
 }

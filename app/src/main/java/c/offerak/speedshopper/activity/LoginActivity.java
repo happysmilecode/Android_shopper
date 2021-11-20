@@ -60,10 +60,13 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.SettingsClient;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.installations.FirebaseInstallations;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 
 import org.json.JSONObject;
 
@@ -229,11 +232,26 @@ public class LoginActivity extends AppCompatActivity implements  FacebookCallbac
                 .requestEmail().build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
-
+//        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener( LoginActivity.this,  new OnSuccessListener<InstanceIdResult>() {
+//            @Override
+//            public void onSuccess(InstanceIdResult instanceIdResult) {
+//                String mToken = instanceIdResult.getToken();
+//                Log.e("Token",mToken);
+//                MySharedPreference.setSharedPreference(context, Constants.FIREBASE_TOKEN, mToken);
+//            }
+//        });
         FirebaseInstallations.getInstance().getToken(true).addOnSuccessListener(LoginActivity.this, installationTokenResult -> {
             String newToken = installationTokenResult.getToken();
             MySharedPreference.setSharedPreference(context, Constants.FIREBASE_TOKEN, newToken);
         });
+
+//        FirebaseInstallations.getInstance().getId().addOnCompleteListener(LoginActivity.this, result -> {
+//            String token = result.getResult();
+//            MySharedPreference.setSharedPreference(context, Constants.FIREBASE_TOKEN, token);
+//        });
+
+
+        Log.e(TAG, "FIREBASE TOKEN: " + MySharedPreference.getSharedPreferences(context, Constants.FIREBASE_TOKEN));
     }
 
     private void requestCameraPermission() {
@@ -408,6 +426,8 @@ public class LoginActivity extends AppCompatActivity implements  FacebookCallbac
                             try {
                                 if (loginResponse.getStatus() == 200) {
 
+                                    String login_num = dataBean.getLogin_num();
+                                    String balance = dataBean.getBalance();
                                     String name = dataBean.getName();
                                     String email = dataBean.getEmail();
                                     String token = dataBean.getToken();
@@ -424,7 +444,7 @@ public class LoginActivity extends AppCompatActivity implements  FacebookCallbac
 
                                     MySharedPreference mySharedPreference = new MySharedPreference(context);
                                     mySharedPreference.setSharedPreference(context, Constants.EVENT_CHECK, "1");
-                                    mySharedPreference.setLoginDetails(email, name, picPath + "" + proPic, token, id, flow);
+                                    mySharedPreference.setLoginDetails(login_num, balance, email, name, picPath + "" + proPic, token, id, flow);
 
                                     if (isEmailVerify) {
 
@@ -522,6 +542,8 @@ public class LoginActivity extends AppCompatActivity implements  FacebookCallbac
                             utils.hideDialog();
                             try {
                                 if (status == 200) {
+                                    String login_num = dataBean.getLogin_num();
+                                    String balance = dataBean.getBalance();
                                     String name = dataBean.getName();
                                     String email = dataBean.getEmail();
                                     String token = dataBean.getToken();
@@ -534,7 +556,7 @@ public class LoginActivity extends AppCompatActivity implements  FacebookCallbac
 
                                     MySharedPreference mySharedPreference = new MySharedPreference(LoginActivity.this);
                                     mySharedPreference.setSharedPreference(context, Constants.EVENT_CHECK, "1");
-                                    mySharedPreference.setLoginDetails(email, name, picPath + "" + proPic, token, id, "loggedin");
+                                    mySharedPreference.setLoginDetails(login_num, balance, email, name, picPath + "" + proPic, token, id, "loggedin");
                                     if (message.equals("Session expired")) {
                                         utils.showSnackBar(getWindow().getDecorView().getRootView(), "Your account has been deactivated by the admin!");
                                     } else {

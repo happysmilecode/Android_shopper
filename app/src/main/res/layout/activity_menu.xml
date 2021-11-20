@@ -173,7 +173,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:text="@string/coupon_codes"
+                    android:text="@string/pre_made_list"
                     android:textColor="@color/white" />
             </LinearLayout>
         </LinearLayout>

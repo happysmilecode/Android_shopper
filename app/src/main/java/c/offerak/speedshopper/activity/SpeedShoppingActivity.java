@@ -110,7 +110,7 @@ public class SpeedShoppingActivity extends AppCompatActivity implements View.OnC
     public List<String> aisleLocationList;
     public ArrayList<String> aisleList = new ArrayList<>();
     public ArrayList<String> aislePositionList = new ArrayList<>();
-    public ImageView icBackButton, toggleButton, icMic, icAddCategory, cross;
+    public ImageView icBackButton, toggleButton, icMic, icAddCategory, cross, congratImg;
     public TextView txtTitle, btnDeleteChecked, btnDeleteAll, btnReverseSort, emptyView, storeListTitle, storeAddress, storeNameTitle, sstxEarned, totalPrice;
     public ImageView importItem, btnShare;
     public ArrayAdapter<String> adapter;
@@ -1393,6 +1393,8 @@ public class SpeedShoppingActivity extends AppCompatActivity implements View.OnC
 
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(context.getResources().getColor(R.color.transparent)));
         cross = dialog.findViewById(R.id.cross);
+        congratImg = dialog.findViewById(R.id.congrat_image);
+        Glide.with(this).load(R.drawable.checked).into(congratImg);
 
         cross.setOnClickListener(v -> dialog.dismiss());
         dialog.show();

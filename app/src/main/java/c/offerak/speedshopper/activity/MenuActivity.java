@@ -1,18 +1,26 @@
 package c.offerak.speedshopper.activity;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
@@ -67,6 +75,10 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
     private ApiInterface apiService;
 
     public boolean isUpgraded = false;
+    public boolean showed = false;
+
+    Dialog dialog;
+    ImageView btn_close, earnedImg;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -83,10 +95,9 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
         initVariables();
         ButterKnife.bind(this);
         initClickEvents();
-        if (isUpgraded) {
+        if (!isUpgraded) {
             loadAds();
         }
-
     }
 
     public void  showInAppMessage()
@@ -116,6 +127,14 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
         }else{
             loginLayout.setVisibility(LinearLayout.VISIBLE);
             guestLayout.setVisibility(LinearLayout.GONE);
+        }
+
+        int login_num = Integer.parseInt(bean.getLogin_num());
+        int balance = Integer.parseInt(bean.getBalance());
+
+        if (login_num == 1 && balance != 0 && !showed) {
+            showDialogReward();
+            showed = true;
         }
     }
 
@@ -149,99 +168,104 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
     @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View view) {
-        String menu_name="";
-        switch (view.getId()) {
-            case R.id.my_list_btn:
-            case R.id.my_list_btn1:
-                menu_name = "my_list";
-                break;
-            case R.id.my_profile_btn:
-                menu_name = "my_profile";
-                break;
-            case R.id.my_wallet_btn:
-                menu_name = "my_wallet";
-                break;
-            case R.id.sstx_btn:
-                menu_name = "sstx_market";
-                break;
-            case R.id.notification_btn:
-                menu_name = "notifications";
-                break;
-            case R.id.notification_btn1:
-                menu_name = "notifications";
-                break;
-            case R.id.coupon_code_btn:
-                menu_name = "coupon_code";
-                break;
-            case R.id.help_btn:
-                menu_name = "help";
-                break;
-            case R.id.help_btn1:
-                menu_name = "help";
-                break;
-            case R.id.contactus_btn:
-                menu_name = "contact_us";
-                break;
-            case R.id.logout_btn:
-            case R.id.login_btn:
-                if (utils.isNetworkConnected(context)) {
-                    utils.showDialog(context);
-                    String token = bean.getUserToken();
-                    Call<GetResponse> call = apiService.logout(token);
-                    call.enqueue(new Callback<GetResponse>() {
-                        @Override
-                        public void onResponse(Call<GetResponse> call, retrofit2.Response<GetResponse> response) {
+        if (view.getId() == R.id.login_btn || view.getId() == R.id.logout_btn) {
+            logout();
+        } else {
+            String menu_name="";
+            switch (view.getId()) {
+                case R.id.my_list_btn:
+                case R.id.my_list_btn1:
+                    menu_name = "my_list";
+                    break;
+                case R.id.my_profile_btn:
+                    menu_name = "my_profile";
+                    break;
+                case R.id.my_wallet_btn:
+                    menu_name = "my_wallet";
+                    break;
+                case R.id.sstx_btn:
+                    menu_name = "sstx_market";
+                    break;
+                case R.id.notification_btn:
+                    menu_name = "notifications";
+                    break;
+                case R.id.notification_btn1:
+                    menu_name = "notifications";
+                    break;
+                case R.id.coupon_code_btn:
+                    menu_name = "pre_made";
+                    break;
+                case R.id.help_btn:
+                    menu_name = "help";
+                    break;
+                case R.id.help_btn1:
+                    menu_name = "help";
+                    break;
+                case R.id.contactus_btn:
+                    menu_name = "contact_us";
+                    break;
+            }
+            Intent intent = new Intent(context, LandingScreen.class);
+            intent.putExtra("MENU_NAME", menu_name);
+            startActivity(intent);
+        }
 
+    }
+
+    public void logout() {
+        if (utils.isNetworkConnected(context)) {
+            utils.showDialog(context);
+            String token = bean.getUserToken();
+            Call<GetResponse> call = apiService.logout(token);
+            call.enqueue(new Callback<GetResponse>() {
+                @Override
+                public void onResponse(Call<GetResponse> call, retrofit2.Response<GetResponse> response) {
+
+                    try {
+                        utils.hideDialog();
+                        GetResponse tokenResponse = response.body();
+                        if (tokenResponse != null) {
+                            int status = tokenResponse.getStatus();
+                            String message = tokenResponse.getMessage();
                             try {
-                                utils.hideDialog();
-                                GetResponse tokenResponse = response.body();
-                                if (tokenResponse != null) {
-                                    int status = tokenResponse.getStatus();
-                                    String message = tokenResponse.getMessage();
-                                    try {
-                                        if (status == 200) {
-                                            MySharedPreference mySharedPreference = new MySharedPreference(context);
-                                            mySharedPreference.clearPreference(context);
-                                            mySharedPreference.setLoginDetails("", "", "", "", "", "");
-                                            startActivity(new Intent(context, LoginActivity.class));
-                                            finish();
-                                        } else {
-                                            utils.showSnackBar(getWindow().getDecorView().getRootView(), message);
+                                if (status == 200) {
+                                    MySharedPreference mySharedPreference = new MySharedPreference(context);
+                                    mySharedPreference.clearPreference(context);
+                                    mySharedPreference.setLoginDetails("", "", "", "", "", "", "", "");
+                                    startActivity(new Intent(context, LoginActivity.class));
+                                    finish();
+                                } else {
+                                    utils.showSnackBar(getWindow().getDecorView().getRootView(), message);
 
-                                            final Handler handler = new Handler();
-                                            handler.postDelayed(() -> {
-                                                startActivity(new Intent(context, LoginActivity.class));
-                                                finish();
-                                            }, 2000);
-                                        }
-
-                                        final Handler handler = new Handler();
-                                        handler.postDelayed(() -> {
-                                            startActivity(new Intent(context, LoginActivity.class));
-                                            finish();
-                                        }, 2000);
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
+//                                            final Handler handler = new Handler();
+//                                            handler.postDelayed(() -> {
+//                                                startActivity(new Intent(context, LoginActivity.class));
+//                                                finish();
+//                                            }, 2000);
                                 }
+
+//                                        final Handler handler = new Handler();
+//                                        handler.postDelayed(() -> {
+//                                            startActivity(new Intent(context, LoginActivity.class));
+//                                            finish();
+//                                        }, 2000);
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
                         }
-
-                        @Override
-                        public void onFailure(Call<GetResponse> call, Throwable t) {
-                            utils.showSnackBar(getWindow().getDecorView().getRootView(), "Please check your internet connection!");
-                        }
-                    });
-                } else {
-                    utils.showSnackBar(getWindow().getDecorView().getRootView(), "You are not connected to internet!");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
-                break;
+
+                @Override
+                public void onFailure(Call<GetResponse> call, Throwable t) {
+                    utils.showSnackBar(getWindow().getDecorView().getRootView(), "Please check your internet connection!");
+                }
+            });
+        } else {
+            utils.showSnackBar(getWindow().getDecorView().getRootView(), "You are not connected to internet!");
         }
-        Intent intent = new Intent(context, LandingScreen.class);
-        intent.putExtra("MENU_NAME", menu_name);
-        startActivity(intent);
     }
 
     @Override
@@ -255,5 +279,31 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
         super.onResume();
         OneSignal.addTrigger("menu", "loaded");
 
+    }
+
+    public void showDialogReward() {
+        dialog = new Dialog(context);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.dialog_earned);
+
+        WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
+        Window window = dialog.getWindow();
+
+        layoutParams.copyFrom(window.getAttributes());
+        layoutParams.width = WindowManager.LayoutParams.WRAP_CONTENT;
+        layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        layoutParams.gravity = Gravity.CENTER;
+        window.setAttributes(layoutParams);
+
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(context.getResources().getColor(R.color.transparent)));
+        earnedImg = dialog.findViewById(R.id.earned_image);
+        btn_close = dialog.findViewById(R.id.close_btn);
+        Glide.with(this).load(R.drawable.earned).into(earnedImg);
+        btn_close.setOnClickListener(v -> {
+            dialog.dismiss();
+        });
+
+        dialog.show();
     }
 }

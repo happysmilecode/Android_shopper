@@ -19,6 +19,7 @@ public class Constants {
     public static final String FACEBOOK_LOGIN_URL = "account/facebookLogin";
     public static final String REGISTER_URL = "account/register";
     public static final String SENDMESSAGE_URL = "account/messageVerify";
+    public static final String MOBILE_VERIFY = "account/verifyMobileOTP";
     public static final String LOGOUT_URL = "account/logout";
     public static final String FORGET_URL = "account/forget";
     public static final String SMSCODE_URL = "account/phoneVerify";
@@ -66,6 +67,7 @@ public class Constants {
     public static final String MESSAGES_PAGE_NUMBER_URL = "/{page_number}";
     public static final String STOREIMAGE_PAGE_NUMBER_URL = "/{page_number}";
     public static final String STOREIMAGE_URL = "common/logos/{token}";
+    public static final String GETREWARD_URL  = "account/getReward";
 
     public static final String PRIVACY_POLICY_URL="https://www.speedshopperapp.com/app/privacy-policies";
     public static final String TERMS_CONDITION_URL="https://www.speedshopperapp.com/app/terms-and-conditions";
@@ -73,6 +75,7 @@ public class Constants {
     public static final String LOGIN_TYPE = "login_type";
     public static String HOME_LIST_FRAGMENT = "home_list_fragment";
     public static final String FIREBASE_TOKEN = "firebase_token";
+    public static final String SMSCODE = "sms_code";
     public static final String MESSAGE = "message";
     public static final String TOKEN = "token";
     public static final String EMAIL = "email";
@@ -95,6 +98,7 @@ public class Constants {
     public static final String UNIT_PRICE = "unit_price";
     public static final String LOCATION = "location";
     public static final String ADDRESS = "address";
+    public static final String PREMIUM = "premium";
 
     public static final String ADS_ID = "ads_id";
     public static final String USER_LATITUDE = "user_latitude";

@@ -38,7 +38,7 @@
         android:layout_marginTop="8dp"
         android:background="@drawable/edit_bg"
         android:hint="@string/phone"
-        android:inputType="text|phone"
+        android:inputType="number|phone"
         android:paddingBottom="12sp"
         android:paddingLeft="18sp"
         android:paddingRight="18sp"

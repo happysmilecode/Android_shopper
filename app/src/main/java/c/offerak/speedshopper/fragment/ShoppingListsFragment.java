@@ -20,6 +20,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
@@ -64,6 +65,7 @@ import c.offerak.speedshopper.utils.Utils;
 import pl.droidsonroids.gif.GifTextView;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 
 import static android.app.Activity.RESULT_OK;
 import static android.content.Context.TELECOM_SERVICE;
@@ -81,7 +83,7 @@ public class ShoppingListsFragment extends Fragment implements GoogleApiClient.C
     private RelativeLayout tapHeader;
     private LinearLayout lay_ctv_note;
     private ListView homeList;
-    private String storeName, storeAddress, storeLogo, storeId, listName;
+    private String storeName, storeAddress, storeLogo, storeId, listName, listID;
     ImageView icAdd, icBackButton, toggleButton;
     View rootView;
     Context context;
@@ -93,6 +95,9 @@ public class ShoppingListsFragment extends Fragment implements GoogleApiClient.C
     BillingProcessor bp;
     IOSDialog iosDialog;
     private PurchaseModel mViewModel;
+
+    Dialog dialog;
+    ImageView btn_close, earnedImg;
 
     @Nullable
     @Override
@@ -351,6 +356,7 @@ public class ShoppingListsFragment extends Fragment implements GoogleApiClient.C
              * This is important to know if you do any validation on the payload returned from Google Play after a successful purchase.
              * */
                 bp.purchase(getActivity(), mViewModel.getPRODUCT_SKU() );
+
             }
              else {
                 utils.showSnackBar(getActivity().getWindow().getDecorView().getRootView(), "You are not able to purchase the logos!");
@@ -454,6 +460,7 @@ public class ShoppingListsFragment extends Fragment implements GoogleApiClient.C
             storeAddress = data.getStringExtra("storeAddress");
             storeName = data.getStringExtra("storeName");
             listName = data.getStringExtra("listName");
+            listID = data.getStringExtra("listID");
         } else if (requestCode == 3000 && resultCode == 2000) {
 
         }
@@ -764,9 +771,80 @@ public class ShoppingListsFragment extends Fragment implements GoogleApiClient.C
 //                .setTitleText("Congratulations!")
 //                .setContentText("Purchase Successfully made! You can add the logos in your shopping list!")
 //                .show();
-        Toast.makeText(context, " You have already purchased the Logos", Toast.LENGTH_LONG).show();
-        startActivity(new Intent(getActivity(), StoreImageActivity.class));
+        Toast.makeText(context, " You have successfully purchased the Logos", Toast.LENGTH_LONG).show();
+//        startActivity(new Intent(getActivity(), StoreImageActivity.class)
+//                .putExtra("listName", listName)
+//                .putExtra("storeName", storeName)
+//                .putExtra("storeAddress", storeAddress)
+//                .putExtra("storeId", storeId)
+//                .putExtra("listId", listID)
+//                .putExtra("storeImage", storeLogo));
+        callAPIRewardMethod();
 
+
+    }
+
+    public void callAPIRewardMethod() {
+        utils.showDialog(context);
+        if(utils.isNetworkConnected(context)) {
+            Call<GetResponse> call = apiService.getReward(userBean.getUserToken(), "logo");
+            call.enqueue(new Callback<GetResponse>() {
+                @Override
+                public void onResponse(@NonNull Call<GetResponse> call, @NonNull Response<GetResponse> response) {
+
+                    GetResponse resp = response.body();
+                    try {
+                        if (resp != null) {
+
+                            if (resp.getStatus() == 200) {
+                                utils.hideDialog();
+                                showDialogReward();
+                            } else {
+                                utils.hideDialog();
+                                utils.showSnackBar(getActivity().getWindow().getDecorView().getRootView(), "There are no any reward for Store Iamge purchase");
+
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<GetResponse> call, Throwable t) {
+                    utils.hideDialog();
+                    Log.d("", "onResponse: ");
+                }
+            });
+        } else {
+            utils.showSnackBar(getActivity().getWindow().getDecorView().getRootView(), getString(R.string.not_connected_to_internet));
+        }
+    }
+
+    public void showDialogReward() {
+        dialog = new Dialog(context);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.dialog_earned);
+
+        WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
+        Window window = dialog.getWindow();
+
+        layoutParams.copyFrom(window.getAttributes());
+        layoutParams.width = WindowManager.LayoutParams.WRAP_CONTENT;
+        layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        layoutParams.gravity = Gravity.CENTER;
+        window.setAttributes(layoutParams);
+
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(context.getResources().getColor(R.color.transparent)));
+        earnedImg = dialog.findViewById(R.id.earned_image);
+        btn_close = dialog.findViewById(R.id.close_btn);
+        Glide.with(this).load(R.drawable.earned).into(earnedImg);
+        btn_close.setOnClickListener(v -> {
+            dialog.dismiss();
+        });
+
+        dialog.show();
     }
 
 }

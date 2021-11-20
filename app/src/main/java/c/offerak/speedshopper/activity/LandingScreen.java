@@ -56,6 +56,8 @@ import c.offerak.speedshopper.fragment.ContactUsFragment;
 import c.offerak.speedshopper.fragment.CouponFragment;
 import c.offerak.speedshopper.fragment.FrequentlyAskedQuestionsFragment;
 import c.offerak.speedshopper.fragment.NotificationFragment;
+import c.offerak.speedshopper.fragment.PremadeFragment;
+
 import c.offerak.speedshopper.fragment.ProfileFragment;
 import c.offerak.speedshopper.fragment.ShoppingListsFragment;
 import c.offerak.speedshopper.fragment.SpeedShopperMarketListFragment;
@@ -190,10 +192,10 @@ public class LandingScreen extends AppCompatActivity implements LocationListener
                 transaction.replace(R.id.homeFrame, new NotificationFragment());
                 transaction.commit();
                 break;
-            case "coupon_code":
+            case "pre_made":
                 fragmentManager = getFragmentManager();
                 transaction = fragmentManager.beginTransaction();
-                transaction.replace(R.id.homeFrame, new CouponFragment());
+                transaction.replace(R.id.homeFrame, new PremadeFragment());
                 transaction.commit();
                 break;
             case "help":
@@ -208,6 +210,8 @@ public class LandingScreen extends AppCompatActivity implements LocationListener
                 transaction.replace(R.id.homeFrame, new ContactUsFragment());
                 transaction.commit();
                 break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + menu_name);
         }
     }
 

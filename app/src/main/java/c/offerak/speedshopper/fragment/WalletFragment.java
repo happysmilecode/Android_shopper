@@ -28,6 +28,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.WriterException;
@@ -42,9 +43,11 @@ import c.offerak.speedshopper.R;
 import c.offerak.speedshopper.activity.LoginActivity;
 import c.offerak.speedshopper.activity.TransactionHistoryActivity;
 import c.offerak.speedshopper.modal.UserBean;
+import c.offerak.speedshopper.response.ProfileResponse;
 import c.offerak.speedshopper.response.WalletResponse;
 import c.offerak.speedshopper.rest.ApiClient;
 import c.offerak.speedshopper.rest.ApiInterface;
+import c.offerak.speedshopper.rest.Constants;
 import c.offerak.speedshopper.utils.MySharedPreference;
 import c.offerak.speedshopper.utils.Utils;
 import retrofit2.Call;
@@ -103,8 +106,61 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
         btn_sstx.setOnClickListener(this);
         btn_eth.setOnClickListener(this);
         btn_deposit.setOnClickListener(this);
-        getWalletDetials();
+//        getWalletDetials();
+        getWallet();
         OneSignal.addTrigger("wallet", "loaded");
+    }
+
+    public void getWallet() {
+        utils.showDialog(context);
+        if (utils.isNetworkConnected(context)) {
+            String token = userBean.getUserToken();
+            Call<ProfileResponse> call = apiService.getProfile(token);
+            call.enqueue(new Callback<ProfileResponse>() {
+                @Override
+                public void onResponse(Call<ProfileResponse> call, retrofit2.Response<ProfileResponse> response) {
+
+                    try {
+                        ProfileResponse tokenResponse = response.body();
+                        if (tokenResponse != null) {
+
+                            ProfileResponse.DataBean dataBean = tokenResponse.getData();
+                            utils.hideDialog();
+                            try {
+                                if (tokenResponse.getStatus() == 200) {
+                                    txtBalance.setText(dataBean.getBalance());
+
+                                    mySharedPreference.setLoginDetails(dataBean.getLogin_num(), dataBean.getBalance(), dataBean.getEmail(), dataBean.getName(), dataBean.getPath() + "" + dataBean.getProfile_pic(), dataBean.getToken(), dataBean.getId(), "loggedin");
+
+                                    MySharedPreference.setSharedPreference(context, Constants.EMAIL, dataBean.getEmail());
+
+                                } else if (tokenResponse.getMessage().equals("Session expired")) {
+                                    utils.showSnackBar(getActivity().getWindow().getDecorView().getRootView(), tokenResponse.getMessage());
+
+                                    startActivity(new Intent(getActivity(), LoginActivity.class));
+                                    getActivity().finish();
+                                } else {
+                                    utils.showSnackBar(getActivity().getWindow().getDecorView().getRootView(), tokenResponse.getMessage());
+                                }
+                                //utils.hideDialog();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ProfileResponse> call, Throwable t) {
+                    utils.hideDialog();
+                    //utils.showSnackBar(constraintLayout, "Please check your internet connection!");
+                }
+            });
+        } else {
+            utils.showSnackBar(getActivity().getWindow().getDecorView().getRootView(), getString(R.string.not_connected_to_internet));
+        }
     }
 
     public void getWalletDetials() {

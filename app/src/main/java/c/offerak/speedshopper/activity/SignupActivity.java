@@ -64,6 +64,8 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
     Dialog dialog;
     private TextView btn_text, btn_email, message;
 
+    MySharedPreference mySharedPreference;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,6 +76,7 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
 
     public void init() {
         ButterKnife.bind(this);
+        mySharedPreference = new MySharedPreference(this);
         apiService = ApiClient.getClient().create(ApiInterface.class);
         imvEyeMainPwd = findViewById(R.id.imvEyeMainPwd);
         imvEyeMainPwd.setOnClickListener(this);
@@ -138,13 +141,15 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
                             SignupResponse.DataBean dataBean = responseSign.getData();
 
                             if (responseSign.getStatus() == 200) {
+                                utils.hideDialog();
                                 name = dataBean.getName();
                                 contact = dataBean.getContact();
                                 useremail = dataBean.getEmail();
-                                token = dataBean.getToken();
+                                token = dataBean.getTokenUser();
                                 id = dataBean.getId();
                                 otp = dataBean.getOtp();
                                 emailVerify = dataBean.getEmail_verify();
+                                mySharedPreference.setTempToken(token);
                                 showDialogVerification(responseSign.getMessage());
                             } else {
                                 utils.hideDialog();
@@ -169,7 +174,6 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
 
     //----------------------- Show Dialog -------------------------------
     public void showDialogVerification(String msg) {
-        dialog.dismiss();
         dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(false);
@@ -190,7 +194,7 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
         message = dialog.findViewById(R.id.msg_detail);
         message.setText(msg);
         btn_text.setOnClickListener(this);
-        btn_text.setOnClickListener(this);
+        btn_email.setOnClickListener(this);
         dialog.show();
     }
 
@@ -199,9 +203,12 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
         switch (v.getId()) {
 
             case R.id.btn_email:
+                dialog.dismiss();
+                utils.showDialog(SignupActivity.this);
                 callMessageAPI();
                 break;
             case R.id.btn_text:
+                dialog.dismiss();
                 mobileScreen();
                 break;
             case R.id.imvEyeMainPwd:
@@ -222,12 +229,12 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
                         if (responseEmail != null) {
 
                             if (responseEmail.getStatus() == 200) {
-
+                                utils.hideDialog();
                                 sendToVerification(responseEmail.getMessage());
                             } else {
                                 utils.hideDialog();
                                 utils.showSnackBar(getWindow().getDecorView().getRootView(), responseEmail.getMessage());
-                                showDialogVerification("Failed to send verification Message, please try again");
+                                showDialogVerification(responseEmail.getMessage());
                             }
                         }
                     } catch (Exception e) {
@@ -258,7 +265,7 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
         handler.postDelayed(() -> {
             startActivity(new Intent(context, LoginActivity.class));
             finish();
-        }, 2000);
+        }, 3000);
     }
 
     public boolean isValidEmail(CharSequence target) {

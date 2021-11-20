@@ -63,6 +63,8 @@ public class LoginResponse {
         private String device_type;
         private String profile_pic;
         private String path;
+        private String login_num;
+        private String balance;
 
         public String getId() {
             return id;
@@ -150,6 +152,22 @@ public class LoginResponse {
 
         public void setPath(String path) {
             this.path = path;
+        }
+
+        public String getLogin_num() {
+            return login_num;
+        }
+
+        public void setLogin_num(String login_num) {
+            this.login_num = login_num;
+        }
+
+        public String getBalance() {
+            return login_num;
+        }
+
+        public void setBalance(String login_num) {
+            this.login_num = login_num;
         }
     }
 }

@@ -11,7 +11,8 @@
         android:id="@+id/headerRelative"
         android:layout_width="match_parent"
         android:layout_height="150sp"
-        android:background="@color/colorAppBlue">
+        android:background="@color/colorAppBlue"
+        tools:ignore="MissingConstraints">
 
         <TextView
             android:layout_width="wrap_content"

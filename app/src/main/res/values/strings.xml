@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Speed Shopper</string>
     <string name="email">Email</string>
-    <string name="phone">+12345678900</string>
+    <string name="phone">Phone number</string>
     <string name="login">Login</string>
     <string name="password">Password</string>
     <string name="forgot_password">Forgot password ?</string>
@@ -75,6 +75,7 @@
     <string name="tap_the_shopping_list_name_to_add_items">TAP THE SHOPPING LIST NAME TO ADD ITEMS</string>
     <string name="update">Update</string>
     <string name="my_list">My Lists</string>
+    <string name="pre_made">Pre-Made Lists</string>
     <string name="sync">Sync</string>
     <string name="okay">Ok</string>
     <string name="you_cannot_select_this_store_out_of_range">You cannot select this store. \nOut of range.</string>
@@ -118,6 +119,7 @@
     <string name="sstx_market">SSTX Market</string>
     <string name="notifications">Notifications</string>
     <string name="coupon_codes">Coupon Codes</string>
+    <string name="pre_made_list">Pre-made List</string>
     <string name="help_faq">Help/FAQ</string>
     <string name="back">Back</string>
     <string name="qty">Qty</string>
@@ -167,5 +169,7 @@
         <item>50 Miles</item>
         <item>100 Miles</item>
     </string-array>
+
+    <string name="coming_soon">This Function will be come soon</string>
 
 </resources>

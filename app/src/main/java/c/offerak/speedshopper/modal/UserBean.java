@@ -2,6 +2,8 @@ package c.offerak.speedshopper.modal;
 
 public class UserBean {
 
+    private String login_num;
+    private String balance;
     private String userName;
     private String userMail;
     private String userImage;
@@ -55,5 +57,21 @@ public class UserBean {
 
     public void setFlow(String flow) {
         this.flow = flow;
+    }
+
+    public String getLogin_num() {
+        return login_num;
+    }
+
+    public void setLogin_num(String login_num) {
+        this.login_num = login_num;
+    }
+
+    public String getBalance() {
+        return balance;
+    }
+
+    public void setBalance(String balance) {
+        this.balance = balance;
     }
 }

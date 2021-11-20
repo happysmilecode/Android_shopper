@@ -72,7 +72,7 @@ public interface ApiInterface {
 
     @POST(Constants.SMSCODE_URL)
     @FormUrlEncoded
-    Call<GetResponse> sendSMS(@Field(Constants.MOBILE) String phone,
+    Call<SignupResponse> sendSMS(@Field(Constants.MOBILE) String phone,
                               @Field(Constants.TOKEN) String token);
 
     @GET(Constants.GET_USER_URL)
@@ -318,6 +318,18 @@ public interface ApiInterface {
 
     @GET(Constants.STOREIMAGE_URL)
     Call<StoreImageListResponse> getLogosList(@Path(Constants.TOKEN) String token);
+
+    @POST(Constants.MOBILE_VERIFY)
+    @FormUrlEncoded
+    Call<LoginResponse> verify_mobile(@Field(Constants.TOKEN) String token,
+                              @Field(Constants.DEVICE_ID) String deviceId,
+                              @Field(Constants.DEVICE_TYPE) String deviceType,
+                              @Field(Constants.ONESIGNAL_ID) String push_id);
+
+    @POST(Constants.GETREWARD_URL)
+    @FormUrlEncoded
+    Call<GetResponse> getReward(@Field(Constants.TOKEN) String token,
+                                      @Field(Constants.PREMIUM) String key);
 
 }
 
