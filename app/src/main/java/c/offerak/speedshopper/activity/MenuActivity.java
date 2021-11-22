@@ -131,10 +131,10 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
 
         int login_num = Integer.parseInt(bean.getLogin_num());
         int balance = Integer.parseInt(bean.getBalance());
-
-        if (login_num == 1 && balance != 0 && !showed) {
+        showed = MySharedPreference.getPurchased(context, "sstx_earned");
+        if (login_num == 1 && balance != 0 && showed) {
             showDialogReward();
-            showed = true;
+            MySharedPreference.setPurchased(context, "sstx_earned", false);
         }
     }
 

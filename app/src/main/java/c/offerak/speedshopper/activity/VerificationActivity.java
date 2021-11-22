@@ -331,7 +331,7 @@ public class VerificationActivity extends AppCompatActivity {
                                 String picPath = dataBean.getPath();
                                 String device_Id = dataBean.getDevice_id();
                                 MySharedPreference.setSharedPreference(context, Constants.DEVICE_ID, device_Id);
-
+                                MySharedPreference.setPurchased(context, "sstx_earned", true);
                                 mySharedPreference.setSharedPreference(context, Constants.EVENT_CHECK, "1");
                                 mySharedPreference.setLoginDetails(login_num, balance, email, name, picPath + "" + proPic, token, id, "loggedin");
                                 startActivity(new Intent(VerificationActivity.this, MenuActivity.class));

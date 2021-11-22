@@ -72,6 +72,7 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 
 import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
@@ -118,6 +119,9 @@ public class ItemEditActivity extends AppCompatActivity implements View.OnClickL
 
     public boolean isUpgraded = false;
     File file;
+
+    Dialog dialog;
+    ImageView btn_close, earnedImg;
 
 //    public RelativeLayout item_imageView, photo_takeView;
 
@@ -289,6 +293,11 @@ public class ItemEditActivity extends AppCompatActivity implements View.OnClickL
                                     aisleLocation = address;
                                     selectAisleTextView.setText(address);
                                     locationDialog.dismiss();
+                                    if ( call == apiService.addItemLocationPro(userBean.getUserToken(), item_id, lat, storeId, address, lng, listId) ) {
+                                        callAPIRewardMethod("aislepro");
+                                    } else if ( call == apiService.addItemLocation(userBean.getUserToken(), item_id, lat, storeId, address, lng, listId) ) {
+                                        callAPIRewardMethod("aisle");
+                                    }
                                 }
                                 else {
                                     Utility.ShowToastMessage(context, response.body() != null ? response.body().getMessage() : null);
@@ -702,5 +711,68 @@ public class ItemEditActivity extends AppCompatActivity implements View.OnClickL
     public void onResume() {
         super.onResume();
         OneSignal.addTrigger("itemEdit", "loaded");
+    }
+
+    public void callAPIRewardMethod(String key) {
+        utils.showDialog(context);
+        if(utils.isNetworkConnected(context)) {
+            Call<GetResponse> call = apiService.getReward(userBean.getUserToken(), key);
+            call.enqueue(new Callback<GetResponse>() {
+                @Override
+                public void onResponse(@NonNull Call<GetResponse> call, @NonNull Response<GetResponse> response) {
+
+                    GetResponse resp = response.body();
+                    try {
+                        if (resp != null) {
+
+                            if (resp.getStatus() == 200) {
+                                utils.hideDialog();
+                                showDialogReward();
+                            } else {
+                                utils.hideDialog();
+                                utils.showSnackBar(getWindow().getDecorView().getRootView(), "There are no any reward for Item Location Adding");
+
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<GetResponse> call, Throwable t) {
+                    utils.hideDialog();
+                    Log.d("", "onResponse: ");
+                }
+            });
+        } else {
+            utils.showSnackBar(getWindow().getDecorView().getRootView(), getString(R.string.not_connected_to_internet));
+        }
+    }
+
+    public void showDialogReward() {
+        dialog = new Dialog(context);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.dialog_earned);
+
+        WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
+        Window window = dialog.getWindow();
+
+        layoutParams.copyFrom(window.getAttributes());
+        layoutParams.width = WindowManager.LayoutParams.WRAP_CONTENT;
+        layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        layoutParams.gravity = Gravity.CENTER;
+        window.setAttributes(layoutParams);
+
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(context.getResources().getColor(R.color.transparent)));
+        earnedImg = dialog.findViewById(R.id.earned_image);
+        btn_close = dialog.findViewById(R.id.close_btn);
+        Glide.with(this).load(R.drawable.earned).into(earnedImg);
+        btn_close.setOnClickListener(v -> {
+            dialog.dismiss();
+        });
+
+        dialog.show();
     }
 }
