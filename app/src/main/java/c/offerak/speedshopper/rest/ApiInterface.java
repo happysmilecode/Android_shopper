@@ -4,6 +4,7 @@ import c.offerak.speedshopper.response.AddNewStore;
 import c.offerak.speedshopper.response.AdvertisementListByMerchantIdResponse;
 import c.offerak.speedshopper.response.AisleLocationResponse;
 import c.offerak.speedshopper.response.BuyListResponse;
+import c.offerak.speedshopper.response.EZListsResponse;
 import c.offerak.speedshopper.response.FAQ_Response;
 import c.offerak.speedshopper.response.GetResponse;
 import c.offerak.speedshopper.response.GetShoppingListResponse;
@@ -58,7 +59,7 @@ public interface ApiInterface {
 
     @POST(Constants.SENDMESSAGE_URL)
     @FormUrlEncoded
-    Call<GetResponse> sendEmail(@Field(Constants.NAME) String name,
+    Call<SignupResponse> sendEmail(@Field(Constants.NAME) String name,
                                 @Field(Constants.EMAIL) String email,
                                 @Field(Constants.TOKEN) String token);
 
@@ -273,6 +274,18 @@ public interface ApiInterface {
     Call<MarketListResponse> getSpeedShopperMarket(@Path(Constants.TOKEN) String token,
                                                    @Field(Constants.PAGE) String page,
                                                    @Field(Constants.KEY) String key);
+
+    @POST(Constants.GET_EZ_LISTS_URL)
+    @FormUrlEncoded
+    Call<EZListsResponse> getEZLists(@Path(Constants.TOKEN) String token,
+                                     @Field(Constants.PAGE) String page,
+                                     @Field(Constants.KEY) String key);
+
+    @POST(Constants.ADD_ITEM_TO_MY_LISTS)
+    @FormUrlEncoded
+    Call<GetResponse> addItemToMyLists(@Path(Constants.TOKEN) String token,
+                                                       @Field(Constants.EZ_LIST_ID) String listId,
+                                                       @Field(Constants.MY_LIST_ID) String storeId);
 
     @POST(Constants.GET_PRODUCT_BY_MERCHANT_ID_URL)
     @FormUrlEncoded

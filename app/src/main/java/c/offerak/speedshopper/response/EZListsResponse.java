@@ -2,8 +2,7 @@ package c.offerak.speedshopper.response;
 
 import java.util.List;
 
-public class MarketListResponse {
-
+public class EZListsResponse {
     /**
      * status : 200
      * message : Speed Shopping List Stores list
@@ -12,7 +11,7 @@ public class MarketListResponse {
 
     private int status;
     private String message;
-    private List<DataBean> data;
+    private List<EZListsResponse.DataBean> data;
 
     public int getStatus() {
         return status;
@@ -30,11 +29,11 @@ public class MarketListResponse {
         this.message = message;
     }
 
-    public List<DataBean> getData() {
+    public List<EZListsResponse.DataBean> getData() {
         return data;
     }
 
-    public void setData(List<DataBean> data) {
+    public void setData(List<EZListsResponse.DataBean> data) {
         this.data = data;
     }
 
@@ -45,41 +44,41 @@ public class MarketListResponse {
          * address : indore
          */
 
-        private String store_id;
-        private String store_name;
-        private String address;
-        private String profile_pic;
+        private String id;
+        private String title;
+        private String description;
+        private String image;
 
-        public String getStore_id() {
-            return store_id;
+        public String getId() {
+            return id;
         }
 
-        public void setStore_id(String store_id) {
-            this.store_id = store_id;
+        public void setId(String id) {
+            this.id = id;
         }
 
-        public String getStore_name() {
-            return store_name;
+        public String getTitle() {
+            return title;
         }
 
-        public void setStore_name(String store_name) {
-            this.store_name = store_name;
+        public void setTitle(String title) {
+            this.title = title;
         }
 
-        public String getAddress() {
-            return address;
+        public String getDescription() {
+            return description;
         }
 
-        public void setAddress(String address) {
-            this.address = address;
+        public void setDescription(String description) {
+            this.description = description;
         }
 
-        public String getProfile_pic() {
-            return profile_pic;
+        public String getImage() {
+            return image;
         }
 
-        public void setProfile_pic(String profile_pic) {
-            this.profile_pic = profile_pic;
+        public void setImage(String image) {
+            this.image = image;
         }
     }
 }

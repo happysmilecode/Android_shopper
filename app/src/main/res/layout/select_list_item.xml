@@ -25,7 +25,6 @@
                     android:layout_marginStart="8sp"
                     android:layout_marginEnd="10dp"
                     android:padding="10dp"
-                    android:layout_toStartOf="@+id/icEdit"
                     android:layout_height="wrap_content">
                     <LinearLayout
                         android:id="@+id/store_info"
@@ -69,35 +68,6 @@
                     </LinearLayout>
 
                 </RelativeLayout>
-
-                <ImageView
-                    android:id="@+id/icDelete"
-                    android:layout_width="35sp"
-                    android:layout_height="35sp"
-                    android:layout_alignBottom="@id/store_info_layout"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginEnd="5sp"
-                    android:src="@mipmap/ic_delete" />
-
-                <TextView
-                    android:id="@+id/lineView"
-                    android:layout_width="1dp"
-                    android:layout_height="wrap_content"
-                    android:layout_alignBottom="@id/store_info_layout"
-                    android:layout_marginEnd="2sp"
-                    android:layout_toStartOf="@+id/icDelete"
-                    android:background="@android:color/transparent"
-                    android:textSize="16sp" />
-
-                <ImageView
-                    android:id="@+id/icEdit"
-                    android:layout_width="35sp"
-                    android:layout_height="35sp"
-                    android:layout_alignBottom="@id/store_info_layout"
-                    android:layout_marginEnd="5sp"
-                    android:layout_toStartOf="@+id/lineView"
-                    android:src="@mipmap/ic_edit" />
-
             </RelativeLayout>
     </RelativeLayout>
 

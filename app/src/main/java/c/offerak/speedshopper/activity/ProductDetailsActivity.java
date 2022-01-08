@@ -59,7 +59,7 @@ public class ProductDetailsActivity extends AppCompatActivity implements View.On
         imgProduct = findViewById(R.id.imgProduct);
         txtProductName = findViewById(R.id.txtProductName);
         txtProductPrice = findViewById(R.id.txtProductPrice);
-        txtProductDiscount = findViewById(R.id.txtProductDiscount);
+//        txtProductDiscount = findViewById(R.id.txtProductDiscount);
         txtWebsite = findViewById(R.id.txtWebsite);
         Linkify.addLinks(txtWebsite, Linkify.ALL);
         txtDescription = findViewById(R.id.txtDescriptionD);
@@ -83,12 +83,12 @@ public class ProductDetailsActivity extends AppCompatActivity implements View.On
         }
 
         if (intent.hasExtra("productPrice")) {
-            txtProductPrice.setText("SSTX - " + intent.getStringExtra("productPrice"));
+            txtProductPrice.setText(intent.getStringExtra("productPrice") + " Tokens");
         }
 
-        if (intent.hasExtra("productDiscount")) {
-            txtProductDiscount.setText(intent.getStringExtra("productDiscount") + "% Off");
-        }
+//        if (intent.hasExtra("productDiscount")) {
+//            txtProductDiscount.setText(intent.getStringExtra("productDiscount") + "% Off");
+//        }
 
         if (intent.hasExtra("productWebsite")) {
             txtWebsite.setText(intent.getStringExtra("productWebsite"));
@@ -157,7 +157,7 @@ public class ProductDetailsActivity extends AppCompatActivity implements View.On
                             try {
                                 if (loginResponse.getStatus() == 200) {
                                     dialog.dismiss();
-                                    mAlertView = new AlertView("Speed Shopper", loginResponse.getMessage(), "OK", null, null, context, AlertView.Style.Alert,
+                                    mAlertView = new AlertView("Speed Shopping List", loginResponse.getMessage(), "OK", null, null, context, AlertView.Style.Alert,
                                             new OnItemClickListener(){
                                                 public void onItemClick(Object o,int position){
                                                 }
@@ -167,7 +167,7 @@ public class ProductDetailsActivity extends AppCompatActivity implements View.On
                                 } else {
                                     dialog.dismiss();
 
-                                    mAlertView = new AlertView("Speed Shopper", loginResponse.getMessage(), "OK", null, null, context, AlertView.Style.Alert,
+                                    mAlertView = new AlertView("Speed Shopping List", loginResponse.getMessage(), "OK", null, null, context, AlertView.Style.Alert,
                                         new OnItemClickListener(){
                                             public void onItemClick(Object o,int position){
                                             }

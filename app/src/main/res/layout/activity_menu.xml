@@ -121,13 +121,13 @@
                     android:layout_height="70dp"
                     android:adjustViewBounds="true"
                     android:contentDescription="@string/my_list"
-                    android:src="@drawable/market_icon2" />
+                    android:src="@drawable/gift_cards_icon" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:text="@string/sstx_market"
+                    android:text="@string/gift_cards"
                     android:textColor="@color/white" />
             </LinearLayout>
 
@@ -167,13 +167,13 @@
                     android:layout_height="70dp"
                     android:adjustViewBounds="true"
                     android:contentDescription="@string/my_list"
-                    android:src="@drawable/coupon_icon2" />
+                    android:src="@drawable/ez_lists_icon" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:text="@string/pre_made_list"
+                    android:text="@string/ez_lists"
                     android:textColor="@color/white" />
             </LinearLayout>
         </LinearLayout>
@@ -391,6 +391,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="50dp"
+        android:layout_marginHorizontal="20dp"
         android:contentDescription="@string/logo_text"
-        android:src="@drawable/logo_white" />
+        android:src="@drawable/logo_text2" />
 </RelativeLayout>

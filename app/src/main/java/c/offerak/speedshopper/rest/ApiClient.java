@@ -1,5 +1,7 @@
 package c.offerak.speedshopper.rest;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -30,6 +32,8 @@ public class ApiClient {
                             .header("x-api-key", "BCX_5AAF884F75F3F")
                             .method(original.method(), original.body())
                             .build();
+
+                    Log.e("~~~~~~~~~~~~~~", request.toString());
 
                     return chain.proceed(request);
                 })

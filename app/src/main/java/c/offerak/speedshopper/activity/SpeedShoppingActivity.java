@@ -316,15 +316,15 @@ public class SpeedShoppingActivity extends AppCompatActivity implements View.OnC
 
         String sharebody = "I want to share my shopping list with you. \n\n " +
                 "This way we'll never forget to buy anything we need, and our lists will always be in sync. \n\n " +
-                "Accept my share request with Speed Shopper. If you're new, you will be sent to download the app first. Don't worry, it's free! \n\n " +
+                "Accept my share request with Speed Shopping List. If you're new, you will be sent to download the app first. Don't worry, it's free! \n\n " +
                 "https://speedshopperapp.com/app/share/token/" + token + "\n\n" +
-                "Try Speed Shopper, the world's best shopping list app, for iOS and Android.\n\n" +
+                "Try Speed Shopping List, the world's best shopping list app, for iOS and Android.\n\n" +
                 "https://apps.apple.com/us/app/speed-shopper/id1434065555 \n\n" +
                 "https://play.google.com/store/apps/details?id=c.offerak.speedshopper";
 
         sendIntent.putExtra(Intent.EXTRA_TEXT, sharebody);
         sendIntent.putExtra(Intent.EXTRA_TITLE, "Shopping List");
-        sendIntent.putExtra(Intent.EXTRA_SUBJECT, "View My Shopping List With Speed Shopper");
+        sendIntent.putExtra(Intent.EXTRA_SUBJECT, "View My Shopping List With Speed Shopping List");
         sendIntent.setType("text/plain");
         Intent shareIntent = Intent.createChooser(sendIntent, "Share Shopping List");
         startActivity(shareIntent);
@@ -1299,6 +1299,8 @@ public class SpeedShoppingActivity extends AppCompatActivity implements View.OnC
                                             item_Ids.add(advertisementList.get(i).getItem_id());
                                         }
                                     }
+
+                                    Log.e("~~~~~~~~~~~~~~", advertisementList.toString());
 
                                     if (listBeans.size() != 0 && item_Ids.size() != 0) {
                                         for (int i = 0; i < listBeans.size(); i++) {

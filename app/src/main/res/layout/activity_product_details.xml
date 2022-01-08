@@ -57,7 +57,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="20dp"
-                                android:layout_marginRight="60dp"
+                                android:layout_marginRight="30dp"
                                 android:layout_toStartOf="@+id/txtProductPrice"
                                 android:ellipsize="end"
                                 android:gravity="center|start"
@@ -67,17 +67,17 @@
                                 android:textSize="17sp"
                                 android:textStyle="bold" />
 
-                            <TextView
-                                android:id="@+id/txtProductDiscount"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_toStartOf="@+id/txtProductPrice"
-                                android:layout_marginEnd="5dp"
-                                android:gravity="center"
-                                android:text="5% Off"
-                                android:textColor="@color/colorAppGreen"
-                                android:textSize="17sp"
-                                android:textStyle="bold" />
+<!--                            <TextView-->
+<!--                                android:id="@+id/txtProductDiscount"-->
+<!--                                android:layout_width="wrap_content"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:layout_marginEnd="5dp"-->
+<!--                                android:layout_toStartOf="@+id/txtProductPrice"-->
+<!--                                android:gravity="center"-->
+<!--                                android:text="5% Off"-->
+<!--                                android:textColor="@color/colorAppGreen"-->
+<!--                                android:textSize="17sp"-->
+<!--                                android:textStyle="bold" />-->
 
                             <TextView
                                 android:id="@+id/txtProductPrice"
@@ -86,7 +86,7 @@
                                 android:layout_alignParentEnd="true"
                                 android:layout_marginEnd="20dp"
                                 android:gravity="center"
-                                android:text="SSTX - 2534"
+                                android:text="2534 Tokens"
                                 android:textColor="@color/colorAppBlue"
                                 android:textSize="17sp"
                                 android:textStyle="bold|italic" />

@@ -1,8 +1,6 @@
 package c.offerak.speedshopper.activity;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -53,24 +51,20 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import c.offerak.speedshopper.R;
 import c.offerak.speedshopper.fragment.ContactUsFragment;
-import c.offerak.speedshopper.fragment.CouponFragment;
 import c.offerak.speedshopper.fragment.FrequentlyAskedQuestionsFragment;
 import c.offerak.speedshopper.fragment.NotificationFragment;
-import c.offerak.speedshopper.fragment.PremadeFragment;
+import c.offerak.speedshopper.fragment.EZListsFragment;
 
 import c.offerak.speedshopper.fragment.ProfileFragment;
 import c.offerak.speedshopper.fragment.ShoppingListsFragment;
-import c.offerak.speedshopper.fragment.SpeedShopperMarketListFragment;
+import c.offerak.speedshopper.fragment.GiftCardsFragment;
 import c.offerak.speedshopper.fragment.WalletFragment;
 import c.offerak.speedshopper.modal.UserBean;
-import c.offerak.speedshopper.response.GetResponse;
 import c.offerak.speedshopper.rest.ApiClient;
 import c.offerak.speedshopper.rest.ApiInterface;
 import c.offerak.speedshopper.rest.Constants;
 import c.offerak.speedshopper.utils.MySharedPreference;
 import c.offerak.speedshopper.utils.Utils;
-import retrofit2.Call;
-import retrofit2.Callback;
 
 public class LandingScreen extends AppCompatActivity implements LocationListener,
         GoogleApiClient.ConnectionCallbacks,
@@ -180,10 +174,10 @@ public class LandingScreen extends AppCompatActivity implements LocationListener
                 transaction.replace(R.id.homeFrame, new WalletFragment());
                 transaction.commit();
                 break;
-            case "sstx_market":
+            case "gift_cards":
                 fragmentManager = getFragmentManager();
                 transaction = fragmentManager.beginTransaction();
-                transaction.replace(R.id.homeFrame, new SpeedShopperMarketListFragment());
+                transaction.replace(R.id.homeFrame, new GiftCardsFragment());
                 transaction.commit();
                 break;
             case "notifications":
@@ -192,10 +186,10 @@ public class LandingScreen extends AppCompatActivity implements LocationListener
                 transaction.replace(R.id.homeFrame, new NotificationFragment());
                 transaction.commit();
                 break;
-            case "pre_made":
+            case "ez_lists":
                 fragmentManager = getFragmentManager();
                 transaction = fragmentManager.beginTransaction();
-                transaction.replace(R.id.homeFrame, new PremadeFragment());
+                transaction.replace(R.id.homeFrame, new EZListsFragment());
                 transaction.commit();
                 break;
             case "help":

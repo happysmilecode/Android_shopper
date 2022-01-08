@@ -93,7 +93,7 @@
             android:layout_marginTop="10dp"
             android:elevation="20sp"
             android:gravity="center"
-            android:src="@drawable/logo"
+            android:src="@drawable/logo_image1"
             app:civ_border_color="#FFFFFF"
             app:civ_border_width="5dp" />
 

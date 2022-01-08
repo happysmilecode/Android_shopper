@@ -29,9 +29,7 @@ import com.onesignal.OneSignal;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.Optional;
 import c.offerak.speedshopper.R;
-import c.offerak.speedshopper.response.GetResponse;
 import c.offerak.speedshopper.response.SignupResponse;
 import c.offerak.speedshopper.rest.ApiClient;
 import c.offerak.speedshopper.rest.ApiInterface;
@@ -59,7 +57,7 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
     private Utils utils = new Utils();
     private ApiInterface apiService;
 
-    String name, contact, useremail, token, otp, emailVerify, id;
+    String name, contact, useremail, token, otp, emailVerify, id, smsCode;
 
     Dialog dialog;
     private TextView btn_text, btn_email, message;
@@ -148,6 +146,7 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
                                 token = dataBean.getTokenUser();
                                 id = dataBean.getId();
                                 otp = dataBean.getOtp();
+                                smsCode = dataBean.getSmsCode();
                                 emailVerify = dataBean.getEmail_verify();
                                 mySharedPreference.setTempToken(token);
                                 showDialogVerification(responseSign.getMessage());
@@ -219,17 +218,33 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
 
     public void callMessageAPI() {
         if(utils.isNetworkConnected(context)) {
-            Call<GetResponse> call = apiService.sendEmail(name, useremail, token);
-            call.enqueue(new Callback<GetResponse>() {
+            Call<SignupResponse> call = apiService.sendEmail(name, useremail, token);
+            call.enqueue(new Callback<SignupResponse>() {
                 @Override
-                public void onResponse(@NonNull Call<GetResponse> call, @NonNull Response<GetResponse> response) {
+                public void onResponse(@NonNull Call<SignupResponse> call, @NonNull Response<SignupResponse> response) {
 
-                    GetResponse responseEmail = response.body();
+                    SignupResponse responseEmail = response.body();
                     try {
                         if (responseEmail != null) {
 
                             if (responseEmail.getStatus() == 200) {
                                 utils.hideDialog();
+
+                            } else {
+
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    try {
+                        if (responseEmail != null) {
+                            SignupResponse.DataBean dataBean = responseEmail.getData();
+
+                            if (responseEmail.getStatus() == 200) {
+                                utils.hideDialog();
+                                smsCode = dataBean.getSmsCode();
                                 sendToVerification(responseEmail.getMessage());
                             } else {
                                 utils.hideDialog();
@@ -243,7 +258,7 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
                 }
 
                 @Override
-                public void onFailure(Call<GetResponse> call, Throwable t) {
+                public void onFailure(Call<SignupResponse> call, Throwable t) {
                     utils.hideDialog();
                     Log.d("", "onResponse: ");
                 }
@@ -258,12 +273,17 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
 //        finish();
     }
 
-    private void sendToVerification(String otp) {
+    private void sendToVerification(String msg) {
         utils.hideDialog();
-        utils.showSnackBar(linearLayout, otp + "");
+        utils.showSnackBar(linearLayout, msg);
         final Handler handler = new Handler();
         handler.postDelayed(() -> {
-            startActivity(new Intent(context, LoginActivity.class));
+            Intent i = new Intent(SignupActivity.this, VerificationActivity.class);
+            i.putExtra(Constants.NAME, name);
+            i.putExtra(Constants.EMAIL, useremail);
+            i.putExtra(Constants.SMSCODE, smsCode);
+            i.putExtra(Constants.MOBILE, "");
+            startActivity(i);
             finish();
         }, 3000);
     }

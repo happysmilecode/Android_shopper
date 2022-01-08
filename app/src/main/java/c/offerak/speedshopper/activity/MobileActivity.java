@@ -101,6 +101,8 @@ public class MobileActivity extends AppCompatActivity {
                                 final Handler handler = new Handler();
                                 handler.postDelayed(() -> {
                                     Intent i = new Intent(MobileActivity.this, VerificationActivity.class);
+                                    i.putExtra(Constants.NAME, "");
+                                    i.putExtra(Constants.EMAIL, "");
                                     i.putExtra(Constants.SMSCODE, dataBean.getSmsCode());
                                     i.putExtra(Constants.MOBILE, phone);
                                     startActivity(i);

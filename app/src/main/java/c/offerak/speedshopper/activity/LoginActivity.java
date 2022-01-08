@@ -2,6 +2,7 @@ package c.offerak.speedshopper.activity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -9,6 +10,7 @@ import android.content.IntentSender;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,13 +23,17 @@ import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.os.Handler;
 import android.provider.Settings;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 import android.util.Patterns;
+import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -82,6 +88,7 @@ import c.offerak.speedshopper.SplashScreen;
 import c.offerak.speedshopper.modal.UserBean;
 import c.offerak.speedshopper.response.GetResponse;
 import c.offerak.speedshopper.response.LoginResponse;
+import c.offerak.speedshopper.response.SignupResponse;
 import c.offerak.speedshopper.rest.ApiClient;
 import c.offerak.speedshopper.rest.ApiInterface;
 import c.offerak.speedshopper.rest.Constants;
@@ -89,6 +96,7 @@ import c.offerak.speedshopper.utils.MySharedPreference;
 import c.offerak.speedshopper.utils.Utils;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 
 import static android.Manifest.permission.CAMERA;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
@@ -102,6 +110,10 @@ public class LoginActivity extends AppCompatActivity implements  FacebookCallbac
     private static final String TAG = LoginActivity.class.getSimpleName();
 
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
+
+    Dialog dialog;
+    private TextView btn_text, btn_email, message;
+    String name1, email1, token1, smsCode1;
 
     @BindView(R.id.mainConstraint)
     LinearLayout linearLayout;
@@ -286,7 +298,88 @@ public class LoginActivity extends AppCompatActivity implements  FacebookCallbac
             case R.id.imvEyeMainPwd:
                 onEyeMainPwd();
                 break;
+            case R.id.btn_email:
+                dialog.dismiss();
+                utils.showDialog(LoginActivity.this);
+                callMessageAPI();
+                break;
+            case R.id.btn_text:
+                dialog.dismiss();
+                mobileScreen();
+                break;
         }
+    }
+
+    public void callMessageAPI() {
+        if(utils.isNetworkConnected(context)) {
+            Call<SignupResponse> call = apiService.sendEmail(name1, email1, token1);
+            call.enqueue(new Callback<SignupResponse>() {
+                @Override
+                public void onResponse(@NonNull Call<SignupResponse> call, @NonNull Response<SignupResponse> response) {
+
+                    SignupResponse responseEmail = response.body();
+                    try {
+                        if (responseEmail != null) {
+
+                            if (responseEmail.getStatus() == 200) {
+                                utils.hideDialog();
+
+                            } else {
+
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    try {
+                        if (responseEmail != null) {
+                            SignupResponse.DataBean dataBean = responseEmail.getData();
+
+                            if (responseEmail.getStatus() == 200) {
+                                utils.hideDialog();
+                                smsCode1 = dataBean.getSmsCode();
+                                sendToVerification(responseEmail.getMessage());
+                            } else {
+                                utils.hideDialog();
+                                utils.showSnackBar(getWindow().getDecorView().getRootView(), responseEmail.getMessage());
+                                showDialogVerification(responseEmail.getMessage());
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<SignupResponse> call, Throwable t) {
+                    utils.hideDialog();
+                    Log.d("", "onResponse: ");
+                }
+            });
+        } else {
+            utils.showSnackBar(getWindow().getDecorView().getRootView(), getString(R.string.not_connected_to_internet));
+        }
+    }
+
+    private void mobileScreen() {
+        startActivity(new Intent(context, MobileActivity.class));
+//        finish();
+    }
+
+    private void sendToVerification(String msg) {
+        utils.hideDialog();
+        utils.showSnackBar(linearLayout, msg);
+        final Handler handler = new Handler();
+        handler.postDelayed(() -> {
+            Intent i = new Intent(LoginActivity.this, VerificationActivity.class);
+            i.putExtra(Constants.NAME, name1);
+            i.putExtra(Constants.EMAIL, email1);
+            i.putExtra(Constants.SMSCODE, smsCode1);
+            i.putExtra(Constants.MOBILE, "");
+            startActivity(i);
+            finish();
+        }, 3000);
     }
 
     public void onEyeMainPwd() {
@@ -436,17 +529,20 @@ public class LoginActivity extends AppCompatActivity implements  FacebookCallbac
                                     String proPic = dataBean.getProfile_pic();
                                     String picPath = dataBean.getPath();
                                     String device_Id = dataBean.getDevice_id();
-                                    MySharedPreference.setSharedPreference(context, Constants.DEVICE_ID, device_Id);
+                                    String user_token = dataBean.getTokenUser();
 
+                                    name1 = name;
+                                    email1 = email;
+                                    token1 = user_token;
+
+                                    MySharedPreference mySharedPreference = new MySharedPreference(context);
                                     if (!emailVerify.isEmpty() && emailVerify.equals("1")) {
                                         isEmailVerify = true;
                                     }
-
-                                    MySharedPreference mySharedPreference = new MySharedPreference(context);
-                                    mySharedPreference.setSharedPreference(context, Constants.EVENT_CHECK, "1");
-                                    mySharedPreference.setLoginDetails(login_num, balance, email, name, picPath + "" + proPic, token, id, flow);
-
                                     if (isEmailVerify) {
+                                        mySharedPreference.setSharedPreference(context, Constants.DEVICE_ID, device_Id);
+                                        mySharedPreference.setSharedPreference(context, Constants.EVENT_CHECK, "1");
+                                        mySharedPreference.setLoginDetails(login_num, balance, email, name, picPath + "" + proPic, token, id, flow);
 
                                         if(flow.equals("guest")){
                                             checkShare("guest");
@@ -454,8 +550,11 @@ public class LoginActivity extends AppCompatActivity implements  FacebookCallbac
                                             checkShare("email");
                                         }
                                     } else {
-                                        utils.showSnackBar(linearLayout, "Please verify your email first!");
+                                        utils.showSnackBar(linearLayout, "Please verify your account!");
+                                        mySharedPreference.setTempToken(token1);
+                                        showDialogVerification(loginResponse.getMessage());
                                     }
+
                                 } else {
                                     utils.showSnackBar(linearLayout, loginResponse.getMessage());
                                 }
@@ -592,6 +691,32 @@ public class LoginActivity extends AppCompatActivity implements  FacebookCallbac
             sendToHome(type);
         }
 
+    }
+
+    //----------------------- Show Dialog -------------------------------
+    public void showDialogVerification(String msg) {
+        dialog = new Dialog(context);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.dialog_verify);
+
+        WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
+        Window window = dialog.getWindow();
+
+        layoutParams.copyFrom(window.getAttributes());
+        layoutParams.width = WindowManager.LayoutParams.WRAP_CONTENT;
+        layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        layoutParams.gravity = Gravity.CENTER;
+        window.setAttributes(layoutParams);
+
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(context.getResources().getColor(R.color.transparent)));
+        btn_text = dialog.findViewById(R.id.btn_text);
+        btn_email = dialog.findViewById(R.id.btn_email);
+        message = dialog.findViewById(R.id.msg_detail);
+        message.setText(msg);
+        btn_text.setOnClickListener(this);
+        btn_email.setOnClickListener(this);
+        dialog.show();
     }
 
     private void sendToHome(String type) {

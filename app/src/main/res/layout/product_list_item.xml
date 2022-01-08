@@ -34,23 +34,12 @@
                 tools:ignore="ContentDescription"/>
 
             <TextView
-                android:id="@+id/productDiscount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/productName"
-                android:layout_marginBottom="8sp"
-                android:layout_marginLeft="8sp"
-                android:layout_marginTop="10sp"
-                android:singleLine="true"
-                android:textStyle="bold"
-                android:textColor="@color/colorAppGreen"/>
-            <TextView
                 android:id="@+id/productPrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/productName"
                 android:layout_marginBottom="8sp"
-                android:layout_marginLeft="75sp"
+                android:layout_marginStart="8sp"
                 android:layout_marginTop="10sp"
                 android:singleLine="true"
                 android:textStyle="bold"

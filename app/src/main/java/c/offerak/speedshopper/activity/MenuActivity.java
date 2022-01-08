@@ -184,7 +184,7 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
                     menu_name = "my_wallet";
                     break;
                 case R.id.sstx_btn:
-                    menu_name = "sstx_market";
+                    menu_name = "gift_cards";
                     break;
                 case R.id.notification_btn:
                     menu_name = "notifications";
@@ -193,7 +193,7 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
                     menu_name = "notifications";
                     break;
                 case R.id.coupon_code_btn:
-                    menu_name = "pre_made";
+                    menu_name = "ez_lists";
                     break;
                 case R.id.help_btn:
                     menu_name = "help";

@@ -61,7 +61,7 @@ public class ApplicationClass extends Application {
                                 case "my_list":
                                 case "my_profile":
                                 case "my_wallet":
-                                case "sstx_market":
+                                case "gift_cards":
                                 case "notifications":
                                 case "coupon_code":
                                 case "help":

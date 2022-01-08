@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Speed Shopper</string>
+    <string name="app_name">Speed Shopping List</string>
     <string name="email">Email</string>
     <string name="phone">Phone number</string>
     <string name="login">Login</string>
@@ -14,6 +14,7 @@
     <string name="already_have_an_account_login">Already have an Account ?</string>
     <string name="verification">Verification</string>
     <string name="we_have_sent_you_an_access_code_via_sms_mobile_number_verification">We have sent you an access code via sms mobile number verification</string>
+    <string name="we_have_sent_you_an_access_code_via_email">We have sent you an access code via email</string>
     <string name="enter_code_here">Enter code here</string>
     <string name="resend_code">Resend Code</string>
     <string name="not_connected_to_internet">Not connect to internet</string>
@@ -33,8 +34,10 @@
     <string name="buy_sstx">BUY SSTX</string>
     <string name="money">\'MONEY\'</string>
     <string name="token">\'TOKEN\'</string>
+    <string name="tokens">\'TOKENS\'</string>
     <string name="_10000">10000</string>
     <string name="sstx">SSTX</string>
+    <string name="speed_tokens">SPEED TOKENS</string>
     <string name="transfer">TRANSFER</string>
     <string name="logout">Logout</string>
     <string name="pick_image_intent_text">Select image from</string>
@@ -117,9 +120,11 @@
     <string name="my_profile">My Profile</string>
     <string name="my_wallet">My Wallet</string>
     <string name="sstx_market">SSTX Market</string>
+    <string name="gift_cards">Gift Cards</string>
     <string name="notifications">Notifications</string>
     <string name="coupon_codes">Coupon Codes</string>
     <string name="pre_made_list">Pre-made List</string>
+    <string name="ez_lists">EZ Lists</string>
     <string name="help_faq">Help/FAQ</string>
     <string name="back">Back</string>
     <string name="qty">Qty</string>
@@ -140,7 +145,7 @@
     <string name="cancel">Cancel</string>
     <string name="make_your_selection">Make your selection</string>
     <string name="search">Search</string>
-    <string name="speed_shopper">Speed Shopper</string>
+    <string name="speed_shopper">Speed Shopping List</string>
     <string name="ok">Ok</string>
     <string name="select_store_to_import_items">Select store to import items</string>
     <string name="todo">TODO</string>

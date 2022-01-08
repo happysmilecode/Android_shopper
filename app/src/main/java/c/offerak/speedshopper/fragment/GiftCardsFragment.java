@@ -46,9 +46,9 @@ import static c.offerak.speedshopper.activity.LandingScreen.history;
 import static c.offerak.speedshopper.activity.LandingScreen.txtSync;
 import static c.offerak.speedshopper.activity.LandingScreen.txtTitle;
 
-public class SpeedShopperMarketListFragment extends Fragment /*implements View.OnClickListener*/ {
+public class GiftCardsFragment extends Fragment /*implements View.OnClickListener*/ {
 
-    public static final String TAG = SpeedShopperMarketListFragment.class.getSimpleName();
+    public static final String TAG = GiftCardsFragment.class.getSimpleName();
     Context context;
     private ApiInterface apiService;
     private Utils utils = new Utils();
@@ -66,7 +66,7 @@ public class SpeedShopperMarketListFragment extends Fragment /*implements View.O
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.speed_shopper_market_list, container, false);
+        rootView = inflater.inflate(R.layout.fragment_gift_cards, container, false);
         context = getActivity();
         init();
         return rootView;
@@ -77,7 +77,7 @@ public class SpeedShopperMarketListFragment extends Fragment /*implements View.O
         noDataFound = rootView.findViewById(R.id.noDataFound);
         searchEdit = rootView.findViewById(R.id.searchEdit);
         apiService = ApiClient.getClient().create(ApiInterface.class);
-        txtTitle.setText("SSTX Market");
+        txtTitle.setText(context.getResources().getString(R.string.gift_cards));
         txtSync.setVisibility(GONE);
         history.setVisibility(View.GONE);
 

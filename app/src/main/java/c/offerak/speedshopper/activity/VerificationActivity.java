@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.onesignal.OneSignal;
 
@@ -62,9 +63,12 @@ public class VerificationActivity extends AppCompatActivity {
     @BindView(R.id.btnNext)
     ImageView btnNext;
 
+    @BindView(R.id.msgTextView)
+    TextView msgTextView;
+
     private Utils utils = new Utils();
     private ApiInterface apiService;
-    String phone, smsCode;
+    String name, email, phone, smsCode;
     MySharedPreference mySharedPreference;
 
     @Override
@@ -82,8 +86,14 @@ public class VerificationActivity extends AppCompatActivity {
         mySharedPreference = new MySharedPreference(this);
 
         Intent intent = getIntent();
+        name = intent.getStringExtra(Constants.NAME);
+        email = intent.getStringExtra(Constants.EMAIL);
         smsCode = intent.getStringExtra(Constants.SMSCODE);
         phone   = intent.getStringExtra(Constants.MOBILE);
+
+        if (phone.equals("")) {
+            msgTextView.setText(context.getString(R.string.we_have_sent_you_an_access_code_via_email));
+        }
 
 //        if (otp != null && !otp.isEmpty()) {
 //            edtOne.setText(Character.toString(otp.charAt(0)));
@@ -363,41 +373,96 @@ public class VerificationActivity extends AppCompatActivity {
         utils.showDialog(context);
         String token = mySharedPreference.getTempToken();
         if(utils.isNetworkConnected(context)) {
-            Call<SignupResponse> call = apiService.sendSMS(phone, token);
-            call.enqueue(new Callback<SignupResponse>() {
-                @Override
-                public void onResponse(@NonNull Call<SignupResponse> call, @NonNull Response<SignupResponse> response) {
-                    SignupResponse resp = response.body();
-                    try {
-                        if (resp != null) {
-                            int status = resp.getStatus();
-                            String message = resp.getMessage();
-                            SignupResponse.DataBean dataBean = resp.getData();
-                            utils.hideDialog();
-
-                            if (status == 200) {
-                                utils.showSnackBar(getWindow().getDecorView().getRootView(), message);
-                                smsCode = dataBean.getSmsCode();
-
-                            } else {
-                                utils.showSnackBar(getWindow().getDecorView().getRootView(), message);
-                            }
-
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<SignupResponse> call, Throwable t) {
-                    utils.hideDialog();
-                    utils.showSnackBar(getWindow().getDecorView().getRootView(), "Failed to send Verification code!");
-                }
-            });
-        }else {
+            if (phone.equals("")) {
+                emailResend(token);
+            } else {
+                smsResend(token);
+            }
+        } else {
             utils.showSnackBar(getWindow().getDecorView().getRootView(), getString(R.string.not_connected_to_internet));
         }
+    }
+
+    private void smsResend(String token) {
+        Call<SignupResponse> call = apiService.sendSMS(phone, token);
+        call.enqueue(new Callback<SignupResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<SignupResponse> call, @NonNull Response<SignupResponse> response) {
+                SignupResponse resp = response.body();
+                try {
+                    if (resp != null) {
+                        int status = resp.getStatus();
+                        String message = resp.getMessage();
+                        SignupResponse.DataBean dataBean = resp.getData();
+                        utils.hideDialog();
+
+                        if (status == 200) {
+                            utils.showSnackBar(getWindow().getDecorView().getRootView(), message);
+                            smsCode = dataBean.getSmsCode();
+
+                        } else {
+                            utils.showSnackBar(getWindow().getDecorView().getRootView(), message);
+                        }
+
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<SignupResponse> call, Throwable t) {
+                utils.hideDialog();
+                utils.showSnackBar(getWindow().getDecorView().getRootView(), "Failed to send Verification code!");
+            }
+        });
+    }
+
+    private void emailResend(String token) {
+        Call<SignupResponse> call = apiService.sendEmail(name, email, token);
+        call.enqueue(new Callback<SignupResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<SignupResponse> call, @NonNull Response<SignupResponse> response) {
+
+                SignupResponse responseEmail = response.body();
+                try {
+                    if (responseEmail != null) {
+
+                        if (responseEmail.getStatus() == 200) {
+                            utils.hideDialog();
+
+                        } else {
+
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                try {
+                    if (responseEmail != null) {
+                        SignupResponse.DataBean dataBean = responseEmail.getData();
+
+                        if (responseEmail.getStatus() == 200) {
+                            utils.hideDialog();
+                            utils.showSnackBar(getWindow().getDecorView().getRootView(), responseEmail.getMessage());
+                            smsCode = dataBean.getSmsCode();
+                        } else {
+                            utils.hideDialog();
+                            utils.showSnackBar(getWindow().getDecorView().getRootView(), responseEmail.getMessage());
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<SignupResponse> call, Throwable t) {
+                utils.hideDialog();
+                Log.d("", "onResponse: ");
+            }
+        });
     }
 
     @Override

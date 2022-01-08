@@ -31,14 +31,12 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
 
     class MyViewHolder extends RecyclerView.ViewHolder {
         TextView productName;
-        TextView productDiscount;
         TextView productPrice;
 
         MyViewHolder(View view) {
             super(view);
             productName = view.findViewById(R.id.productName);
             productPrice = view.findViewById(R.id.productPrice);
-            productDiscount = view.findViewById(R.id.productDiscount);
         }
     }
 
@@ -51,8 +49,7 @@ public class ProductListAdapter extends RecyclerView.Adapter<ProductListAdapter.
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         ProductListResponse.DataBean bean = marketListResponses.get(position);
-        holder.productPrice.setText("Price - "+bean.getPrice()+" SSTX");
-        holder.productDiscount.setText(bean.getDiscount() + "% Off");
+        holder.productPrice.setText("Price - "+bean.getPrice()+" Tokens");
         holder.productName.setText(bean.getProduct_name());
     }
 }

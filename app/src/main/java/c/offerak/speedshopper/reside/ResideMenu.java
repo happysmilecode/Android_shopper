@@ -45,7 +45,7 @@ import c.offerak.speedshopper.fragment.ContactUsFragment;
 import c.offerak.speedshopper.fragment.FrequentlyAskedQuestionsFragment;
 import c.offerak.speedshopper.fragment.NotificationFragment;
 import c.offerak.speedshopper.fragment.ProfileFragment;
-import c.offerak.speedshopper.fragment.SpeedShopperMarketListFragment;
+import c.offerak.speedshopper.fragment.GiftCardsFragment;
 import c.offerak.speedshopper.fragment.WalletFragment;
 import c.offerak.speedshopper.response.GetResponse;
 import c.offerak.speedshopper.rest.ApiClient;
@@ -201,7 +201,7 @@ public class ResideMenu extends FrameLayout {
             strings.add("My Lists");
             strings.add("My Profile");
             strings.add("My Wallet");
-            strings.add("SSTX Market");
+            strings.add(context.getResources().getString(R.string.gift_cards));
             strings.add("Notifications");
             strings.add("My Codes");
             strings.add("FAQ");
@@ -252,7 +252,7 @@ public class ResideMenu extends FrameLayout {
                             transaction = fragmentManager.beginTransaction();
                             fragmentManager.popBackStack();
                             transaction.addToBackStack(null);
-                            transaction.replace(R.id.homeFrame, new SpeedShopperMarketListFragment());
+                            transaction.replace(R.id.homeFrame, new GiftCardsFragment());
                             transaction.commit();
                             closeMenu();
                             break;

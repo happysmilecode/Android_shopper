@@ -15,10 +15,10 @@
     <ImageView
         android:id="@+id/iconSpeed"
         android:layout_width="270sp"
-        android:layout_height="wrap_content"
+        android:layout_height="140sp"
         android:layout_marginTop="15dp"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/speed_shopper_text_logo" />
+        android:src="@drawable/logo_text1" />
 
     <TextView
         android:id="@+id/inpText"

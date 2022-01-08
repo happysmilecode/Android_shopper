@@ -35,6 +35,7 @@ public class Constants {
     public static final String SAVE_SHARE_TOKEN_URL = "shopping/shareShoppingList/{token}";
 
     public static final String ADD_ITEM_TO_SHOPPING_LIST_URL = "shopping/addItemToShoppingListNew/{token}";
+    public static final String ADD_ITEM_TO_MY_LISTS = "ez_lists/addItemToMyLists/{token}";
     public static final String REMOVE_SHOPPING_LIST_URL = "shopping/removeShoppingList/{token}";
     public static final String REMOVE_ALL_ITEM_URL = "shopping/removeAllItem/{token}";
     public static final String REMOVE_CHECKED_ITEM_URL = "shopping/removeCheckedItem/{token}";
@@ -53,6 +54,7 @@ public class Constants {
     public static final String GET_WALLET_URL = "wallet/getWallet/{token}";
     public static final String CONTACT_URL = "common/contact/{token}";
     public static final String GET_SPEED_SHOPPER_MARKET_URL = "speed_shopper_market/getSpeedShopperMarket/{token}";
+    public static final String GET_EZ_LISTS_URL = "ez_lists/getEz_list/{token}";
     public static final String GET_PRODUCT_BY_MERCHANT_ID_URL = "speed_shopper_market/getProductByMerchantID/{token}";
     public static final String FAQ_URL = "common/faq/{token}";
     public static final String BUY_URL = "speed_shopper_market/buy/{token}";
@@ -123,4 +125,7 @@ public class Constants {
     public static final Boolean purchased = false;
     public static final String SHARE_TOKEN = "sharing_token";
     public static final String ISDEEPLINK = "deeplink";
+
+    public static final String EZ_LIST_ID = "ez_list_id";
+    public static final String MY_LIST_ID = "my_list_id";
 }

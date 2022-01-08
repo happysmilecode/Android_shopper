@@ -65,6 +65,7 @@ public class LoginResponse {
         private String path;
         private String login_num;
         private String balance;
+        private String user_token;
 
         public String getId() {
             return id;
@@ -168,6 +169,14 @@ public class LoginResponse {
 
         public void setBalance(String login_num) {
             this.login_num = login_num;
+        }
+
+        public String getTokenUser() {
+            return user_token;
+        }
+
+        public void setTokenUser(String user_token) {
+            this.user_token = user_token;
         }
     }
 }

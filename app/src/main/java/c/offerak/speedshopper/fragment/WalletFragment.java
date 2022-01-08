@@ -75,6 +75,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
     private Bitmap qrImage;
     private ClipboardManager myClipboard;
     private ClipData myClip;
+    private ImageView profileImage;
 
     @Nullable
     @Override
@@ -92,6 +93,8 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
         btn_deposit = rootView.findViewById(R.id.btn_deposit);
         btn_sstx = rootView.findViewById(R.id.btn_sstx);
         btn_eth = rootView.findViewById(R.id.btn_eth);
+        profileImage = rootView.findViewById(R.id.profile_image);
+        Glide.with(this).load(R.drawable.money).into(profileImage);
 
         txtTitle.setText(R.string.wallet);
         txtSync.setVisibility(View.GONE);
@@ -106,6 +109,7 @@ public class WalletFragment extends Fragment implements View.OnClickListener {
         btn_sstx.setOnClickListener(this);
         btn_eth.setOnClickListener(this);
         btn_deposit.setOnClickListener(this);
+
 //        getWalletDetials();
         getWallet();
         OneSignal.addTrigger("wallet", "loaded");
