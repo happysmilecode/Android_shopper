@@ -475,9 +475,9 @@ public class ShoppingListsFragment extends Fragment implements GoogleApiClient.C
         TextView shopItem, lineView, storeName, storeAddress, counterTextView;
         RelativeLayout counterLayout;
         RelativeLayout cardviewContainer;
-        LinearLayout store_info_view;
+        RelativeLayout store_info_view;
         CardView cardView;
-        ImageView icDelete, icEdit, arrow;
+        ImageView icDelete, icEdit, arrow, arrowRight;
         private Context context;
         private List<ShoppingListBean> shoppingListBeans;
         private MySharedPreference mySharedPreference;
@@ -516,7 +516,7 @@ public class ShoppingListsFragment extends Fragment implements GoogleApiClient.C
 
             convertView = from(parent.getContext()).inflate(R.layout.shopping_list_item, parent, false);
             cardviewContainer = convertView.findViewById(R.id.parentCardView);
-            store_info_view = convertView.findViewById(R.id.store_info);
+            store_info_view = convertView.findViewById(R.id.store_info_view);
             shopItem = convertView.findViewById(R.id.listName);
             storeName = convertView.findViewById(R.id.storeName);
             storeAddress = convertView.findViewById(R.id.storeAddress);
@@ -527,6 +527,8 @@ public class ShoppingListsFragment extends Fragment implements GoogleApiClient.C
             icDelete = convertView.findViewById(R.id.icDelete);
             icEdit = convertView.findViewById(R.id.icEdit);
             arrow = convertView.findViewById(R.id.arrow);
+            arrowRight = convertView.findViewById(R.id.arrow_right_image);
+            Glide.with(context).load(R.drawable.arrow_right).into(arrowRight);
             ShoppingListBean bean = shoppingListBeans.get(position);
             shopItem.setText(bean.getShopItem().substring(0, 1).toUpperCase() + bean.getShopItem().substring(1));
             storeName.setText(bean.getStoreName());
@@ -538,6 +540,7 @@ public class ShoppingListsFragment extends Fragment implements GoogleApiClient.C
             Glide.with(context)
                     .load(Constants.IMAGE_URL + imageName)
                     .into(arrow);
+            Log.e("~~~~~~~", Constants.IMAGE_URL + imageName);
 
 //            String imageResource = "@drawable/" + imageName;
 //            int imageId = getResources().getIdentifier(imageResource, "drawable", getActivity().getPackageName());
@@ -613,8 +616,8 @@ public class ShoppingListsFragment extends Fragment implements GoogleApiClient.C
                 }
             });
 
+            String finalImageName = imageName;
             arrow.setOnClickListener(new View.OnClickListener() {
-
                 @Override
                 public void onClick(View v) {
 //                    String storeId = bean.getStoreId();

@@ -38,7 +38,7 @@
                             android:layout_height="60dp"
                             android:layout_marginEnd="21dp"
                             android:src="@drawable/logo_0"
-                            android:scaleType="fitCenter"/>
+                            android:scaleType="fitStart"/>
                         <TextView
                             android:id="@+id/listName"
                             android:layout_width="match_parent"

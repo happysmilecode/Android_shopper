@@ -14,91 +14,108 @@
         android:paddingEnd="15dp"
         android:paddingStart="10dp">
 
+        <RelativeLayout
+            android:id="@+id/store_info_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp">
+
             <RelativeLayout
+                android:id="@+id/store_info_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="5dp">
+                android:layout_marginStart="8sp"
+                android:layout_marginEnd="10dp"
+                android:layout_toStartOf="@+id/icEdit"
+                android:padding="10dp">
 
-                <RelativeLayout
-                    android:id="@+id/store_info_layout"
+                <LinearLayout
+                    android:id="@+id/store_info"
                     android:layout_width="match_parent"
-                    android:layout_marginStart="8sp"
-                    android:layout_marginEnd="10dp"
-                    android:padding="10dp"
-                    android:layout_toStartOf="@+id/icEdit"
-                    android:layout_height="wrap_content">
-                    <LinearLayout
-                        android:id="@+id/store_info"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/arrow"
+                        android:layout_width="80dp"
+                        android:layout_height="60dp"
+                        android:layout_marginEnd="21dp"
+                        android:scaleType="fitStart"
+                        android:src="@drawable/logo_0" />
+
+                    <TextView
+                        android:id="@+id/listName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentStart="true"
-                        android:orientation="vertical">
-                        <ImageView
-                            android:id="@+id/arrow"
-                            android:layout_width="80dp"
-                            android:layout_height="60dp"
-                            android:layout_marginEnd="21dp"
-                            android:src="@drawable/logo_0"
-                            android:scaleType="fitCenter"/>
-                        <TextView
-                            android:id="@+id/listName"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textColor="@android:color/black"
-                            android:textSize="15sp"
-                            android:maxLines="1"
-                            android:minLines="1"
-                            tools:ignore="RtlSymmetry" />
-                        <TextView
-                            android:id="@+id/storeName"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textStyle="bold"
-                            android:maxLines="1"
-                            android:minLines="1"
-                            android:textColor="@android:color/black"
-                            android:textSize="14sp" />
-                        <TextView
-                            android:id="@+id/storeAddress"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textColor="@android:color/black"
-                            android:maxLines="3"
-                            android:minLines="3"
-                            android:textSize="12sp" />
-                    </LinearLayout>
+                        android:maxLines="1"
+                        android:minLines="1"
+                        android:textColor="@android:color/black"
+                        android:textSize="15sp"
+                        tools:ignore="RtlSymmetry" />
 
-                </RelativeLayout>
+                    <TextView
+                        android:id="@+id/storeName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1"
+                        android:minLines="1"
+                        android:textColor="@android:color/black"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
 
-                <ImageView
-                    android:id="@+id/icDelete"
-                    android:layout_width="35sp"
-                    android:layout_height="35sp"
-                    android:layout_alignBottom="@id/store_info_layout"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginEnd="5sp"
-                    android:src="@mipmap/ic_delete" />
-
-                <TextView
-                    android:id="@+id/lineView"
-                    android:layout_width="1dp"
-                    android:layout_height="wrap_content"
-                    android:layout_alignBottom="@id/store_info_layout"
-                    android:layout_marginEnd="2sp"
-                    android:layout_toStartOf="@+id/icDelete"
-                    android:background="@android:color/transparent"
-                    android:textSize="16sp" />
-
-                <ImageView
-                    android:id="@+id/icEdit"
-                    android:layout_width="35sp"
-                    android:layout_height="35sp"
-                    android:layout_alignBottom="@id/store_info_layout"
-                    android:layout_marginEnd="5sp"
-                    android:layout_toStartOf="@+id/lineView"
-                    android:src="@mipmap/ic_edit" />
+                    <TextView
+                        android:id="@+id/storeAddress"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:maxLines="3"
+                        android:minLines="3"
+                        android:textColor="@android:color/black"
+                        android:textSize="12sp" />
+                </LinearLayout>
 
             </RelativeLayout>
+
+            <ImageView
+                android:id="@+id/arrow_right_image"
+                android:layout_width="72dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="30dp"
+                android:paddingVertical="10dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:src="@drawable/arrow_right" />
+
+            <ImageView
+                android:id="@+id/icDelete"
+                android:layout_width="35sp"
+                android:layout_height="35sp"
+                android:layout_alignBottom="@id/store_info_layout"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="5sp"
+                android:src="@mipmap/ic_delete" />
+
+            <TextView
+                android:id="@+id/lineView"
+                android:layout_width="1dp"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/store_info_layout"
+                android:layout_marginEnd="2sp"
+                android:layout_toStartOf="@+id/icDelete"
+                android:background="@android:color/transparent"
+                android:textSize="16sp" />
+
+            <ImageView
+                android:id="@+id/icEdit"
+                android:layout_width="35sp"
+                android:layout_height="35sp"
+                android:layout_alignBottom="@id/store_info_layout"
+                android:layout_marginEnd="5sp"
+                android:layout_toStartOf="@+id/lineView"
+                android:src="@mipmap/ic_edit" />
+
+        </RelativeLayout>
     </RelativeLayout>
 
     <RelativeLayout
