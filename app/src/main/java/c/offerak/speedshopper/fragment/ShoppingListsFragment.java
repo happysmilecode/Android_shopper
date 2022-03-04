@@ -32,7 +32,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.anjlab.android.iab.v3.BillingProcessor;
-import com.anjlab.android.iab.v3.TransactionDetails;
+import com.anjlab.android.iab.v3.PurchaseInfo;
 import com.bumptech.glide.Glide;
 import com.gmail.samehadar.iosdialog.IOSDialog;
 import com.google.android.gms.ads.AdRequest;
@@ -283,6 +283,9 @@ public class ShoppingListsFragment extends Fragment implements GoogleApiClient.C
 
     @Override
     public void onDestroy() {
+        if (bp != null) {
+            bp.release();
+        }
         super.onDestroy();
 //        utils.hideDialog();
     }
@@ -463,10 +466,6 @@ public class ShoppingListsFragment extends Fragment implements GoogleApiClient.C
             listID = data.getStringExtra("listID");
         } else if (requestCode == 3000 && resultCode == 2000) {
 
-        }
-
-        if (!bp.handleActivityResult(requestCode, resultCode, data)) {
-            super.onActivityResult(requestCode, resultCode, data);
         }
     }
 
@@ -726,15 +725,23 @@ public class ShoppingListsFragment extends Fragment implements GoogleApiClient.C
     }
 
     @Override
-    public void onProductPurchased(String productId, TransactionDetails details) {
+    public void onProductPurchased(@NonNull String productId, @Nullable PurchaseInfo details) {
         /**
          * Called when requested PRODUCT ID was successfully purchased
          */
         MySharedPreference.setPurchased(context, "STORE_LOGO",true);
         //always consume made purchase and allow to buy same product multiple times
-        bp.consumePurchase(mViewModel.getPRODUCT_SKU());
+        bp.consumePurchaseAsync(mViewModel.getPRODUCT_SKU(), new BillingProcessor.IPurchasesResponseListener() {
+            @Override
+            public void onPurchasesSuccess() {
+                showSuccessPurchase();
+            }
 
-        showSuccessPurchase();
+            @Override
+            public void onPurchasesError() {
+
+            }
+        });
     }
 
     @Override
@@ -750,23 +757,29 @@ public class ShoppingListsFragment extends Fragment implements GoogleApiClient.C
 
     @Override
     public void onBillingInitialized() {
-
-        if(bp.loadOwnedPurchasesFromGoogle()){
-            // check user is already subscribe or not
-            if(bp.isPurchased(mViewModel.getPRODUCT_SKU())){
-                /** if already subscribe then we will change the static variable
-                 * and call billingrpocessor release() method.
-                 * */
-                MySharedPreference.setPurchased(context, "STORE_LOGO",true);
-                bp.release();
-//                iosDialog.cancel();
+        bp.loadOwnedPurchasesFromGoogleAsync(new BillingProcessor.IPurchasesResponseListener() {
+            @Override
+            public void onPurchasesSuccess() {
+                // check user is already subscribe or not
+                if(bp.isPurchased(mViewModel.getPRODUCT_SKU())){
+                    /** if already subscribe then we will change the static variable
+                     * and call billingrpocessor release() method.
+                     * */
+                    MySharedPreference.setPurchased(context, "STORE_LOGO",true);
+                    bp.release();
+//                    iosDialog.cancel();
+                }
+                else {
+                    MySharedPreference.setPurchased(context, "STORE_LOGO",false);
+//                    iosDialog.cancel();
+                }
             }
-            else {
-                MySharedPreference.setPurchased(context, "STORE_LOGO",false);
-//                iosDialog.cancel();
-            }
-        }
 
+            @Override
+            public void onPurchasesError() {
+
+            }
+        });
     }
 
     private void showSuccessPurchase(){
@@ -804,7 +817,7 @@ public class ShoppingListsFragment extends Fragment implements GoogleApiClient.C
                                 showDialogReward();
                             } else {
                                 utils.hideDialog();
-                                utils.showSnackBar(getActivity().getWindow().getDecorView().getRootView(), "There are no any reward for Store Iamge purchase");
+                                utils.showSnackBar(getActivity().getWindow().getDecorView().getRootView(), "There are no any reward for Store Image purchase");
 
                             }
                         }

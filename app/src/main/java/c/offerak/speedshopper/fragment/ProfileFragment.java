@@ -42,7 +42,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.anjlab.android.iab.v3.BillingProcessor;
-import com.anjlab.android.iab.v3.TransactionDetails;
+import com.anjlab.android.iab.v3.PurchaseInfo;
 import com.bumptech.glide.Glide;
 import com.facebook.appevents.suggestedevents.ViewOnClickListener;
 import com.gmail.samehadar.iosdialog.IOSDialog;
@@ -605,13 +605,30 @@ public class ProfileFragment extends Fragment implements BillingProcessor.IBilli
     }
 
     @Override
-    public void onProductPurchased(@NotNull String productId, TransactionDetails details) {
+    public void onProductPurchased(@NonNull String productId, @Nullable PurchaseInfo details) {
         MySharedPreference.setPurchased(mContext, productId,true);
         MySharedPreference.setPurchased(mContext, "membership",true);
         //always consume made purchase and allow to buy same product multiple times
-        bp.consumePurchase(productId);
+        bp.consumePurchaseAsync(productId, new BillingProcessor.IPurchasesResponseListener() {
+            @Override
+            public void onPurchasesSuccess() {
+                if (productId.equals(mViewModel.getPRODUCT_MONTHLY_SKU())) {
+                    callAPIRewardMethod("monthly");
+                } else if (productId.equals(mViewModel.getPRODUCT_THREEMONTH_SKU())) {
+                    callAPIRewardMethod("3months");
+                } else if (productId.equals(mViewModel.getPRODUCT_SIXMONTH_SKU())) {
+                    callAPIRewardMethod("6months");
+                } else if (productId.equals(mViewModel.getPRODUCT_YEARLY_SKU())) {
+                    callAPIRewardMethod("yearly");
+                }
+                utils.showSnackBar(rootView, "You have upgraded premium membership successfully");
+            }
 
-        utils.showSnackBar(rootView, "You have upgraded premium membership successfully");
+            @Override
+            public void onPurchasesError() {
+                utils.showSnackBar(rootView, "You did not upgrade premium membership");
+            }
+        });
     }
 
     @Override
@@ -626,51 +643,59 @@ public class ProfileFragment extends Fragment implements BillingProcessor.IBilli
 
     @Override
     public void onBillingInitialized() {
-        if(bp.loadOwnedPurchasesFromGoogle()){
-            if(bp.isSubscribed(mViewModel.getPRODUCT_MONTHLY_SKU())){
-                MySharedPreference.setPurchased(mContext, mViewModel.getPRODUCT_MONTHLY_SKU(),true);
-                MySharedPreference.setPurchased(mContext, "membership",true);
-                bp.release();
-                callAPIRewardMethod("monthly");
-                utils.showSnackBar(rootView, "You are already Monthly premium member.");
-            }
-            else {
-                MySharedPreference.setPurchased(mContext, mViewModel.getPRODUCT_MONTHLY_SKU(),false);
+        bp.loadOwnedPurchasesFromGoogleAsync(new BillingProcessor.IPurchasesResponseListener() {
+            @Override
+            public void onPurchasesSuccess() {
+                if(bp.isSubscribed(mViewModel.getPRODUCT_MONTHLY_SKU())){
+                    MySharedPreference.setPurchased(mContext, mViewModel.getPRODUCT_MONTHLY_SKU(),true);
+                    MySharedPreference.setPurchased(mContext, "membership",true);
+                    bp.release();
+//                    callAPIRewardMethod("monthly");
+                    utils.showSnackBar(rootView, "You are already Monthly premium member.");
+                }
+                else {
+                    MySharedPreference.setPurchased(mContext, mViewModel.getPRODUCT_MONTHLY_SKU(),false);
+                }
+
+                if(bp.isSubscribed(mViewModel.getPRODUCT_THREEMONTH_SKU())){
+                    MySharedPreference.setPurchased(mContext, mViewModel.getPRODUCT_THREEMONTH_SKU(),true);
+                    MySharedPreference.setPurchased(mContext, "membership",true);
+                    bp.release();
+//                    callAPIRewardMethod("3months");
+                    utils.showSnackBar(rootView, "You are already Three Months premium member.");
+                }
+                else {
+                    MySharedPreference.setPurchased(mContext, mViewModel.getPRODUCT_THREEMONTH_SKU(),false);
+                }
+
+                if(bp.isSubscribed(mViewModel.getPRODUCT_SIXMONTH_SKU())){
+                    MySharedPreference.setPurchased(mContext, mViewModel.getPRODUCT_SIXMONTH_SKU(),true);
+                    MySharedPreference.setPurchased(mContext, "membership",true);
+                    bp.release();
+//                    callAPIRewardMethod("6months");
+                    utils.showSnackBar(rootView, "You are already Six Months premium member.");
+                }
+                else {
+                    MySharedPreference.setPurchased(mContext, mViewModel.getPRODUCT_SIXMONTH_SKU(),false);
+                }
+
+                if(bp.isSubscribed(mViewModel.getPRODUCT_YEARLY_SKU())){
+                    MySharedPreference.setPurchased(mContext, mViewModel.getPRODUCT_YEARLY_SKU(),true);
+                    MySharedPreference.setPurchased(mContext, "membership",true);
+                    bp.release();
+//                    callAPIRewardMethod("yearly");
+                    utils.showSnackBar(rootView, "You are already Yearly premium member.");
+                }
+                else {
+                    MySharedPreference.setPurchased(mContext, mViewModel.getPRODUCT_YEARLY_SKU(),false);
+                }
             }
 
-            if(bp.isSubscribed(mViewModel.getPRODUCT_THREEMONTH_SKU())){
-                MySharedPreference.setPurchased(mContext, mViewModel.getPRODUCT_THREEMONTH_SKU(),true);
-                MySharedPreference.setPurchased(mContext, "membership",true);
-                bp.release();
-                callAPIRewardMethod("3months");
-                utils.showSnackBar(rootView, "You are already Three Months premium member.");
-            }
-            else {
-                MySharedPreference.setPurchased(mContext, mViewModel.getPRODUCT_THREEMONTH_SKU(),false);
-            }
+            @Override
+            public void onPurchasesError() {
 
-            if(bp.isSubscribed(mViewModel.getPRODUCT_SIXMONTH_SKU())){
-                MySharedPreference.setPurchased(mContext, mViewModel.getPRODUCT_SIXMONTH_SKU(),true);
-                MySharedPreference.setPurchased(mContext, "membership",true);
-                bp.release();
-                callAPIRewardMethod("6months");
-                utils.showSnackBar(rootView, "You are already Six Months premium member.");
             }
-            else {
-                MySharedPreference.setPurchased(mContext, mViewModel.getPRODUCT_SIXMONTH_SKU(),false);
-            }
-
-            if(bp.isSubscribed(mViewModel.getPRODUCT_YEARLY_SKU())){
-                MySharedPreference.setPurchased(mContext, mViewModel.getPRODUCT_YEARLY_SKU(),true);
-                MySharedPreference.setPurchased(mContext, "membership",true);
-                bp.release();
-                callAPIRewardMethod("yearly");
-                utils.showSnackBar(rootView, "You are already Yearly premium member.");
-            }
-            else {
-                MySharedPreference.setPurchased(mContext, mViewModel.getPRODUCT_YEARLY_SKU(),false);
-            }
-        }
+        });
     }
 
     @Override
@@ -685,8 +710,17 @@ public class ProfileFragment extends Fragment implements BillingProcessor.IBilli
         OneSignal.addTrigger("profile", "loaded");
     }
 
+    @Override
+    public void onDestroy() {
+        if (bp != null) {
+            bp.release();
+        }
+        super.onDestroy();
+    }
+
     public void callAPIRewardMethod(String key) {
         utils.showDialog(mContext);
+        Log.e("~~~~", userBean.getUserToken());
         if(utils.isNetworkConnected(mContext)) {
             Call<GetResponse> call = apiService.getReward(userBean.getUserToken(), key);
             call.enqueue(new Callback<GetResponse>() {
@@ -702,7 +736,7 @@ public class ProfileFragment extends Fragment implements BillingProcessor.IBilli
                                 showDialogReward();
                             } else {
                                 utils.hideDialog();
-                                utils.showSnackBar(getActivity().getWindow().getDecorView().getRootView(), "There are no any reward for Store Iamge purchase");
+                                utils.showSnackBar(getActivity().getWindow().getDecorView().getRootView(), "There are no any reward for Store Image purchase");
 
                             }
                         }

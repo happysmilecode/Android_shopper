@@ -124,6 +124,7 @@ public class ItemEditActivity extends AppCompatActivity implements View.OnClickL
     ImageView btn_close, earnedImg;
 
 //    public RelativeLayout item_imageView, photo_takeView;
+    String rewardType = "";
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -263,6 +264,7 @@ public class ItemEditActivity extends AppCompatActivity implements View.OnClickL
     }
 
     public void locationAdd(String address) {
+        rewardType = "";
         if(utils.isNetworkConnected(context)) {
             progressHUD = ProgressHUD.show(context, "Loading", true, false, null);
             Call<SpeedAvailableItemResponse> call;
@@ -271,6 +273,7 @@ public class ItemEditActivity extends AppCompatActivity implements View.OnClickL
                     call = apiService.updateItemLocationPro(userBean.getUserToken(), item_id, lat, storeId, address, lng, listId);
                 } else {
                     call = apiService.addItemLocationPro(userBean.getUserToken(), item_id, lat, storeId, address, lng, listId);
+                    rewardType = "aislepro";
                 }
 
             } else {
@@ -278,6 +281,7 @@ public class ItemEditActivity extends AppCompatActivity implements View.OnClickL
                     call = apiService.updateItemLocation(userBean.getUserToken(), item_id, lat, storeId, address, lng, listId);
                 } else {
                     call = apiService.addItemLocation(userBean.getUserToken(), item_id, lat, storeId, address, lng, listId);
+                    rewardType = "aisle";
                 }
             }
 
@@ -293,11 +297,14 @@ public class ItemEditActivity extends AppCompatActivity implements View.OnClickL
                                     aisleLocation = address;
                                     selectAisleTextView.setText(address);
                                     locationDialog.dismiss();
-                                    if ( call == apiService.addItemLocationPro(userBean.getUserToken(), item_id, lat, storeId, address, lng, listId) ) {
-                                        callAPIRewardMethod("aislepro");
-                                    } else if ( call == apiService.addItemLocation(userBean.getUserToken(), item_id, lat, storeId, address, lng, listId) ) {
-                                        callAPIRewardMethod("aisle");
+                                    if (!rewardType.isEmpty()) {
+                                        callAPIRewardMethod(rewardType);
                                     }
+//                                    if ( call == apiService.addItemLocationPro(userBean.getUserToken(), item_id, lat, storeId, address, lng, listId) ) {
+//                                        callAPIRewardMethod("aislepro");
+//                                    } else if ( call == apiService.addItemLocation(userBean.getUserToken(), item_id, lat, storeId, address, lng, listId) ) {
+//                                        callAPIRewardMethod("aisle");
+//                                    }
                                 }
                                 else {
                                     Utility.ShowToastMessage(context, response.body() != null ? response.body().getMessage() : null);
