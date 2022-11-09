@@ -4,35 +4,35 @@ import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
-import android.util.Log;
-import android.widget.LinearLayout;
+
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleObserver;
+import androidx.lifecycle.OnLifecycleEvent;
+import androidx.lifecycle.ProcessLifecycleOwner;
 
 import com.onesignal.OSDeviceState;
 import com.onesignal.OSInAppMessageAction;
-import com.onesignal.OSInAppMessageTag;
 import com.onesignal.OneSignal;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import c.offerak.speedshopper.activity.LandingScreen;
 import c.offerak.speedshopper.activity.LoginActivity;
-import c.offerak.speedshopper.activity.MenuActivity;
 import c.offerak.speedshopper.modal.UserBean;
 import c.offerak.speedshopper.rest.Constants;
 import c.offerak.speedshopper.utils.MySharedPreference;
 
-public class ApplicationClass extends Application {
+public class ApplicationClass extends Application implements LifecycleObserver {
     private static final String ONESIGNAL_APP_ID = "88eea516-8527-4bf9-a5a3-717221327c0b";
     MySharedPreference mySharedPreference;//bluedev
     UserBean bean;//bluedev
 
     Context context;
 
+    public static boolean isForeground = false;
+
     @Override
     public void onCreate() {
         super.onCreate();
+        ProcessLifecycleOwner.get().getLifecycle().addObserver(this);
         context = getApplicationContext();
 
         // Enable verbose OneSignal logging to debug issues if needed.
@@ -40,6 +40,8 @@ public class ApplicationClass extends Application {
 
         // OneSignal Initialization
         OneSignal.initWithContext(this);
+        OneSignal.setNotificationOpenedHandler((OneSignal.OSNotificationOpenedHandler)
+                        new NotificationOpenedHandler(this));
         OneSignal.setAppId(ONESIGNAL_APP_ID);
         OSDeviceState device = OneSignal.getDeviceState();
         assert device != null;
@@ -117,5 +119,15 @@ public class ApplicationClass extends Application {
                 });
         //bluedev
 
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
+    private void onAppBackgrounded() {
+        isForeground = false;
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_START)
+    private void onAppForegrounded() {
+        isForeground = true;
     }
 }
