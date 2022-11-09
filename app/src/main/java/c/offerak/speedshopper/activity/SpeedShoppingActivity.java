@@ -30,6 +30,8 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -133,6 +135,8 @@ public class SpeedShoppingActivity extends AppCompatActivity implements View.OnC
     public String shareToken;
     public boolean isUpgraded = false;
     public float total = 0.0f;
+    private RadioGroup sortRadioGroup;
+    private int currentSortMode = 0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -228,7 +232,7 @@ public class SpeedShoppingActivity extends AppCompatActivity implements View.OnC
         });
 
         btnDeleteAll.setOnClickListener(v -> AskOption("all"));
-        btnReverseSort.setOnClickListener(v -> ReverseSort());
+        btnReverseSort.setOnClickListener(v -> sortDialogShow());
         btnDeleteChecked.setOnClickListener(v -> AskOption("checked"));
         icMic.setOnClickListener(v -> promptSpeechInput());
         icBackButton.setOnClickListener(v -> finish());
@@ -340,21 +344,69 @@ public class SpeedShoppingActivity extends AppCompatActivity implements View.OnC
         return token;
     }
 
-    private void ReverseSort() {
+    private void sortDialogShow() {
+        dialog = new Dialog(context);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(true);
+        dialog.setContentView(R.layout.dialog_reverse_sort);
+
+        WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
+        Window window = dialog.getWindow();
+
+        layoutParams.copyFrom(window.getAttributes());
+        layoutParams.width = WindowManager.LayoutParams.WRAP_CONTENT;
+        layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        layoutParams.gravity = Gravity.CENTER;
+        window.setAttributes(layoutParams);
+
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(context.getResources().getColor(R.color.transparent)));
+        sortRadioGroup = dialog.findViewById(R.id.sort_radio_group);
+
+        ((RadioButton)sortRadioGroup.getChildAt(currentSortMode)).setChecked(true);
+        sortRadioGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            RadioButton radioButton = dialog.findViewById(checkedId);
+            currentSortMode = sortRadioGroup.indexOfChild(radioButton);
+            reverseSort();
+            dialog.dismiss();
+        });
+        dialog.show();
+    }
+
+    private void reverseSort() {
         // Implement a reverse-order Comparator by lambda function
-        Comparator<SpeedShoppingListBean> comp = (SpeedShoppingListBean a, SpeedShoppingListBean b) -> {
+        Comparator<SpeedShoppingListBean> comp_index = (SpeedShoppingListBean a, SpeedShoppingListBean b) -> {
             int firstIndex = a.getIndex(), secondIndex = b.getIndex();
             if (a.getStatus().equals("1")) {
                 return 1;
             }
-            if (orderFlag) {
+            if (currentSortMode == 0) {
                 return Integer.compare(secondIndex, firstIndex);
             } else {
                 return Integer.compare(firstIndex, secondIndex);
             }
         };
+        Comparator<SpeedShoppingListBean> comp_alpha = (SpeedShoppingListBean a, SpeedShoppingListBean b) -> {
+            if (currentSortMode == 2) {
+                return a.getName().compareTo(b.getName());
+            } else {
+                return b.getName().compareTo(a.getName());
+            }
+
+        };
         orderFlag = !orderFlag;
-        Collections.sort(listBeans, comp);
+        switch (currentSortMode) {
+            case 0:
+            case 1:
+                Collections.sort(listBeans, comp_index);
+                break;
+            case 2:
+            case 3:
+                Collections.sort(listBeans, comp_alpha);
+                break;
+            default:
+                break;
+
+        }
         speedShoppingListAdapter.notifyDataSetChanged();
 
 

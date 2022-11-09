@@ -177,4 +177,15 @@
 
     <string name="coming_soon">This Function will be come soon</string>
 
+    <string name="sort_items">Sort By</string>
+    <string name="sort_location_up">Location Up</string>
+    <string name="sort_location_down">Location Down</string>
+    <string name="sort_alpha_up">Alphabetically Up</string>
+    <string name="sort_alpha_down">Alphabetically Down</string>
+    <string-array name="sort_items_options_array">
+        <item>Name</item>
+        <item>Name (Desc)</item>
+        <item>Last Modified Time</item>
+        <item>Last Modified Time (Desc)</item>
+    </string-array>
 </resources>
