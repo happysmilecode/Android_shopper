@@ -366,10 +366,15 @@ public class SpeedShoppingActivity extends AppCompatActivity implements View.OnC
         sortRadioGroup.setOnCheckedChangeListener((group, checkedId) -> {
             RadioButton radioButton = dialog.findViewById(checkedId);
             currentSortMode = sortRadioGroup.indexOfChild(radioButton);
-            reverseSort();
+            updateAdapterByOrder();
             dialog.dismiss();
         });
         dialog.show();
+    }
+
+    private void updateAdapterByOrder() {
+        reverseSort();
+        speedShoppingListAdapter.notifyDataSetChanged();
     }
 
     private void reverseSort() {
@@ -379,14 +384,14 @@ public class SpeedShoppingActivity extends AppCompatActivity implements View.OnC
             if (a.getStatus().equals("1")) {
                 return 1;
             }
-            if (currentSortMode == 0) {
+            if (currentSortMode == 2) {
                 return Integer.compare(secondIndex, firstIndex);
             } else {
                 return Integer.compare(firstIndex, secondIndex);
             }
         };
         Comparator<SpeedShoppingListBean> comp_alpha = (SpeedShoppingListBean a, SpeedShoppingListBean b) -> {
-            if (currentSortMode == 2) {
+            if (currentSortMode == 0) {
                 return a.getName().compareTo(b.getName());
             } else {
                 return b.getName().compareTo(a.getName());
@@ -397,17 +402,17 @@ public class SpeedShoppingActivity extends AppCompatActivity implements View.OnC
         switch (currentSortMode) {
             case 0:
             case 1:
-                Collections.sort(listBeans, comp_index);
+                Collections.sort(listBeans, comp_alpha);
                 break;
             case 2:
             case 3:
-                Collections.sort(listBeans, comp_alpha);
+                Collections.sort(listBeans, comp_index);
                 break;
             default:
                 break;
 
         }
-        speedShoppingListAdapter.notifyDataSetChanged();
+
 
 
     }
@@ -707,6 +712,7 @@ public class SpeedShoppingActivity extends AppCompatActivity implements View.OnC
                             }
                             listBeans.clear();
                             listBeans.addAll(tempBeans);
+                            reverseSort();
                             speedShoppingListAdapter.notifyDataSetChanged();
 
                         } else if (tokenResponse.getMessage().equals("Session expired")) {
@@ -884,6 +890,7 @@ public class SpeedShoppingActivity extends AppCompatActivity implements View.OnC
 
         addItemToListBean(bean, 0);
 
+        reverseSort();
         speedShoppingListAdapter.notifyDataSetChanged();
 
         btnReverseSort.setVisibility(View.VISIBLE);
@@ -999,6 +1006,7 @@ public class SpeedShoppingActivity extends AppCompatActivity implements View.OnC
             }
         }
 
+        reverseSort();
         speedShoppingListAdapter.notifyDataSetChanged();
 
         if (listBeans.size() == 0) {
@@ -1183,6 +1191,7 @@ public class SpeedShoppingActivity extends AppCompatActivity implements View.OnC
                         unPurchasedCount--;
                     }
                 }
+                reverseSort();
                 speedShoppingListAdapter.notifyDataSetChanged();
             }, 600);
 
@@ -1365,6 +1374,7 @@ public class SpeedShoppingActivity extends AppCompatActivity implements View.OnC
                                     }
 
                                     if (speedShoppingListAdapter != null) {
+                                        reverseSort();
                                         speedShoppingListAdapter.notifyDataSetChanged();
                                     }
 

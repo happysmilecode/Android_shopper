@@ -178,10 +178,10 @@
     <string name="coming_soon">This Function will be come soon</string>
 
     <string name="sort_items">Sort By</string>
-    <string name="sort_location_up">Location Up</string>
-    <string name="sort_location_down">Location Down</string>
-    <string name="sort_alpha_up">Alphabetically Up</string>
-    <string name="sort_alpha_down">Alphabetically Down</string>
+    <string name="sort_order_up">Order Up</string>
+    <string name="sort_order_down">Order Down</string>
+    <string name="sort_alpha_up">A ~ Z</string>
+    <string name="sort_alpha_down">Z ~ A</string>
     <string-array name="sort_items_options_array">
         <item>Name</item>
         <item>Name (Desc)</item>
