@@ -232,19 +232,20 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="10sp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
 
             <TextView
                 android:id="@+id/btnReverseSort"
                 android:layout_width="70dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:background="@drawable/reverse_sort"
                 android:paddingBottom="3sp"
                 android:paddingLeft="7sp"
                 android:paddingRight="7sp"
                 android:paddingTop="3sp"
                 android:textColor="@color/white"
-                android:text="@string/reverse_sort"
+                android:text="@string/sort"
                 android:lines="2"
                 android:gravity="center"
                 android:textSize="12sp" />

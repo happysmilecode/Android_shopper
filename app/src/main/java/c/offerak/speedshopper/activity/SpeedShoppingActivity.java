@@ -136,7 +136,7 @@ public class SpeedShoppingActivity extends AppCompatActivity implements View.OnC
     public boolean isUpgraded = false;
     public float total = 0.0f;
     private RadioGroup sortRadioGroup;
-    private int currentSortMode = 0;
+    private int currentSortMode = 1;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -384,17 +384,20 @@ public class SpeedShoppingActivity extends AppCompatActivity implements View.OnC
             if (a.getStatus().equals("1")) {
                 return 1;
             }
-            if (currentSortMode == 2) {
+            if (currentSortMode == 0) {
                 return Integer.compare(secondIndex, firstIndex);
             } else {
                 return Integer.compare(firstIndex, secondIndex);
             }
         };
         Comparator<SpeedShoppingListBean> comp_alpha = (SpeedShoppingListBean a, SpeedShoppingListBean b) -> {
-            if (currentSortMode == 0) {
-                return a.getName().compareTo(b.getName());
+            if (a.getStatus().equals("1")) {
+                return 1;
+            }
+            if (currentSortMode == 2) {
+                return a.getName().toLowerCase().compareTo(b.getName().toLowerCase());
             } else {
-                return b.getName().compareTo(a.getName());
+                return b.getName().toLowerCase().compareTo(a.getName().toLowerCase());
             }
 
         };
@@ -402,11 +405,11 @@ public class SpeedShoppingActivity extends AppCompatActivity implements View.OnC
         switch (currentSortMode) {
             case 0:
             case 1:
-                Collections.sort(listBeans, comp_alpha);
+                Collections.sort(listBeans, comp_index);
                 break;
             case 2:
             case 3:
-                Collections.sort(listBeans, comp_index);
+                Collections.sort(listBeans, comp_alpha);
                 break;
             default:
                 break;

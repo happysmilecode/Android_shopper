@@ -34,6 +34,22 @@
                 android:layout_height="wrap_content"
                 android:paddingStart="5dp"
                 android:checked="false"
+                android:text="@string/sort_aisle_up"
+                android:textSize="18sp"/>
+
+            <RadioButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="5dp"
+                android:checked="false"
+                android:text="@string/sort_aisle_down"
+                android:textSize="18sp"/>
+
+            <RadioButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="5dp"
+                android:checked="false"
                 android:text="@string/sort_alpha_up"
                 android:textSize="18sp"/>
 
@@ -43,22 +59,6 @@
                 android:paddingStart="5dp"
                 android:checked="false"
                 android:text="@string/sort_alpha_down"
-                android:textSize="18sp"/>
-
-            <RadioButton
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingStart="5dp"
-                android:checked="false"
-                android:text="@string/sort_order_up"
-                android:textSize="18sp"/>
-
-            <RadioButton
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingStart="5dp"
-                android:checked="false"
-                android:text="@string/sort_order_down"
                 android:textSize="18sp"/>
 
         </RadioGroup>
