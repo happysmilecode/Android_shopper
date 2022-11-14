@@ -31,7 +31,9 @@ import com.onesignal.OneSignal;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import c.offerak.speedshopper.ApplicationClass;
 import c.offerak.speedshopper.R;
+import c.offerak.speedshopper.SplashScreen;
 import c.offerak.speedshopper.modal.UserBean;
 import c.offerak.speedshopper.response.GetResponse;
 import c.offerak.speedshopper.rest.ApiClient;
@@ -97,6 +99,14 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
         initClickEvents();
         if (!isUpgraded) {
             loadAds();
+        }
+
+        if (getIntent().hasExtra(ApplicationClass.fromFCM)) {
+            boolean fromFCM = getIntent().getBooleanExtra(ApplicationClass.fromFCM, false);
+            if (fromFCM) {
+                Intent intent = new Intent(this, NotificationActivity.class);
+                startActivity(intent);
+            }
         }
     }
 

@@ -94,7 +94,14 @@ public class SplashScreen extends AppCompatActivity  {
         int secondsDelayed = 2;
         new Handler().postDelayed(() -> {
             if (MySharedPreference.getSharedPreferences(context, Constants.EVENT_CHECK).equals("1")) {
-                startActivity(new Intent(this, MenuActivity.class));
+                Intent intent = new Intent(this, MenuActivity.class);
+                if (getIntent().hasExtra(ApplicationClass.fromFCM)) {
+                    boolean fromFCM = getIntent().getBooleanExtra(ApplicationClass.fromFCM, false);
+                    if (fromFCM) {
+                        intent.putExtra(ApplicationClass.fromFCM, true);
+                    }
+                }
+                startActivity(intent);
             } else {
                 startActivity(new Intent(this, LoginActivity.class));
             }

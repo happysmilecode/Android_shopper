@@ -22,6 +22,7 @@ public class NotificationOpenedHandler implements OneSignal.OSNotificationOpened
         try {
             Intent intent = new Intent(mContext, ApplicationClass.isForeground ? NotificationActivity.class : SplashScreen.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.putExtra(ApplicationClass.fromFCM, true);
             mContext.startActivity(intent);
         } catch (Throwable t) {
             t.printStackTrace();

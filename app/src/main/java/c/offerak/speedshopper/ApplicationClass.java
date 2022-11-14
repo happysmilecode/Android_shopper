@@ -29,6 +29,8 @@ public class ApplicationClass extends Application implements LifecycleObserver {
 
     public static boolean isForeground = false;
 
+    public static String fromFCM = "fromFCM";
+
     @Override
     public void onCreate() {
         super.onCreate();
