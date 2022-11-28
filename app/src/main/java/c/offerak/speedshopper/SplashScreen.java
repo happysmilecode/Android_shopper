@@ -21,7 +21,6 @@ import c.offerak.speedshopper.activity.LoginActivity;
 import c.offerak.speedshopper.activity.MenuActivity;
 import c.offerak.speedshopper.rest.Constants;
 import c.offerak.speedshopper.utils.MySharedPreference;
-import com.crashlytics.android.Crashlytics;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.login.LoginResult;
@@ -45,7 +44,6 @@ import com.onesignal.OSSubscriptionStateChanges;
 import com.onesignal.OneSignal;
 
 import c.offerak.speedshopper.utils.Utils;
-import io.fabric.sdk.android.Fabric;
 
 public class SplashScreen extends AppCompatActivity  {
 
@@ -62,7 +60,7 @@ public class SplashScreen extends AppCompatActivity  {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Fabric.with(this, new Crashlytics());
+//        Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_splash_screen);
 
         context=this;

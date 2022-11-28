@@ -2,6 +2,7 @@ package c.offerak.speedshopper.services;
 
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.os.Build;
 import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -31,8 +32,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     Intent intent = new Intent(this, NotificationActivity.class);
                     Random random = new Random();
 
-                    PendingIntent pendingIntent = PendingIntent.getActivity(this, random.nextInt(1000) * 5, intent, 0);
-                    NotificationUtils notificationUtils = new NotificationUtils(getApplicationContext());
+                    PendingIntent pendingIntent = PendingIntent.getActivity(this, random.nextInt(1000) * 5, intent,
+                            Build.VERSION.SDK_INT >= Build.VERSION_CODES.S ? PendingIntent.FLAG_IMMUTABLE : 0);                    NotificationUtils notificationUtils = new NotificationUtils(getApplicationContext());
                     notificationUtils.showUniqueNotification(object.getString(Constants.MESSAGE),
                             pendingIntent, true, "", 0);
 
@@ -41,7 +42,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     Intent intent = new Intent(this, NotificationActivity.class);
                     Random random = new Random();
 
-                    PendingIntent pendingIntent = PendingIntent.getActivity(this, random.nextInt(1000) * 5, intent, 0);
+                    PendingIntent pendingIntent = PendingIntent.getActivity(this, random.nextInt(1000) * 5, intent,
+                            Build.VERSION.SDK_INT >= Build.VERSION_CODES.S ? PendingIntent.FLAG_IMMUTABLE : 0);
                     NotificationUtils notificationUtils = new NotificationUtils(getApplicationContext());
                     notificationUtils.showUniqueNotification(object.getString(Constants.MESSAGE),
                             pendingIntent, true, "", 0);

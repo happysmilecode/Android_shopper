@@ -41,14 +41,16 @@
 
         <activity
             android:name=".SplashScreen"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.DeepLinkActivity">
+        <activity android:name=".activity.DeepLinkActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
                 <action android:name="android.intent.action.VIEW" />
@@ -63,7 +65,8 @@
         </activity>
         <activity
             android:name=".activity.LoginActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -158,12 +161,14 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.LandingScreen" /> <!-- Firebase Notifications -->
-        <service android:name=".services.MyFirebaseMessagingService">
+        <service android:name=".services.MyFirebaseMessagingService"
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <service android:name=".services.MyFirebaseInstanceIDService">
+        <service android:name=".services.MyFirebaseInstanceIDService"
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
