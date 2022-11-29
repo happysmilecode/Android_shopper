@@ -57,6 +57,7 @@ import java.util.Objects;
 import c.offerak.speedshopper.BuildConfig;
 import c.offerak.speedshopper.R;
 import c.offerak.speedshopper.activity.LoginActivity;
+import c.offerak.speedshopper.activity.MenuActivity;
 import c.offerak.speedshopper.activity.StoreImageActivity;
 import c.offerak.speedshopper.modal.PurchaseModel;
 import c.offerak.speedshopper.modal.UserBean;
@@ -96,7 +97,7 @@ public class ProfileFragment extends Fragment implements BillingProcessor.IBilli
     EditText txtUserName;
     final int PERMISSION_REQUEST_CODE = 101;
     String[] requestedPermissions = {CAMERA, WRITE_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE};
-    TextView mailId, editProfile, updateProfile, upgradeProfile, restore;
+    TextView mailId, editProfile, updateProfile, upgradeProfile, restore, deleteProfile;
     ImageView imgCam, profileImage, imageView2;
     UserBean userBean;
     ConstraintLayout constraintLayout;
@@ -154,6 +155,7 @@ public class ProfileFragment extends Fragment implements BillingProcessor.IBilli
         profileImage = rootView.findViewById(R.id.profile_image);
         imageView2 = rootView.findViewById(R.id.imageView2);
         updateProfile = rootView.findViewById(R.id.updateProfile);
+        deleteProfile = rootView.findViewById(R.id.deleteProfile);
         constraintLayout = rootView.findViewById(R.id.myConstraint);
         upgradeProfile = rootView.findViewById(R.id.upgrade);
 //        restore = rootView.findViewById(R.id.restore);
@@ -191,6 +193,10 @@ public class ProfileFragment extends Fragment implements BillingProcessor.IBilli
 
         upgradeProfile.setOnClickListener(v -> {
             openDialog();
+        });
+
+        deleteProfile.setOnClickListener(v -> {
+            deleteProfile();
         });
 
 //        restore.setOnClickListener(v -> {
@@ -376,6 +382,68 @@ public class ProfileFragment extends Fragment implements BillingProcessor.IBilli
         } else {
             utils.showSnackBar(getActivity().getWindow().getDecorView().getRootView(), getString(R.string.not_connected_to_internet));
         }
+    }
+
+    private void deleteProfile() {
+        utils = new Utils();
+        utils.showDialog(getActivity());
+
+        RequestBody token = RequestBody.create(MediaType.parse("text/plain"), userBean.getUserToken());
+
+        if (utils.isNetworkConnected(mContext)) {
+            Call<GetResponse> call = apiService.update(token);
+            call.enqueue(new Callback<GetResponse>() {
+                @Override
+                public void onResponse(Call<GetResponse> call, retrofit2.Response<GetResponse> response) {
+                    utils.hideDialog();
+                    try {
+                        GetResponse tokenResponse = response.body();
+                        if (tokenResponse != null) {
+                            try {
+                                if (tokenResponse.getStatus() == 200) {
+                                    utils.showSnackBar(constraintLayout, tokenResponse.getMessage());
+                                    if (tokenResponse.getMessage().equals("Account deleted successfully.")) {
+                                        logout();
+                                    }
+
+                                } else if (tokenResponse.getMessage().equals("Session expired")) {
+                                    utils.showSnackBar(getActivity().getWindow().getDecorView().getRootView(), tokenResponse.getMessage());
+
+                                    final Handler handler = new Handler();
+                                    handler.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            startActivity(new Intent(getActivity(), LoginActivity.class));
+                                            getActivity().finish();
+                                        }
+                                    }, 2000);
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<GetResponse> call, Throwable t) {
+                    utils.hideDialog();
+                    utils.showSnackBar(constraintLayout, "Please check your internet connection!");
+                }
+            });
+        } else {
+            utils.showSnackBar(getActivity().getWindow().getDecorView().getRootView(), getString(R.string.not_connected_to_internet));
+        }
+    }
+
+    public void logout() {
+        MySharedPreference mySharedPreference = new MySharedPreference(mContext);
+        mySharedPreference.clearPreference(mContext);
+        mySharedPreference.setLoginDetails("", "", "", "", "", "", "", "");
+        startActivity(new Intent(mContext, LoginActivity.class));
+        getActivity().finish();
     }
 
     void getProfile(UserBean bean) {

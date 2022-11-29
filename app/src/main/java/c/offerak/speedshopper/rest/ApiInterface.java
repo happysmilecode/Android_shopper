@@ -174,6 +174,10 @@ public interface ApiInterface {
                                        @Part(Constants.NAME) RequestBody name,
                                        @Part MultipartBody.Part file);
 
+    @POST(Constants.DELETE_URL)
+    @Multipart
+    Call<GetResponse> update(@Part(Constants.TOKEN) RequestBody token);
+
     @POST(Constants.IMPORT_ITEM_URL)
     @FormUrlEncoded
     Call<SpeedAvailableItemResponse> importItem(@Path(Constants.TOKEN) String token,

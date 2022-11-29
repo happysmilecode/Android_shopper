@@ -24,6 +24,7 @@ public class Constants {
     public static final String FORGET_URL = "account/forget";
     public static final String SMSCODE_URL = "account/phoneVerify";
     public static final String UPDATE_URL = "account/update";
+    public static final String DELETE_URL = "account/delete/{token}";
     public static final String GET_USER_URL = "account/getUser/{token}";
     public static final String GET_SSTX_EARNED_URL = "shopping/getSSTXValue/{token}";
     public static final String GET_STORES_URL = "store/getStores/{token}";
