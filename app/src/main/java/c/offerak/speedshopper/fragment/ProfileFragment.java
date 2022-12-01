@@ -196,7 +196,18 @@ public class ProfileFragment extends Fragment implements BillingProcessor.IBilli
         });
 
         deleteProfile.setOnClickListener(v -> {
-            deleteProfile();
+            new AlertDialog.Builder(mContext)
+//                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setTitle(getString(R.string.delete_account))
+                    .setMessage(getString(R.string.want_delete_account))
+                    .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            deleteProfile();
+                        }
+                    }).setNegativeButton(getString(R.string.cancel),null).show();
+
         });
 
 //        restore.setOnClickListener(v -> {
@@ -402,21 +413,23 @@ public class ProfileFragment extends Fragment implements BillingProcessor.IBilli
                             try {
                                 if (tokenResponse.getStatus() == 200) {
                                     utils.showSnackBar(constraintLayout, tokenResponse.getMessage());
-                                    if (tokenResponse.getMessage().equals("Account deleted successfully.")) {
-                                        logout();
+                                    logout();
+
+                                } else {
+                                    if (tokenResponse.getMessage().equals("Session expired")) {
+                                        utils.showSnackBar(getActivity().getWindow().getDecorView().getRootView(), tokenResponse.getMessage());
+
+                                        final Handler handler = new Handler();
+                                        handler.postDelayed(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                startActivity(new Intent(getActivity(), LoginActivity.class));
+                                                getActivity().finish();
+                                            }
+                                        }, 2000);
+                                    } else {
+
                                     }
-
-                                } else if (tokenResponse.getMessage().equals("Session expired")) {
-                                    utils.showSnackBar(getActivity().getWindow().getDecorView().getRootView(), tokenResponse.getMessage());
-
-                                    final Handler handler = new Handler();
-                                    handler.postDelayed(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            startActivity(new Intent(getActivity(), LoginActivity.class));
-                                            getActivity().finish();
-                                        }
-                                    }, 2000);
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();

@@ -30,6 +30,8 @@
     <string name="grocery_store">GROCERY STORE</string>
     <string name="update_profile">Update profile</string>
     <string name="edit_profile">Edit profile</string>
+    <string name="delete_account">Delete Account</string>
+    <string name="want_delete_account">Are you sure you want to delete your account?</string>
     <string name="color">Color</string>
     <string name="buy_sstx">BUY SSTX</string>
     <string name="money">\'MONEY\'</string>
