@@ -23,6 +23,14 @@
           }
         },
         {
+          "client_id": "28140651852-dq309nf0p8fvhmnv57kamshlscfao4vv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "c.offerak.speedshopper",
+            "certificate_hash": "9e747743f3b390f9cbe90043f8e90380d90428af"
+          }
+        },
+        {
           "client_id": "28140651852-vajo3b9e69qslqjigag1305tfg02al83.apps.googleusercontent.com",
           "client_type": 3
         }
