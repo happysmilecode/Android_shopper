@@ -1,10 +1,13 @@
 package c.offerak.speedshopper.activity;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -19,6 +22,8 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.ads.AdRequest;
@@ -108,6 +113,7 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(intent);
             }
         }
+        checkNotificationPermission();
     }
 
     public void  showInAppMessage()
@@ -162,6 +168,30 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
         btnContactUs.setOnClickListener(this);
         btnLogout.setOnClickListener(this);
         loginBtn.setOnClickListener(this);
+    }
+
+    public void checkNotificationPermission() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return;
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.POST_NOTIFICATIONS)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.POST_NOTIFICATIONS)) {
+
+                ActivityCompat.requestPermissions(MenuActivity.this,
+                        new String[]{Manifest.permission.POST_NOTIFICATIONS},
+                        LoginActivity.MY_PERMISSIONS_REQUEST_NOTIFICATION);
+
+
+            } else {
+                // No explanation needed, we can request the permission.
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.POST_NOTIFICATIONS},
+                        LoginActivity.MY_PERMISSIONS_REQUEST_NOTIFICATION);
+            }
+        }
     }
 
     void loadAds() {

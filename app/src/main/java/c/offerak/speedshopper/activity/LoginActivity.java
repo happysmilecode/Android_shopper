@@ -110,6 +110,7 @@ public class LoginActivity extends AppCompatActivity implements  FacebookCallbac
     private static final String TAG = LoginActivity.class.getSimpleName();
 
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
+    public static final int MY_PERMISSIONS_REQUEST_NOTIFICATION = 999;
 
     Dialog dialog;
     private TextView btn_text, btn_email, message;
@@ -169,7 +170,7 @@ public class LoginActivity extends AppCompatActivity implements  FacebookCallbac
 
     public void init() {
 
-        checkLocationPermission();
+        checkNotificationPermission();
         createLocationRequest();
 
         GoogleSignInOptions gSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -878,6 +879,30 @@ public class LoginActivity extends AppCompatActivity implements  FacebookCallbac
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
     }
 
+    public void checkNotificationPermission() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return;
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.POST_NOTIFICATIONS)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.POST_NOTIFICATIONS)) {
+
+                ActivityCompat.requestPermissions(LoginActivity.this,
+                        new String[]{Manifest.permission.POST_NOTIFICATIONS},
+                        MY_PERMISSIONS_REQUEST_NOTIFICATION);
+
+
+            } else {
+                // No explanation needed, we can request the permission.
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.POST_NOTIFICATIONS},
+                        MY_PERMISSIONS_REQUEST_NOTIFICATION);
+            }
+        }
+    }
+
     public void checkLocationPermission() {
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION)
@@ -922,6 +947,9 @@ public class LoginActivity extends AppCompatActivity implements  FacebookCallbac
                     utils.showSnackBar(getWindow().getDecorView().getRootView(), "You denied the permission!");
                 }
             }
+
+            case MY_PERMISSIONS_REQUEST_NOTIFICATION:
+                checkLocationPermission();
 
         }
     }
