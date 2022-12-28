@@ -14,6 +14,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.StrictMode;
 import android.provider.MediaStore;
@@ -29,6 +30,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProviders;
 
+import android.provider.Settings;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -80,6 +82,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.Manifest.permission.CAMERA;
+import static android.Manifest.permission.MANAGE_EXTERNAL_STORAGE;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static android.app.Activity.RESULT_OK;
@@ -219,14 +222,23 @@ public class ProfileFragment extends Fragment implements BillingProcessor.IBilli
         imgCam.setOnClickListener(v -> {
             Log.e(TAG, "init: " + "imgCam");
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (ContextCompat.checkSelfPermission(mContext, CAMERA) == PackageManager.PERMISSION_GRANTED
-                        && ContextCompat.checkSelfPermission(mContext, WRITE_EXTERNAL_STORAGE)
-                        == PackageManager.PERMISSION_GRANTED
-                        && ContextCompat.checkSelfPermission(mContext, READ_EXTERNAL_STORAGE)
-                        == PackageManager.PERMISSION_GRANTED) {
-                    selectImage();
+                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.S) {
+                    if (ContextCompat.checkSelfPermission(mContext, CAMERA) == PackageManager.PERMISSION_GRANTED
+                        && Environment.isExternalStorageManager()) {
+                        selectImage();
+                    } else {
+                        requestCameraPermission();
+                    }
                 } else {
-                    requestCameraPermission();
+                    if (ContextCompat.checkSelfPermission(mContext, CAMERA) == PackageManager.PERMISSION_GRANTED
+                            && ContextCompat.checkSelfPermission(mContext, WRITE_EXTERNAL_STORAGE)
+                            == PackageManager.PERMISSION_GRANTED
+                            && ContextCompat.checkSelfPermission(mContext, READ_EXTERNAL_STORAGE)
+                            == PackageManager.PERMISSION_GRANTED) {
+                        selectImage();
+                    } else {
+                        requestCameraPermission();
+                    }
                 }
             } else {
                 selectImage();
@@ -600,19 +612,32 @@ public class ProfileFragment extends Fragment implements BillingProcessor.IBilli
     }
 
     private void requestCameraPermission() {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), CAMERA) | ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), WRITE_EXTERNAL_STORAGE)
-                | ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), READ_EXTERNAL_STORAGE)) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-            builder.setMessage(getString(R.string.camera_permission_needed));
-            builder.setPositiveButton(R.string.grant, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    ActivityCompat.requestPermissions(getActivity(), requestedPermissions, PERMISSION_REQUEST_CODE);
-                }
-            }).create().show();
-
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.S) {
+            if (ContextCompat.checkSelfPermission(mContext, CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(getActivity(), new String[]{CAMERA}, PERMISSION_REQUEST_CODE);
+                return;
+            }
+            if (!Environment.isExternalStorageManager()) {
+                Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
+                intent.addCategory("android.intent.category.DEFAULT");
+                intent.setData(Uri.parse(String.format("package:%s",getActivity().getPackageName())));
+                startActivity(intent);
+            }
         } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                requestPermissions(new String[]{CAMERA, WRITE_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
+            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), CAMERA) | ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), WRITE_EXTERNAL_STORAGE)
+                    | ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), READ_EXTERNAL_STORAGE)) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                builder.setMessage(getString(R.string.camera_permission_needed));
+                builder.setPositiveButton(R.string.grant, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        ActivityCompat.requestPermissions(getActivity(), requestedPermissions, PERMISSION_REQUEST_CODE);
+                    }
+                }).create().show();
+
+            } else {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    requestPermissions(new String[]{CAMERA, WRITE_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
+                }
             }
         }
     }
@@ -801,7 +826,6 @@ public class ProfileFragment extends Fragment implements BillingProcessor.IBilli
 
     public void callAPIRewardMethod(String key) {
         utils.showDialog(mContext);
-        Log.e("~~~~", userBean.getUserToken());
         if(utils.isNetworkConnected(mContext)) {
             Call<GetResponse> call = apiService.getReward(userBean.getUserToken(), key);
             call.enqueue(new Callback<GetResponse>() {
