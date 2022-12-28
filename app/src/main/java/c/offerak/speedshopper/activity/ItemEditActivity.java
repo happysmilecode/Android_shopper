@@ -25,7 +25,9 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -544,14 +546,23 @@ public class ItemEditActivity extends AppCompatActivity implements View.OnClickL
 
     public void taekPhoto() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(context, CAMERA) == PackageManager.PERMISSION_GRANTED
-                    && ContextCompat.checkSelfPermission(context, WRITE_EXTERNAL_STORAGE)
-                    == PackageManager.PERMISSION_GRANTED
-                    && ContextCompat.checkSelfPermission(context, READ_EXTERNAL_STORAGE)
-                    == PackageManager.PERMISSION_GRANTED) {
-                selectImage();
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.S) {
+                if (ContextCompat.checkSelfPermission(this, CAMERA) == PackageManager.PERMISSION_GRANTED
+                        && Environment.isExternalStorageManager()) {
+                    selectImage();
+                } else {
+                    requestCameraPermission();
+                }
             } else {
-                requestCameraPermission();
+                if (ContextCompat.checkSelfPermission(this, CAMERA) == PackageManager.PERMISSION_GRANTED
+                        && ContextCompat.checkSelfPermission(this, WRITE_EXTERNAL_STORAGE)
+                        == PackageManager.PERMISSION_GRANTED
+                        && ContextCompat.checkSelfPermission(this, READ_EXTERNAL_STORAGE)
+                        == PackageManager.PERMISSION_GRANTED) {
+                    selectImage();
+                } else {
+                    requestCameraPermission();
+                }
             }
         } else {
             selectImage();
@@ -559,19 +570,32 @@ public class ItemEditActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void requestCameraPermission() {
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this, CAMERA) | ActivityCompat.shouldShowRequestPermissionRationale(this, WRITE_EXTERNAL_STORAGE)
-                | ActivityCompat.shouldShowRequestPermissionRationale(this, READ_EXTERNAL_STORAGE)) {
-            androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(context);
-            builder.setMessage(getString(R.string.camera_permission_needed));
-            builder.setPositiveButton(R.string.grant, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    ActivityCompat.requestPermissions((Activity) context, requestedPermissions, PERMISSION_REQUEST_CODE);
-                }
-            }).create().show();
-
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.S) {
+            if (ContextCompat.checkSelfPermission(this, CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{CAMERA}, PERMISSION_REQUEST_CODE);
+                return;
+            }
+            if (!Environment.isExternalStorageManager()) {
+                Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
+                intent.addCategory("android.intent.category.DEFAULT");
+                intent.setData(Uri.parse(String.format("package:%s",this.getPackageName())));
+                startActivity(intent);
+            }
         } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                requestPermissions(new String[]{CAMERA, WRITE_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, CAMERA) | ActivityCompat.shouldShowRequestPermissionRationale(this, WRITE_EXTERNAL_STORAGE)
+                    | ActivityCompat.shouldShowRequestPermissionRationale(this, READ_EXTERNAL_STORAGE)) {
+                androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(this);
+                builder.setMessage(getString(R.string.camera_permission_needed));
+                builder.setPositiveButton(R.string.grant, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        ActivityCompat.requestPermissions((Activity)context, requestedPermissions, PERMISSION_REQUEST_CODE);
+                    }
+                }).create().show();
+
+            } else {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    requestPermissions(new String[]{CAMERA, WRITE_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
+                }
             }
         }
     }
@@ -642,9 +666,9 @@ public class ItemEditActivity extends AppCompatActivity implements View.OnClickL
                 outputFileUri = Uri.fromFile(new File(getImage.getPath(), "pickImageResult.jpeg"));
             }
         } else {
-            /*File getImage = getActivity().getExternalCacheDir();
+            /*File getImage = this.getExternalCacheDir();
             if (getImage != null) {
-                outputFileUri = FileProvider.getUriForFile(mContext, BuildConfig.APPLICATION_ID + ".provider",
+                outputFileUri = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".provider",
                         new File(getImage.getPath(), "pickImageResult.jpeg"));
             }*/
 
