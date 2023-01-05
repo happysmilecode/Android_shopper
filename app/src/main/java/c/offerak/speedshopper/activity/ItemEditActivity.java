@@ -547,8 +547,7 @@ public class ItemEditActivity extends AppCompatActivity implements View.OnClickL
     public void taekPhoto() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (Build.VERSION.SDK_INT > Build.VERSION_CODES.S) {
-                if (ContextCompat.checkSelfPermission(this, CAMERA) == PackageManager.PERMISSION_GRANTED
-                        && Environment.isExternalStorageManager()) {
+                if (ContextCompat.checkSelfPermission(this, CAMERA) == PackageManager.PERMISSION_GRANTED) {
                     selectImage();
                 } else {
                     requestCameraPermission();
@@ -574,12 +573,6 @@ public class ItemEditActivity extends AppCompatActivity implements View.OnClickL
             if (ContextCompat.checkSelfPermission(this, CAMERA) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this, new String[]{CAMERA}, PERMISSION_REQUEST_CODE);
                 return;
-            }
-            if (!Environment.isExternalStorageManager()) {
-                Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
-                intent.addCategory("android.intent.category.DEFAULT");
-                intent.setData(Uri.parse(String.format("package:%s",this.getPackageName())));
-                startActivity(intent);
             }
         } else {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, CAMERA) | ActivityCompat.shouldShowRequestPermissionRationale(this, WRITE_EXTERNAL_STORAGE)

@@ -223,8 +223,7 @@ public class ProfileFragment extends Fragment implements BillingProcessor.IBilli
             Log.e(TAG, "init: " + "imgCam");
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (Build.VERSION.SDK_INT > Build.VERSION_CODES.S) {
-                    if (ContextCompat.checkSelfPermission(mContext, CAMERA) == PackageManager.PERMISSION_GRANTED
-                        && Environment.isExternalStorageManager()) {
+                    if (ContextCompat.checkSelfPermission(mContext, CAMERA) == PackageManager.PERMISSION_GRANTED) {
                         selectImage();
                     } else {
                         requestCameraPermission();
@@ -616,12 +615,6 @@ public class ProfileFragment extends Fragment implements BillingProcessor.IBilli
             if (ContextCompat.checkSelfPermission(mContext, CAMERA) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(getActivity(), new String[]{CAMERA}, PERMISSION_REQUEST_CODE);
                 return;
-            }
-            if (!Environment.isExternalStorageManager()) {
-                Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
-                intent.addCategory("android.intent.category.DEFAULT");
-                intent.setData(Uri.parse(String.format("package:%s",getActivity().getPackageName())));
-                startActivity(intent);
             }
         } else {
             if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), CAMERA) | ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), WRITE_EXTERNAL_STORAGE)

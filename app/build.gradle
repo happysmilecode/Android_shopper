@@ -37,8 +37,8 @@ android {
         minSdkVersion 21
         targetSdkVersion 33
         compileSdkVersion 33
-        versionCode 77
-        versionName "3.0.8"
+        versionCode 79
+        versionName "3.0.9"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         setProperty("archivesBaseName", "SpeedShopper-$versionName")
 //        manifestPlaceholders = [
